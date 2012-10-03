@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
+		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- 3rd Party Imports -->
+		<script src="../../libs/base64/base64.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfapi.js"></script>
+		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/jquery.dfpager.js"></script>
+		<script src="../../dfcore/jquery.dfpagerui.js"></script>
+		
+		<script src="admin.js"></script>
+		
+		
+		<!-- Initialize the system and start the application -->
+		<script>
+
+	var isPageDirty = false;
+		
+	var selected_app_grp_id = -1;
+	var current_app_grps = null;
+	var selectAppGrp = null;
+	
+	function makeAppGrpButton(id,name,container) {
+		container.append($('<button id="APP_GRP_'+id+'" class="app_grp_button" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	}
+	
+	function renderApps(container,appGrp) {
+		for(var i = 0; i < appGrp.length; i++) {
+			if(!appGrp[i]) continue;
+			makeAppGrpButton(i,appGrp[i].getName(),container);
+			if(selected_app_grp_id > -1 && parseInt(appGrp[i].getId()) == selected_app_grp_id) {
+				selected_app_grp_id = -1;
+			}
+		}
+		$('.app_grp_button').button({icons: {primary: "ui-icon-star"}}).click(function(){
+			showAppGrp(null); // clear user selection
+			$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
+			showAppGrp(current_app_grps[parseInt($(this).attr('id').substring('APP_GRP_'.length))]);
+		});
+	}
+	
+	function showAppGrp(appGrp) {
+		selectAppGrp = appGrp;
+		if(appGrp) {
+			
+			$('input:text[name=Name]').val(appGrp.getName());
+			$('input:text[name=Description]').val(appGrp.getDescription());
+			//$('#saveLabel').html('Save Group');
+			$("#save").button({ disabled: true });
+		} else {
+			if(current_app_grps) {
+				for(var i in current_app_grps) {
+					$('#APP_GRP_'+i).button( "option", "icons", {primary: 'ui-icon-star', secondary:''} );
+				}
+			}
+			$('input:text[name=Name]').val('');
+			$('input:text[name=Description]').val('');
+			//$('#saveLabel').html('Add New Group');
+			$('#save').button({ disabled: false });
+		}
+		if(appGrp) {
+			$('#delete').button({ disabled: false });
+			$('#clear').button({ disabled: false });
+		} else {
+			$('#delete').button({ disabled: true });
+			$('#clear').button({ disabled: true });
+		}
+	}
+	
+	function makeClearable() {
+		navControl(false);
+		$('#clear').button({ disabled: false });
+		$('#appGrpList').dfPagerUI('disableAll');
+		$("#save").button({ disabled: false });
+	}
+	
+	var save_app_grp_request = {
+		app: 'admin',
+		sys: true,
+		table: 'AppGroup',
+		type: DFRequestType.POST,
+		success: function(json) {
+			var errorMsg = checkFailure(json);
+			if(errorMsg) {
+				$('#errorMsg').html(errorMsg);
+				$('#errorDialog').dialog('open');
+			} else {
+				$('#appGrpList').dfPager('fetch');
+			}
+			navControl(true);
+			$("#save").button({ disabled: true });
+			$('#appGrpList').dfPagerUI('enableAll');
+			$('#savingDialog').dialog('close');
+		},
+		error: function(err) {
+			$('#savingDialog').dialog('close');
+			$('#errorMsg').html(err);
+			$('#errorDialog').dialog('open');
+   		}
+	};
+	
+	function deleteAppGrp(confirmed) {
+		if(selectAppGrp) {
+			if(confirmed) {
+				var req = {Ids:selectAppGrp.getId()}
+				var newObject = jQuery.extend(true, {}, save_app_grp_request);
+				newObject.action = DFRequestActions.DELETE;
+				newObject.data = JSON.stringify(req);
+				new DFRequest(newObject).makeRequest();
+			} else {
+				$( "#deleteAppGrp" ).html(selectAppGrp.getName());
+				$( "#confirmDeleteAppGrpDialog" ).dialog('open');
+			}
+		}
+	}
+	
+	function createAppGrp() {
+		var appGrp = new Application({});
+		appGrp.setName($('input:text[name=Name]').val());
+		appGrp.setDescription($('input:text[name=Description]').val());
+		var newObject = jQuery.extend(true, {}, save_app_grp_request);
+		newObject.action = DFRequestActions.CREATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:appGrp.getJSON()}]}});
+		new DFRequest(newObject).makeRequest();
+		
+	}
+	
+	function updateAppGrp(app) {
+		app.setName($('input:text[name=Name]').val());
+		app.setDescription($('input:text[name=Description]').val());
+		var newObject = jQuery.extend(true, {}, save_app_grp_request);
+		newObject.action = DFRequestActions.UPDATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:app.getJSON()}]}});
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	$(document).ready(function() {
+		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+		$().dfcore();
+		makeAdminNav('appgroups');
+		
+		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
+			deleteAppGrp();
+		});
+		
+		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
+			if(selectAppGrp) {
+				updateAppGrp(selectAppGrp);
+			} else {
+				createAppGrp();
+			}
+		});
+		
+		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
+			navControl(true);
+			$('#appGrpList').dfPagerUI('enableAll');
+			showAppGrp(null);
+		});
+		
+		$("#savingDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
+		
+		$("#errorDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
+		
+		$( "#confirmDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					refreshList(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$( "#confirmDeleteAppGrpDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					deleteAppGrp(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$("#AppType").buttonset();
+		$("#active").buttonset();
+		
+		$('#appGrpList').dfPagerUI({
+			app: 'admin',
+			sys: true,
+			table: 'AppGroup',
+			pageNo: 0,
+			pageLimit: 1,
+			pageLimits: [10,25,50,100],
+			orderBy: 0,
+			orderFields: ['Id'],
+			renderer: function(container,json) {
+				showAppGrp(null);
+				var apps = [];
+				for(var i in json.record) {
+					apps[apps.length] = new Application(json.record[i].fields);
+				}
+				if(apps.length > 0) {
+					current_app_grps = apps;
+					renderApps(container,apps);
+					resizeUi();
+					return apps.length;
+				} else {
+					renderApps(container,users);
+					container.append('<i>End Of List</i>');
+					resizeUi();
+					return 0;
+				}
+			}
+		});
+	});
+		</script>
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="admin_radio"></div>
+			<div id="admin_panel" class="">
+				<div class="cLeft cW3333 cH100" id="appGrpList"></div>
+				<div class="cLeft cW50 cH100">
+					<div class="cP1">
+						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
+							<strong>Application Editor:</strong> Use these controls below to create, update and delete applications in the list
+							to the left.
+							<br/>
+							<br/>
+							<div>
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Name" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Description:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Description" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<br/>
+							<br/>
+							<div class="cTM1">
+								<div class="cLeft cW75 " align="right">
+									<button id="clear">New Group</button>
+									<button id="delete">Delete Group</button>
+									<button id="save"><span id="saveLabel">Save Group</span></button>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="cClear"><!--  --></div>
+				<div id="savingDialog" title="Saving, Please Wait..." class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						The changes are being saved. Please do not close this tab or the browser.
+					</p>
+				</div>
+				<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+					<p class="ui-state-error ui-corner-all cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="errorMsg"><!--  --></span>
+					</p>
+				</div>
+				<div id="confirmDialog" title="Please Confirm:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							The list of users has unsaved changes. Refreshing the list will destroy all changes made to the list.
+							<br/>
+							<br/>
+							Do you want to continue?
+						</span>
+					</p>
+				</div>
+				<div id="confirmDeleteAppGrpDialog" title="Please Confirm Delete:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							You are about to delete <span id="deleteAppGrp"><!--  --></span>. Are you sure you want to delete this Application?
+						</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

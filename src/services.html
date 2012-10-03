@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		
+		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
+		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- 3rd Party Imports -->
+		<script src="../../libs/base64/base64.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfapi.js"></script>
+		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/jquery.dfpager.js"></script>
+		<script src="../../dfcore/jquery.dfpagerui.js"></script>
+		
+		<script src="admin.js"></script>
+		
+		<!-- Initialize the system and start the application -->
+		<script>
+
+	var isPageDirty = false;
+	var selected_service_id = -1;
+	var current_service = null;
+	var selectService = null;
+	
+	function makeServiceButton(id,name,container) {
+		container.append($('<button id="SERV_'+id+'" class="service_button" style="width:100%;margin-top: 4px;"><span id="DFServiceLabel_'+id+'">'+name+'</span></button>'));
+	}
+	
+	function renderServices(container,services) {
+		for(var i = 0; i < services.length; i++) {
+			if(!services[i]) continue;
+			makeServiceButton(i,services[i].getLabel(),container);
+			if(selected_service_id > -1 && parseInt(services[i].getId()) == selected_service_id) {
+				selected_user = i;
+				selected_service_id = -1;
+			}
+		}
+		$('.service_button').button({icons: {primary: "ui-icon-star"}}).click(function(){
+			showService(null); // clear user selection
+			$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
+			showService(current_service[parseInt($(this).attr('id').substring('SERV_'.length))]);
+		});
+	}
+	
+	function showService(service) {
+		selectService = service;
+		if(service) {
+			
+			$('input:text[name=Name]').val(service.getName());
+			$('input:text[name=Label]').val(service.getLabel());
+			$('input:text[name=Type]').val(service.getType());
+			$('input:text[name=BaseUrl]').val(service.getBaseUrl());
+			$('textarea#HeaderList').val(service.getHeaderList());
+			$('textarea#ParamList').val(service.getParamList());
+			if(service.getIsActive()) {
+				$('input[name="IsActive"]')[0].checked = true;
+			} else {
+				$('input[name="IsActive"]')[1].checked = true;
+			}
+			
+			$('#active').buttonset('refresh');
+			
+			$("#save").button({ disabled: true });
+		} else {
+			if(current_service) {
+				for(var i in current_service) {
+					$('#SERV_'+i).button( "option", "icons", {primary: 'ui-icon-star', secondary:''} );
+				}
+			}
+			
+			$('input:text[name=Name]').val('');
+			$('input:text[name=Label]').val('');
+			$('input:text[name=Type]').val('');
+			$('input:text[name=BaseUrl]').val('');
+			$('textarea#HeaderList').val('');
+			$('textarea#ParamList').val('');
+			$('input[name="IsActive"]')[0].checked = true;
+			
+			$('#active').buttonset('refresh');
+			
+			$('#save').button({ disabled: false });
+		}
+		
+		if(service) {
+			$('#delete').button({ disabled: false });
+			$('#clear').button({ disabled: false });
+		} else {
+			$('#delete').button({ disabled: true });
+			$('#clear').button({ disabled: true });
+		}
+		
+	}
+	
+	function makeClearable() {
+		navControl(false);
+		$('#clear').button({ disabled: false });
+		$('#serviceList').dfPagerUI('disableAll');
+		$("#save").button({ disabled: false });
+	}
+	
+	var save_service_request = {
+		app: 'admin',
+		sys: true,
+		table: 'WebService',
+		type: DFRequestType.POST,
+		success: function(json) {
+			var errorMsg = checkFailure(json);
+			if(errorMsg) {
+				$('#errorMsg').html(errorMsg);
+				$('#errorDialog').dialog('open');
+			} else {
+				$('#serviceList').dfPager('fetch');
+			}
+			navControl(true);
+			$("#save").button({ disabled: true });
+			$('#serviceList').dfPagerUI('enableAll');
+		},
+		error: function(err) {
+			$('#errorMsg').html(err);
+			$('#errorDialog').dialog('open');
+   		}
+	};
+	
+	function deleteService(confirmed) {
+		if(selectService) {
+			if(confirmed) {
+				var req = {Ids:selectService.getId()};
+				var newObject = jQuery.extend(true, {}, save_service_request);
+				newObject.action = DFRequestActions.DELETE;
+				newObject.data = JSON.stringify(req);
+				new DFRequest(newObject).makeRequest();
+			} else {
+				$( "#deleteService" ).html(selectService.getLabel());
+				$( "#confirmDeleteUserDialog" ).dialog('open');
+			}
+		}
+	}
+	
+	function createService() {
+		
+		var service = new WebService({});
+		service.setName($('input:text[name=Name]').val());
+		service.setLabel($('input:text[name=Label]').val());
+		service.setType($('input:text[name=Type]').val());
+		service.setBaseUrl($('input:text[name=BaseUrl]').val());
+		service.setHeaderList($('textarea#HeaderList').val());
+		service.setParamList($('textarea#ParamList').val());
+		service.setIsActive(!$('input[name="IsActive"]')[1].checked);
+		
+		var newObject = jQuery.extend(true, {}, save_service_request);
+		newObject.action = DFRequestActions.CREATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:service.getJSON()}]}});
+		
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	function updateService(service) {
+		
+		service.setName($('input:text[name=Name]').val());
+		service.setLabel($('input:text[name=Label]').val());
+		service.setType($('input:text[name=Type]').val());
+		service.setBaseUrl($('input:text[name=BaseUrl]').val());
+		service.setHeaderList($('textarea#HeaderList').val());
+		service.setParamList($('textarea#ParamList').val());
+		if($('input[name="IsActive"]')[1].checked) {
+			service.setIsActive(false);
+		} else {
+			service.setIsActive(true);
+		}
+		
+		var newObject = jQuery.extend(true, {}, save_service_request);
+		newObject.action = DFRequestActions.UPDATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:service.getJSON()}]}});
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	$(document).ready(function() {
+		
+		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+		
+		$().dfcore();
+		var current_button = 'services';
+		makeAdminNav(current_button);
+		
+		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
+			deleteService();
+		});
+		
+		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
+			if(selectService) {
+				updateService(selectService);
+			} else {
+				createService();
+			}
+		});
+		
+		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
+			navControl(true);
+			$('#serviceList').dfPagerUI('enableAll');
+			showService(null);
+		});
+		
+		$("#errorDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
+		
+		$( "#confirmDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					refreshList(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$( "#confirmDeleteUserDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					deleteService(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$("#active").buttonset();
+		$("#sys_admin").buttonset();
+		
+		$('#serviceList').dfPagerUI({
+			app: 'admin',
+			sys: true,
+			table: 'WebService',
+			pageNo: 0,
+			pageLimit: 1,
+			pageLimits: [10,25,50,100],
+			orderBy: 0,
+			orderFields: ['Id','Name'],
+			ctrl_btns: navControl,
+			renderer: function(container,json) {
+				showService(null);
+				var services = [];
+				for(var i in json.record) {
+					services[services.length] = new WebService(json.record[i].fields);
+				}
+				if(services.length > 0) {
+					current_service = services;
+					renderServices(container,services);
+					resizeUi();
+					return services.length;
+				} else {
+					renderServices(container,services);
+					container.append('<i>End Of List</i>');
+					resizeUi();
+					return 0;
+				}
+			}
+		});
+	});
+		</script>
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="admin_radio"></div>
+			<div id="admin_panel" class="">
+				<div class="cLeft cW3333 cH100" id="serviceList"></div>
+				<div class="cLeft cW50 cH100">
+					<div class="cP1">
+						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
+							<strong>User Editor:</strong> Use these controls below to create, update and delete users in the list
+							to the left.
+							<br/>
+							<br/>
+							<div>
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Name" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Label:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Label" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Base URL:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="BaseUrl" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Header List:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<textarea class="ui-widget ui-state-default ui-corner-all cP2" name="HeaderList" id="HeaderList" cols="32" rows="3" onkeyup="makeClearable()"></textarea>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Parameter List:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<textarea type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="ParamList" id="ParamList" cols="32" rows="3" onkeyup="makeClearable()"></textarea>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Type:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="type" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Status:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<div id="active">
+										<input type="radio" id="IsActive" name="IsActive" onchange="makeClearable()"/><label for="IsActive">Active</label><input type="radio" id="InActive" name="IsActive" onchange="makeClearable()" checked="checked" /><label for="InActive">Inactive</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<br/>
+							<br/>
+							<div class="cTM1">
+								<div class="cLeft cW75 " align="right">
+									<button id="clear">New Serive</button>
+									<button id="delete">Delete Service</button>
+									<button id="save"><span id="saveLabel">Save Service</span></button>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="cClear"><!--  --></div>
+				<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+					<p class="ui-state-error ui-corner-all cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="errorMsg"><!--  --></span>
+					</p>
+				</div>
+				<div id="confirmDialog" title="Please Confirm:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							The list of users has unsaved changes. Refreshing the list will destroy all changes made to the list.
+							<br/>
+							<br/>
+							Do you want to continue?
+						</span>
+					</p>
+				</div>
+				<div id="confirmDeleteUserDialog" title="Please Confirm Delete:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							You are about to delete <span id="deleteService"><!--  --></span>. Are you sure you want to delete this user?
+						</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

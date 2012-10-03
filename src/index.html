@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		
+		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
+		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- 3rd Party Imports -->
+		<script src="../../libs/base64/base64.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfapi.js"></script>
+		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/jquery.dfpager.js"></script>
+		<script src="../../dfcore/jquery.dfpagerui.js"></script>
+		
+		<script src="admin.js"></script>
+		
+		<!-- Initialize the system and start the application -->
+		<script>
+
+	var isPageDirty = false;
+	var selected_user_id = -1;
+	var current_users = null;
+	var selectUser = null;
+	
+	function makeUserButton(id,name,container) {
+		container.append($('<button id="USER_'+id+'" class="user_button" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	}
+	
+	function renderUsers(container,users) {
+		for(var i = 0; i < users.length; i++) {
+			if(!users[i]) continue;
+			makeUserButton(i,users[i].getFullName(),container);
+			if(selected_user_id > -1 && parseInt(users[i].getId()) == selected_user_id) {
+				selected_user = i;
+				selected_user_id = -1;
+			}
+		}
+		$('.user_button').button({icons: {primary: "ui-icon-person"}}).click(function(){
+			showUser(null); // clear user selection
+			$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
+			showUser(current_users[parseInt($(this).attr('id').substring('USER_'.length))]);
+		});
+	}
+	
+	function showUser(user) {
+		selectUser = user;
+		if(user) {
+			$('input:text[name=username]').val(user.getUserName());
+			$('input:text[name=fullname]').val(user.getFullName());
+			$('input:text[name=lastname]').val(user.getLastName());
+			$('input:text[name=firstname]').val(user.getFirstName());
+			$('input:text[name=email]').val(user.getEmail());
+			$('input:text[name=phone]').val(user.getPhone());
+			if(user.isActive()) {
+				$('input[name="isactive"]')[0].checked = true;
+			} else {
+				$('input[name="isactive"]')[1].checked = true;
+			}
+			if(user.isSysAdmin()) {
+				$('input[name="issysadmin"]')[0].checked = true;
+			} else {
+				$('input[name="issysadmin"]')[1].checked = true;
+			}
+			$('#active').buttonset('refresh');
+			$('#sys_admin').buttonset('refresh');
+			//$('#saveLabel').html('Save');
+			$("#save").button({ disabled: true });
+		} else {
+			if(current_users) {
+				for(var i in current_users) {
+					$('#USER_'+i).button( "option", "icons", {primary: 'ui-icon-person', secondary:''} );
+				}
+			}
+			$('input:text[name=username]').val('');
+			$('input:text[name=fullname]').val('');
+			$('input:text[name=lastname]').val('');
+			$('input:text[name=firstname]').val('');
+			$('input:text[name=email]').val('');
+			$('input:text[name=phone]').val('');
+			$('input[name="isactive"]')[1].checked = true;
+			$('input[name="issysadmin"]')[1].checked = true;
+			$('#active').buttonset('refresh');
+			$('#sys_admin').buttonset('refresh');
+			//$('#saveLabel').html('Add New User');
+			
+			$('#save').button({ disabled: false });
+		}
+		
+		if(user) {
+			$('#delete').button({ disabled: false });
+			$('#clear').button({ disabled: false });
+		} else {
+			$('#delete').button({ disabled: true });
+			$('#clear').button({ disabled: true });
+		}
+		
+	}
+	
+	function makeClearable() {
+		navControl(false);
+		$('#clear').button({ disabled: false });
+		$('#usersList').dfPagerUI('disableAll');
+		$("#save").button({ disabled: false });
+	}
+	
+	function scrollToTop() {
+		var container = $('.scrollablePane'), scrollTo = $("#USER_"+selected_user);
+		container.animate({
+			scrollTop: 0
+		});
+	}
+	
+	function userIconPrimary(user) {
+		if(user.isDirty) {
+			if(!isListDirty) isListDirty = true;
+			return 'ui-icon-alert';
+		} else {
+			return 'ui-icon-person';
+		}
+	}
+	
+	var save_user_request = {
+		app: 'admin',
+		sys: true,
+		table: 'User',
+		type: DFRequestType.POST,
+		success: function(json) {
+			var errorMsg = checkFailure(json);
+			if(errorMsg) {
+				$('#errorMsg').html(errorMsg);
+				$('#errorDialog').dialog('open');
+			} else {
+				$('#usersList').dfPager('fetch');
+			}
+			navControl(true);
+			$("#save").button({ disabled: true });
+			$('#usersList').dfPagerUI('enableAll');
+		},
+		error: function(err) {
+			$('#errorMsg').html(err);
+			$('#errorDialog').dialog('open');
+   		}
+	};
+	
+	function deleteUser(confirmed) {
+		if(selectUser) {
+			if(confirmed) {
+				var req = {Ids:selectUser.getId()};
+				var newObject = jQuery.extend(true, {}, save_user_request);
+				newObject.action = DFRequestActions.DELETE;
+				newObject.data = JSON.stringify(req);
+				new DFRequest(newObject).makeRequest();
+			} else {
+				$( "#deleteUser" ).html(selectUser.getFullName());
+				$( "#confirmDeleteUserDialog" ).dialog('open');
+			}
+		}
+	}
+	
+	function createUser() {
+		
+		var user = new DFUser({});
+		user.setUserName($('input:text[name=username]').val());
+		user.setFullName($('input:text[name=fullname]').val());
+		user.setLastName($('input:text[name=lastname]').val());
+		user.setFirstName($('input:text[name=firstname]').val());
+		user.setEmail($('input:text[name=email]').val());
+		user.setPhone($('input:text[name=phone]').val());
+		
+		if($('input[name="issysadmin"]')[1].checked) {
+			user.setSysAdmin('false');
+		} else {
+			user.setSysAdmin('true');
+		}
+		
+		if($('input[name="isactive"]')[1].checked) {
+			user.setActive('false');
+		} else {
+			user.setActive('true');
+		}
+		
+		var newObject = jQuery.extend(true, {}, save_user_request);
+		newObject.action = DFRequestActions.CREATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:user.getJSON()}]}});
+		
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	function updateUser(user) {
+		
+		user.setUserName($('input:text[name=username]').val());
+		user.setFullName($('input:text[name=fullname]').val());
+		user.setLastName($('input:text[name=lastname]').val());
+		user.setFirstName($('input:text[name=firstname]').val());
+		user.setEmail($('input:text[name=email]').val());
+		user.setPhone($('input:text[name=phone]').val());
+		
+		if($('input[name="isactive"]')[1].checked) {
+			user.setActive('false');
+		} else {
+			user.setActive('true');
+		}
+		
+		if($('input[name="issysadmin"]')[1].checked) {
+			user.setSysAdmin('false');
+		} else {
+			user.setSysAdmin('true');
+		}
+		
+		user.getJSON().CreatedById = null;
+		user.getJSON().CreatedDate = null;
+		user.getJSON().LastModifiedDate = null;
+		user.getJSON().LastModifiedById = null;
+		user.getJSON().ConfirmCode = null;
+		
+		var newObject = jQuery.extend(true, {}, save_user_request);
+		newObject.action = DFRequestActions.UPDATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:user.getJSON()}]}});
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	$(document).ready(function() {
+		
+		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+		
+		$().dfcore();
+		var current_button = 'index';
+		makeAdminNav(current_button);
+		
+		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
+			deleteUser();
+		});
+		
+		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
+			if(selectUser) {
+				updateUser(selectUser);
+			} else {
+				createUser();
+			}
+		});
+		
+		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
+			navControl(true);
+			$('#usersList').dfPagerUI('enableAll');
+			showUser(null);
+		});
+		
+		$("#errorDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
+		
+		$( "#confirmDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					refreshList(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$( "#confirmDeleteUserDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					deleteUser(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$("#active").buttonset();
+		$("#sys_admin").buttonset();
+		
+		$('#usersList').dfPagerUI({
+			app: 'admin',
+			sys: true,
+			table: 'User',
+			pageNo: 0,
+			pageLimit: 1,
+			pageLimits: [10,25,50,100],
+			orderBy: 0,
+			orderFields: ['Id','LastName','FirstName'],
+			ctrl_btns: navControl,
+			renderer: function(container,json) {
+				showUser(null);
+				var users = [];
+				for(var i in json.record) {
+					users[users.length] = new DFUser(json.record[i].fields);
+				}
+				if(users.length > 0) {
+					current_users = users;
+					renderUsers(container,users);
+					resizeUi();
+					return users.length;
+				} else {
+					renderUsers(container,users);
+					container.append('<i>End Of List</i>');
+					resizeUi();
+					return 0;
+				}
+			}
+		});
+	});
+		</script>
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="admin_radio"></div>
+			<div id="admin_panel" class="">
+				<div class="cLeft cW3333 cH100" id="usersList"></div>
+				<div class="cLeft cW50 cH100">
+					<div class="cP1">
+						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
+							<strong>User Editor:</strong> Use these controls below to create, update and delete users in the list
+							to the left.
+							<br/>
+							<br/>
+							<div>
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>User Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="username" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Full Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="fullname" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>First Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="firstname" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Last Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="lastname" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Email:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="email" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Telephone:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="phone" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Status:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<div id="active">
+										<input type="radio" id="isactive" name="isactive" onchange="makeClearable()"/><label for="isactive">Active</label><input type="radio" id="inactive" name="isactive" onchange="makeClearable()" checked="checked" /><label for="inactive">Inactive</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>User Type:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<div id="sys_admin">
+										<input type="radio" id="sysadmin" name="issysadmin" onchange="makeClearable()" /><label for="sysadmin">Administrator</label><input type="radio" id="sysuser" name="issysadmin" onchange="makeClearable()" checked="checked" /><label for="sysuser">Standard User</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<br/>
+							<br/>
+							<div class="cTM1">
+								<div class="cLeft cW75 " align="right">
+									<button id="clear">New User</button>
+									<button id="delete">Delete User</button>
+									<button id="save"><span id="saveLabel">Save User</span></button>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="cClear"><!--  --></div>
+				<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+					<p class="ui-state-error ui-corner-all cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="errorMsg"><!--  --></span>
+					</p>
+				</div>
+				<div id="confirmDialog" title="Please Confirm:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							The list of users has unsaved changes. Refreshing the list will destroy all changes made to the list.
+							<br/>
+							<br/>
+							Do you want to continue?
+						</span>
+					</p>
+				</div>
+				<div id="confirmDeleteUserDialog" title="Please Confirm Delete:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							You are about to delete <span id="deleteUser"><!--  --></span>. Are you sure you want to delete this user?
+						</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

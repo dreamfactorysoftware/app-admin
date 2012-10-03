@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
+		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- 3rd Party Imports -->
+		<script src="../../libs/base64/base64.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfapi.js"></script>
+		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/jquery.dfpager.js"></script>
+		<script src="../../dfcore/jquery.dfpagerui.js"></script>
+		
+		<script src="admin.js"></script>
+		
+		<!-- Initialize the system and start the application -->
+		<script>
+	
+	var isPageDirty = false;
+	
+	var current_apps = null;
+	var current_grps = null;
+	
+	var selected_grp_id = -1;
+	var selected_grp = -1;
+	var selected_app_id = -1;
+	var selected_app = -1;
+	
+	var KEY_CHECKED = 'checked';
+	var KEY_REFRESH = 'refresh';
+	
+	var TABLE_APPS = 'appsList';
+	var TABLE_APP_GRPS = 'appGrpList';
+	
+	var ICON_APP_GRPS_LOCKED = 'ui-icon-arrowthick-1-e';
+	var ICON_APP_LOCKED = 'ui-icon-arrowthick-1-w';
+	var ICON_CHECK = 'ui-icon-check';
+	var ICON_ALERT = 'ui-icon-alert';
+	var ICON_CANCEL = 'ui-icon-cancel';
+	var ICON_REFERENCED = 'ui-icon-radio-on';
+	
+	var locked_table = null;
+	var primary_record = -1;
+	var secondary_record = -1;
+	
+	/** Logic to enable selector/multi-selector abilities */
+	function selectorLogic(index,table) {
+		if(!locked_table) {
+			locked_table = table;
+			primary_record = index;
+		} else if(locked_table == table) {
+			if(primary_record == index) {
+				locked_table = null;
+				primary_record = null;
+			} else {
+				primary_record = index;
+			}
+		} else {
+			secondary_record = index;
+		}
+	}
+	
+	function clickedApp(index) {
+		selectorLogic(index,TABLE_APPS);
+		doRefresh();
+	}
+	
+	function clickedAppGrp(index) {
+		selectorLogic(index,TABLE_APP_GRPS);
+		doRefresh();
+	}
+	
+	function markAppGrps() {
+		for(var i in current_grps) {
+			var appGrp = current_grps[i];
+			var primary_ico = null;
+			var secondary_ico = null;
+			if(appGrp.isDirty) {
+				primary_ico = ICON_ALERT;
+			} else if(i == selected_grp) {
+				primary_ico = ICON_REFERENCED;
+			} else {
+				primary_ico = 'ui-icon-gear'; //appGrp.getAppId() ? 'ui-icon-wrench' : 
+			}
+			if(locked_table == TABLE_APP_GRPS) {
+				if(i == primary_record) {
+					secondary_ico = ICON_APP_GRPS_LOCKED;
+				}
+			} else if(i == secondary_record) {
+				if($('#APP_'+primary_record).hasClass('GID_'+appGrp.getId())) {
+					$('#APP_'+primary_record).removeClass('GID_'+appGrp.getId());
+					makeClearable();
+				} else {
+					addAppToGrp(primary_record,secondary_record);
+					secondary_ico = ICON_CHECK;
+				}
+				secondary_record = null;
+			} else {
+				if($('#APP_'+primary_record).hasClass('GID_'+appGrp.getId())) {
+					secondary_ico = ICON_CHECK;
+				}
+			}
+			$('#APP_GRPS_'+i).button( "option", "icons", {primary: primary_ico, secondary: secondary_ico});
+		}
+	}
+	
+	function addAppToGrp(appIndex,appGrpIndex) {
+		$('#APP_'+appIndex).addClass('GID_'+current_grps[appGrpIndex].getId());
+		makeClearable();
+	}
+	
+	function makeClearable() {
+		navControl(false);
+		$('#clearLists').button({ disabled: false });
+		$('#'+TABLE_APP_GRPS).dfPagerUI('disableAll');
+		$('#'+TABLE_APPS).dfPagerUI('disableAll');
+		$("#save").button({ disabled: false });
+	}
+	
+	function markApps() {
+		for(var i = 0; i < current_apps.length; i++) {
+			if(!current_apps[i]) continue;
+			var user = current_apps[i];
+			var primary_ico = null;
+			var secondary_ico = null;
+			if(user.isDirty) {
+				secondary_ico = ICON_ALERT;
+			} else if(i == selected_app) {
+				secondary_ico = ICON_REFERENCED;
+			} else {
+				secondary_ico = 'ui-icon-star';
+			}
+			if(locked_table == TABLE_APPS) {
+				if(i == primary_record) {
+					primary_ico = ICON_APP_LOCKED;
+				}
+			} else if(i == secondary_record) {
+				if(current_grps[primary_record]) {
+					if($('#APP_'+secondary_record).hasClass('GID_'+current_grps[primary_record].getId())) {
+						$('#APP_'+secondary_record).removeClass('GID_'+current_grps[primary_record].getId());
+						makeClearable();
+					} else {
+						addAppToGrp(secondary_record,primary_record);
+						primary_ico = ICON_CHECK;
+					}
+				}
+				secondary_record = null;
+			} else {
+				if(current_grps[primary_record]) {
+					if($('#APP_'+i).hasClass('GID_'+current_grps[primary_record].getId())) {
+						primary_ico = ICON_CHECK;
+					}
+				}
+			}
+			$('#APP_'+i).button( "option", "icons", {primary: primary_ico, secondary: secondary_ico});
+		}
+	}
+	
+	function convertGrpIdsToClasses(grpIds) {
+		var tmp = '';
+		if(!grpIds || !grpIds.split) return "BARF";
+		var roles = grpIds.split(',');
+		var role = null;
+		var i = 0;
+		for(; i < roles.length; i++) {
+			role = $.trim(roles[i]);
+			if(role.length>0) tmp += ' GID_'+role;
+		}
+		return tmp;
+	}
+	
+	function makeAppGrpButton(id,name,container) {
+		container.append($('<button id="APP_GRPS_'+id+'" class="app_grp_button" style="width:100%;margin-top: 4px;"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
+	}
+	
+	function renderAppGrps(container,appGrps) {
+		for(var i in appGrps) {
+			makeAppGrpButton(i,appGrps[i].getName(),container);
+			if(selected_grp_id > -1 && parseInt(appGrps[i].getId()) == selected_grp_id) {
+				selected_grp_id = -1;
+			}
+		}
+		$('.app_grp_button').button().click(function(){
+			clickedAppGrp(parseInt($(this).attr('id').substring('APP_GRPS_'.length)));
+		});
+		doRefresh();
+	}
+	
+	function makeAppButton(id,name,container,grpIds) {
+		container.append($('<button id="APP_'+id+'" class="app_button '+convertGrpIdsToClasses(grpIds)+'" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	}
+	
+	function renderApps(container,apps) {
+		for(var i = 0; i < apps.length; i++) {
+			if(!apps[i]) continue;
+			makeAppButton(i,apps[i].getLabel(),container,apps[i].getAppGroupIds());
+			if(selected_app_id > -1 && parseInt(apps[i].getId()) == selected_app_id) {
+				selected_app_id = -1;
+			}
+		}
+		$('.app_button').button({icons: {secondary: "ui-icon-star"}}).click(function(){
+			clickedApp(parseInt($(this).attr('id').substring('APP_'.length)));
+		});
+		doRefresh();
+	}
+	
+	var refresh_to = null;
+	function doRefresh() {
+		if(refresh_to) return;
+		if(current_apps && current_grps) {
+			markAppGrps();
+			markApps();
+		} else {
+			refresh_to = window.setTimeout('refresh_to=null;doRefresh()',10);
+		}
+	}
+	
+	var reset_to = null;
+	function resetSelector(table) {
+		if(reset_to) return;
+		if(current_apps && current_grps && !refresh_to) {
+			if(table == locked_table) {
+				locked_table = null;
+				primary_record = -1;
+				secondary_record = -1;
+			}
+		} else {
+			reset_to = window.setTimeout('reset_to=null;resetSelector()',10);
+		}
+	}
+	
+	function diableAllListControls() {
+		$("#clearLists").button({ disabled: true });
+		$("#save").button({ disabled: true });
+	}
+	
+	function enableAllListControls() {
+		$("#clearLists").button({ disabled: true });
+		$("#save").button({ disabled: true });
+	}
+	
+	
+	$(document).ready(function() {
+		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+		$().dfcore();
+		makeAdminNav('appgroupassign');
+		
+		$("#clearLists").button({icons: {primary: "ui-icon-trash"}}).click(function(){
+			var users = $('#appsList').dfPagerUI('getUIContainer');
+			users.html('');
+			renderApps(users,current_apps);
+			var roles = $('#appGrpList').dfPagerUI('getUIContainer');
+			roles.html('');
+			renderAppGrps(roles,current_grps);
+			resizeUi();
+			$('#appsList').dfPagerUI('enableAll');
+			$('#appGrpList').dfPagerUI('enableAll');
+			diableAllListControls();
+			navControl(true);
+		});
+		
+		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
+			var changes = [];
+			for(var i in current_apps) {
+				var new_role_ids = [];
+				var cl = $('#APP_'+i).attr('class').split(' ');
+				for(var j in cl) {
+					if(cl[j].indexOf('GID_') == 0) {
+						new_role_ids[new_role_ids.length] = cl[j].substring(4);
+					}
+				}
+				var tmp = '';
+				for(var j in new_role_ids) {
+					tmp += ','+new_role_ids[j];
+				}
+				if(tmp.length > 0) tmp += ',';
+				if(tmp != current_apps[i].getAppGroupIds()) {
+					current_apps[i].setAppGroupIds(tmp);
+					changes[changes.length] = current_apps[i];
+				}
+			}
+			if(changes.length > 0) {
+				var res = {records:[]};
+				for(var i in changes) {
+					res.records[res.records.length] = changes[i].getJSON();
+				}
+				navControl(false);
+				var newObject = jQuery.extend(true, {}, save_app_request);
+				newObject.action = DFRequestActions.UPDATE;
+				newObject.data = JSON.stringify(res);
+				new DFRequest(newObject).makeRequest();
+			}
+		});
+		
+		var save_app_request = {
+			app: 'admin',
+			sys: true,
+			table: 'App',
+			type: DFRequestType.POST,
+			success: function(json) {
+				var errorMsg = checkFailure(json);
+				if(errorMsg) {
+					$('#errorMsg').html(errorMsg);
+					$('#errorDialog').dialog('open');
+				}
+				navControl(true);
+				$("#save").button({ disabled: true });
+				$("#clearLists").button({ disabled: true });
+				$('#appsList').dfPagerUI('enableAll');
+				$('#appGrpList').dfPagerUI('enableAll');
+				//$('#savingDialog').dialog('close');
+			},
+			error: function(err) {
+				//$('#savingDialog').dialog('close');
+				//$('#errorMsg').html(err);
+				//$('#errorDialog').dialog('open');
+	   		}
+		};
+		
+		
+		$('#appsList').dfPagerUI({
+			app: 'admin',
+			sys: true,
+			table: 'App',
+			pageNo: 0,
+			pageLimit: 1,
+			pageLimits: [10,25,50,100],
+			orderBy: 0,
+			orderFields: ['Id','Name','Label'],
+			renderer: function(container,json) {
+				resetSelector(TABLE_APPS);
+				var apps = [];
+				for(var i in json.record) {
+					apps[apps.length] = new Application(json.record[i].fields);
+				}
+				if(apps.length > 0) {
+					current_apps = apps;
+					renderApps(container,apps);
+					resizeUi();
+					return apps.length;
+				} else {
+					current_apps = [];
+					renderApps(container,apps);
+					container.append('<i>End Of List</i>');
+					resizeUi();
+					return 0;
+				}
+				doRefresh();
+			}
+		});
+		
+		$('#appGrpList').dfPagerUI({
+			app: 'admin',
+			sys: true,
+			table: 'AppGroup',
+			pageNo: 0,
+			pageLimit: 1,
+			pageLimits: [10,25,50,100],
+			orderBy: 0,
+			orderFields: ['Id','Label','Name'],
+			renderer: function(container,json) {
+				resetSelector(TABLE_APP_GRPS);
+				var app_grps = [];
+				for(var i in json.record) {
+					app_grps[app_grps.length] = new ApplicationGroup(json.record[i].fields);
+				}
+				if(app_grps.length > 0) {
+					current_grps = app_grps;
+					renderAppGrps(container,app_grps);
+					resizeUi();
+					return app_grps.length;
+				} else {
+					current_grps = [];
+					renderAppGrps(container,app_grps);
+					container.append('<i>End Of List</i>');
+					return 0;
+				}
+				doRefresh();
+			}
+		});
+		
+		diableAllListControls();
+	});
+		</script>
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="admin_radio"></div>
+			<div id="admin_panel" class="">
+				<div class="cLeft cW3333 cH100" id="appGrpList"></div>
+				<div class="cLeft cW20 cH100">
+					<div class="cP1 cH95" align="center">
+						<div class="cH35">
+							&nbsp;
+						</div>
+						<button id="clearLists" class="cW75">Revert Changes</button>
+						<button id="save" class="cW75 cTM1">Save Changes</button>
+					</div>
+				</div>
+				<div class="cLeft cW3333 cH100" id="appsList"></div>
+				<div class="cClear"><!--  --></div>
+			</div>
+		</div>
+	</body>
+</html>

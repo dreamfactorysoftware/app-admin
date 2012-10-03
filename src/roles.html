@@ -1,0 +1,636 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
+		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- 3rd Party Imports -->
+		<script src="../../libs/base64/base64.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfapi.js"></script>
+		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/jquery.dfpager.js"></script>
+		<script src="../../dfcore/jquery.dfpagerui.js"></script>
+		<script src="admin.js"></script>
+		
+		<!-- Initialize the system and start the application -->
+		<script>
+	var isPageDirty = false;
+	
+	var current_roles = null;
+	var selected_role = -1;
+	var selected_role_id = -1;
+	
+	
+	var KEY_CHECKED = 'checked';
+	var KEY_REFRESH = 'refresh';
+	
+	function makeRoleButton(id,name,container) {
+		container.append($('<button id="ROLE_'+id+'" class="role_button" style="width:100%;margin-top: 4px;"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
+	}
+	
+	function showApps(apps) {
+		var con = $('#appId');
+		con.html('');
+		con.append('<option value="">System Level Roles</option>');
+		for(var i in apps) {
+			con.append('<option value="'+apps[i].getId()+'">'+apps[i].getName()+'</option>');
+		}
+	}
+	
+	function showApp(appId) {
+		var con = document.getElementById('appId');
+		var opts = con.options;
+		if(appId == '') {
+			opts.selectedIndex = 0;
+		} else {
+			appId = parseInt(appId);
+			if(appId == -1) {
+				opts.selectedIndex = -1;
+				return;
+			}
+			for(var i = 0; i < opts.length; i++) {
+				if(!opts[i].value) continue;
+				var key = parseInt(opts[i].value);
+				if(key == appId) {
+					opts.selectedIndex = i;
+				}
+			}
+		}
+	}
+	
+	function renderRoles(container,roles) {
+		for(var i in roles) {
+			makeRoleButton(i,roles[i].getName(),container);
+			if(selected_role_id > -1 && parseInt(roles[i].getId()) == selected_role_id) {
+				selected_role = i;
+				selected_role_id = -1;
+			}
+		}
+		$('.role_button').button({icons: {primary: "ui-icon-gear"}}).click(function(){
+			showRole(current_roles[parseInt($(this).attr('id').substring('ROLE_'.length))]);
+		});
+	}
+	
+	function showRoles(roles) {
+		var con = $('#role_selector');
+		con.html('');
+		for(var i in roles) {
+			makeRoleButton(i,roles[i].getName(),con);
+			if(selected_role_id > -1 && parseInt(roles[i].getId()) == selected_role_id) {
+				selected_role = i;
+				selected_role_id = -1;
+			}
+		}
+		$('.role_button').button({icons: {primary: "ui-icon-gear"}}).click(function(){
+			showRole(parseInt($(this).attr('id').substring('ROLE_'.length)));
+		});
+	}
+	
+	function markRolesAsDirtyOrSelected() {
+		isListDirty = false;
+		for(var i in current_roles) {
+			var role = current_roles[i];
+			if(i == selected_role) {
+				$('#ROLE_'+i).button( "option", "icons", {primary: roleIconPrimary(role), secondary:'ui-icon-seek-next'} );
+			} else {
+				$('#ROLE_'+i).button( "option", "icons", {primary: roleIconPrimary(role), secondary:''} );
+			}
+			if($('#DFRoleLabel_'+i).html() != role.getName()) {
+				$('#DFRoleLabel_'+i).html(role.getName());
+			}
+		}
+	}
+	
+	var selectRole = null;
+	
+	function showRole(role) {
+		selectRole = role;
+		if(role) {
+			showApp(role.getAppId());
+			$('#appId').attr('disabled', 'disabled');
+			$('#rName').val(role.getName());
+			$('#rDescription').val(role.getDescription());
+			if(role.getCreateRecords()) {
+				$('#rcreate').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#rcreate').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			if(role.getReadRecords()) {
+				$('#rread').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#rread').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			if(role.getUpdateRecords()) {
+				$('#rupdate').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#rupdate').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			if(role.getDeleteRecords()) {
+				$('#rdelete').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#rdelete').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			if(role.getAdminUsers()) {
+				$('#auser').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#auser').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			if(role.getReadUsers()) {
+				$('#ruser').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#ruser').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			if(role.getAdminRoles()) {
+				$('#roadmin').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#roadmin').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			if(role.getAssignRoles()) {
+				$('#roassign').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#roassign').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			if(role.getReadRoles()) {
+				$('#roread').attr(KEY_CHECKED,true).button(KEY_REFRESH);
+			} else {
+				$('#roread').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			}
+			
+			//$('#saveLabel').html('Save Role');
+			$('#save').button({ disabled: true });
+			
+		} else {
+			showApp(-1);
+			$('#appId').removeAttr('disabled');
+			$('#rName').val('');
+			$('#rDescription').val('');
+			$('#rcreate').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			$('#rread').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			$('#rupdate').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			$('#rdelete').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			$('#auser').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			$('#ruser').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			$('#roread').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			$('#roassign').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			$('#roadmin').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
+			
+			//$('#saveLabel').html('Add New Role');
+			$('#save').button({ disabled: false });
+		}
+		
+		if(role) {
+			$('#delete').button({ disabled: false });
+			$('#clear').button({ disabled: false });
+		} else {
+			$('#delete').button({ disabled: true });
+			$('#clear').button({ disabled: true });
+		}
+		
+	}
+	
+	function makeClearable() {
+		$('#clear').button({ disabled: false });
+		navControl(false);
+		$('#save').button({ disabled: false });
+		$('#rolesList').dfPagerUI('disableAll');
+	}
+	
+	function scrollToCurrent() {
+		if(selected_role != -1) {
+			var container = $('.scrollablePane'), scrollTo = $("#ROLE_"+selected_role);
+			container.animate({
+				scrollTop: scrollTo.offset().top - container.offset().top + container.scrollTop()
+			});
+		}
+	}
+	
+	function roleIconPrimary(role) {
+		if(role.isDirty) {
+			if(!isListDirty) isListDirty = true;
+			return 'ui-icon-alert';
+		} else {
+			if(role.getAppId()) {
+				return 'ui-icon-wrench';
+			} else {
+				return 'ui-icon-gear';
+			}
+		}
+	}
+	
+	function clearRole() {
+		showRole(-1);
+	}
+	
+	var save_role_request = {
+		app: 'admin',
+		sys: true,
+		table: 'Role',
+		type: DFRequestType.POST,
+		success: function(xml) {
+			var errorMsg = checkFailure(xml);
+			if(errorMsg) {
+				$('#errorMsg').html(errorMsg);
+				$('#errorDialog').dialog('open');
+			} else {
+				$('#save').button({ disabled: true });
+				$('#rolesList').dfPager('fetch');
+			}
+			navControl(true);
+			$("#save").button({ disabled: true });
+			$('#rolesList').dfPagerUI('enableAll');
+			$('#savingDialog').dialog('close');
+		},
+		error: function(err) {
+			$('#savingDialog').dialog('close');
+			$('#errorMsg').html(err);
+			$('#errorDialog').dialog('open');
+   		}
+	};
+	
+	var get_roles_request = {
+		app: 'admin',
+		sys: true,
+		table: 'Role',
+		success: function(json) {
+			var errorMsg = checkFailure(json);
+			if(errorMsg) {
+				$('#errorMsg').html(errorMsg);
+				$('#errorDialog').dialog('open');
+			} else {
+				current_roles = [];
+				for(var i in json.record) {
+					current_roles[current_roles.length] = new Role(json.record[i].fields);
+				}
+				showRoles(current_roles);
+				showRole(selected_role);
+				$('#savingDialog').dialog('close');
+				$('#save').button({ disabled: false });
+				scrollToCurrent();
+			}
+		},
+		error: function(err) {
+			$('#savingDialog').dialog('close');
+			$('#save').button({ disabled: false });
+			$('#errorMsg').html(err);
+			$('#errorDialog').dialog('open');
+   		}
+	};
+	
+	var get_apps_request = {
+		app: 'admin',
+		sys: true,
+		table: 'App',
+		success: function(json) {
+			var errorMsg = checkFailure(json);
+			if(errorMsg) {
+				$('#errorMsg').html(errorMsg);
+				$('#errorDialog').dialog('open');
+			} else {
+				current_apps = [];
+				for(var i in json.record) {
+					current_apps[current_apps.length] = new Application(json.record[i].fields);
+				}
+				showApps(current_apps);
+				showApp(-1);
+			}
+		},
+		error: function(err) {
+			$('#errorMsg').html(err);
+			$('#errorDialog').dialog('open');
+   		}
+	};
+	
+	function refreshList(confirmed) {
+		if(isListDirty && !confirmed) {
+			$( "#confirmDialog" ).dialog( "open" );
+		} else {
+			clearRole();
+			$('#save').button({ disabled: true });
+			$('#role_selector').html('<div align="center"><i>&lt; Loading, Please Wait...&gt;</i></div>');
+			new DFRequest(get_apps_request).start();
+			new DFRequest(get_roles_request).start();
+		}
+	}
+	
+	function deleteRole(confirmed) {
+		if(selectRole) {
+			if(confirmed) {
+				var req = {Ids:selectRole.getId()};
+				var newObject = jQuery.extend(true, {}, save_role_request);
+				newObject.action = DFRequestActions.DELETE;
+				newObject.data = JSON.stringify(req);
+				new DFRequest(newObject).makeRequest();
+			} else {
+				$( "#deleteRole" ).html(selectRole.getName());
+				$( "#confirmDeleteRoleDialog" ).dialog('open');
+			}
+		}
+	}
+	
+	function createRole() {
+		
+		var role = new Role({});
+		role.setAppId($('select#appId option:selected').val());
+		role.setName($('#rName').val());
+		role.setDescription($('#rDescription').val());
+		role.setCreateRecords($('#rcreate').attr('checked')=='checked');
+		role.setReadRecords($('#rread').attr('checked')=='checked');
+		role.setUpdateRecords($('#rupdate').attr('checked')=='checked');
+		role.setDeleteRecords($('#rdelete').attr('checked')=='checked');
+		role.setAdminUsers($('#auser').attr('checked')=='checked');
+		role.setReadUsers($('#ruser').attr('checked')=='checked');
+		role.setAdminRoles($('#roadmin').attr('checked')=='checked');
+		role.setAssignRoles($('#roassign').attr('checked')=='checked');
+		role.setReadRoles($('#roread').attr('checked')=='checked');
+		
+		var newObject = jQuery.extend(true, {}, save_role_request);
+		newObject.action = DFRequestActions.CREATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:role.getJSON()}]}});
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	function updateRole(role) {
+		
+		role.setName($('#rName').val());
+		role.setDescription($('#rDescription').val());
+		role.setCreateRecords($('#rcreate').attr('checked')=='checked');
+		role.setReadRecords($('#rread').attr('checked')=='checked');
+		role.setUpdateRecords($('#rupdate').attr('checked')=='checked');
+		role.setDeleteRecords($('#rdelete').attr('checked')=='checked');
+		role.setAdminUsers($('#auser').attr('checked')=='checked');
+		role.setReadUsers($('#ruser').attr('checked')=='checked');
+		role.setAdminRoles($('#roadmin').attr('checked')=='checked');
+		role.setAssignRoles($('#roassign').attr('checked')=='checked');
+		role.setReadRoles($('#roread').attr('checked')=='checked');
+		
+		var newObject = jQuery.extend(true, {}, save_role_request);
+		newObject.action = DFRequestActions.UPDATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:role.getJSON()}]}});
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	
+	$(document).ready(function() {
+		
+		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+		
+		$().dfcore();
+		
+		var current_button = 'roles';
+		makeAdminNav(current_button);
+		
+		// set radio button to role panel...
+		$('input[name="radio"]')[1].checked = true;
+		$('#admin_radio').buttonset(KEY_REFRESH);
+		
+		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
+			deleteRole();
+		});
+		
+		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
+			if(selectRole) {
+				updateRole(selectRole);
+			} else {
+				createRole();
+			}
+		});
+		
+		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
+			navControl(true);
+			$('#rolesList').dfPagerUI('enableAll');
+			showRole(null);
+		});
+		
+		$( "#savingDialog" ).dialog( "destroy" );
+		$("#savingDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
+		
+		$( "#errorDialog" ).dialog( "destroy" );
+		$("#errorDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
+		
+		$( "#confirmDialog" ).dialog( "destroy" );
+		$( "#confirmDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					refreshList(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$( "#confirmDeleteRoleDialog" ).dialog( "destroy" );
+		$( "#confirmDeleteRoleDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					deleteRole(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$( "#recordsgroup" ).buttonset();
+		$( "#admingroup" ).buttonset();
+		$( "#rolesgroup" ).buttonset();
+		
+		new DFRequest(get_apps_request).makeRequest();
+		
+		$('#rolesList').dfPagerUI({
+			app: 'admin',
+			sys: true,
+			table: 'Role',
+			pageNo: 0,
+			pageLimit: 1,
+			pageLimits: [10,25,50,100],
+			orderBy: 0,
+			orderFields: ['Id','AppId','Name'],
+			renderer: function(container,json) {
+				showRole(null);
+				var roles = [];
+				
+				for(var i in json.record) {
+					roles[roles.length] = new Role(json.record[i].fields);
+				}
+				
+				if(roles.length > 0) {
+					current_roles = roles;
+					renderRoles(container,roles);
+					resizeUi();
+					return roles.length;
+				} else {
+					renderRoles(container,roles);
+					container.append('<i>End Of List</i>');
+					resizeUi();
+					return 0;
+				}
+			}
+		});
+		
+		
+	});
+		</script>
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="admin_radio"></div>
+			<div id="admin_panel" class="">
+				<div class="cLeft cW3333 cH100" id="rolesList"></div>
+				<div class="cLeft cW50 cH100">
+					<div class="cP1">
+						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
+							<strong>Role Editor:</strong> Use these controls below to create, update and delete roles in the list
+							to the left.
+							<br/>
+							<br/>
+							<div>
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Application:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<select id="appId" class="ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()">
+										<option>[ Loading, Please Wait... ]</option>
+									</select>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" id="rName" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Description:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" id="rDescription" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Records:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<div id="recordsgroup">
+										<input type="checkbox" id="rcreate" onchange="makeClearable()"/><label for="rcreate">Create</label><input type="checkbox" id="rread" onchange="makeClearable()"/><label for="rread">Read</label><input type="checkbox" id="rupdate" onchange="makeClearable()"/><label for="rupdate">Update</label><input type="checkbox" id="rdelete" onchange="makeClearable()"/><label for="rdelete">Delete</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Administration:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<div id="admingroup">
+										<input type="checkbox" id="auser" onchange="makeClearable()"/><label for="auser">Admin Users</label><input type="checkbox" id="ruser" onchange="makeClearable()"/><label for="ruser">Read Users</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Roles:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<div id="rolesgroup">
+										<input type="checkbox" id="roread" onchange="makeClearable()"/><label for="roread">Read</label><input type="checkbox" id="roassign" onchange="makeClearable()"/><label for="roassign">Assign</label><input type="checkbox" id="roadmin" onchange="makeClearable()"/><label for="roadmin">Admin</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+						</div>
+						
+						<br/>
+						<br/>
+						<div class="cTM1">
+							<div class="cLeft cW75 " align="right">
+								<button id="clear">New Role</button>
+								<button id="delete">Delete Role</button>
+								<button id="save"><span id="saveLabel">Save Role</span></button>
+							</div>
+							<div class="cClear"><!--  --></div>
+						</div>
+					</div>
+				</div>
+				<div class="cClear"><!--  --></div>
+				<div id="savingDialog" title="Saving, Please Wait..." class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						The changes are being saved. Please do not close this tab or the browser.
+					</p>
+				</div>
+				<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+					<p class="ui-state-error ui-corner-all cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="errorMsg"><!--  --></span>
+					</p>
+				</div>
+				<div id="confirmDialog" title="Please Confirm:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							The list of roles has unsaved changes. Refreshing the list will destroy all changes made to the list.
+							<br/>
+							<br/>
+							Do you want to continue?
+						</span>
+					</p>
+				</div>
+				<div id="confirmDeleteRoleDialog" title="Please Confirm Delete:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							You are about to delete <span id="deleteRole"><!--  --></span>. Are you sure you want to delete this role from the system?
+						</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

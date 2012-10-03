@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
+		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- 3rd Party Imports -->
+		<script src="../../libs/base64/base64.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfapi.js"></script>
+		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/jquery.dfpager.js"></script>
+		<script src="../../dfcore/jquery.dfpagerui.js"></script>
+		
+		<script src="admin.js"></script>
+		
+		
+		<!-- Initialize the system and start the application -->
+		<script>
+
+	var isPageDirty = false;
+	var selected_app_id = -1;
+	var current_apps = null;
+	var selectApp = null;
+	var reselectApp = false;
+	
+	function makeAppButton(id,name,container) {
+		container.append($('<button id="APP_'+id+'" class="app_button" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	}
+	
+	function renderApps(container,apps) {
+		for(var i = 0; i < apps.length; i++) {
+			if(!apps[i]) continue;
+			makeAppButton(i,apps[i].getLabel(),container);
+			if(selected_app_id > -1 && parseInt(apps[i].getId()) == selected_app_id) {
+				selected_user = i;
+				selected_app_id = -1;
+			}
+		}
+		$('.app_button').button({icons: {primary: "ui-icon-star"}}).click(function(){
+			showApp(null); // clear user selection
+			$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
+			showApp(current_apps[parseInt($(this).attr('id').substring('APP_'.length))]);
+		});
+	}
+	
+	function showApp(app) {
+		
+		if(selectApp && app == null && reselectApp) {
+			reselectApp = false;
+			app = selectApp;
+		} else {
+			selectApp = app;
+		}
+		
+		if(app) {
+			
+			$('input:text[name=Name]').val(app.getName());
+			$('input:text[name=Label]').val(app.getLabel());
+			$('input:text[name=Description]').val(app.getDescription());
+			$('input:text[name=Url]').val(app.getUrl());
+			if(app.isActive()) {
+				$('input[name="IsActive"]')[0].checked = true;
+			} else {
+				$('input[name="IsActive"]')[1].checked = true;
+			}
+			if(app.isUrlExternal()) {
+				$('input[name="IsUrlExternal"]')[0].checked = true;
+			} else {
+				$('input[name="IsUrlExternal"]')[1].checked = true;
+			}
+			$('#active').buttonset('refresh');
+			$('#AppType').buttonset('refresh');
+			//$('#saveLabel').html('Save Application');
+			$("#save").button({ disabled: true });
+			if(!app.isUrlExternal()) {
+				$("#filemanager").button({ disabled: false });
+			} else {
+				$("#filemanager").button({ disabled: true });
+			}
+		} else {
+			if(current_apps) {
+				for(var i in current_apps) {
+					$('#APP_'+i).button( "option", "icons", {primary: 'ui-icon-star', secondary:''} );
+				}
+			}
+			$('input:text[name=Name]').val('');
+			$('input:text[name=Label]').val('');
+			$('input:text[name=Description]').val('');
+			$('input:text[name=Url]').val('');
+			$('input[name="IsActive"]')[1].checked = true;
+			$('input[name="IsUrlExternal"]')[1].checked = true;
+			$('#active').buttonset('refresh');
+			$('#AppType').buttonset('refresh');
+			//$('#saveLabel').html('Add New Application');
+			$('#save').button({ disabled: false });
+			$("#filemanager").button({ disabled: true });
+		}
+		if(app) {
+			$('#delete').button({ disabled: false });
+			$('#clear').button({ disabled: false });
+		} else {
+			$('#delete').button({ disabled: true });
+			$('#clear').button({ disabled: true });
+		}
+	}
+	
+	function makeClearable() {
+		navControl(false);
+		$('#clear').button({ disabled: false });
+		$('#appsList').dfPagerUI('disableAll');
+		$("#save").button({ disabled: false });
+	}
+	
+	var save_app_request = {
+		app: 'admin',
+		sys: true,
+		table: 'App',
+		type: DFRequestType.POST,
+		success: function(json) {
+			var errorMsg = checkFailure(json);
+			if(errorMsg) {
+				$('#errorMsg').html(errorMsg);
+				$('#errorDialog').dialog('open');
+			} else {
+				$('#appsList').dfPager('fetch');
+			}
+			navControl(true);
+			$("#save").button({ disabled: true });
+			$('#appsList').dfPagerUI('enableAll');
+			$('#savingDialog').dialog('close');
+		},
+		error: function(err) {
+			$('#savingDialog').dialog('close');
+			$('#errorMsg').html(err);
+			$('#errorDialog').dialog('open');
+   		}
+	};
+	
+	function deleteApp(confirmed) {
+		if(selectApp) {
+			if(confirmed) {
+				var req = {Ids:selectApp.getId()};
+				var newObject = jQuery.extend(true, {}, save_app_request);
+				newObject.action = DFRequestActions.DELETE;
+				newObject.data = JSON.stringify(req);
+				new DFRequest(newObject).makeRequest();
+			} else {
+				$( "#deleteApp" ).html(selectApp.getLabel());
+				$( "#confirmDeleteAppDialog" ).dialog('open');
+			}
+		}
+	}
+	
+	function createApp() {
+		
+		var app = new Application({});
+		
+		app.setName($('input:text[name=Name]').val());
+		app.setLabel($('input:text[name=Label]').val());
+		app.setDescription($('input:text[name=Description]').val());
+		app.setUrl($('input:text[name=Url]').val());
+		
+		if($('input[name="IsActive"]')[0].checked) {
+			app.setActive(true);
+		} else {
+			app.setActive(false);
+		}
+		
+		if($('input[name="IsUrlExternal"]')[0].checked) {
+			app.setUrlExternal(true);
+		} else {
+			app.setUrlExternal(false);
+		}
+		
+		var newObject = jQuery.extend(true, {}, save_app_request);
+		newObject.action = DFRequestActions.CREATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:app.getJSON()}]}});
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	function updateApp(app) {
+		
+		//$('#savingDialog').dialog('open');
+		
+		
+		app.setLabel($('input:text[name=Label]').val());
+		app.setDescription($('input:text[name=Description]').val());
+		app.setUrl($('input:text[name=Url]').val());
+		
+		if($('input[name="IsActive"]')[0].checked) {
+			app.setActive(true);
+		} else {
+			app.setActive(false);
+		}
+		
+		if($('input[name="IsUrlExternal"]')[0].checked) {
+			app.setUrlExternal(true);
+		} else {
+			app.setUrlExternal(false);
+		}
+		
+		var newObject = jQuery.extend(true, {}, save_app_request);
+		newObject.action = DFRequestActions.UPDATE;
+		newObject.data = JSON.stringify({records:{record: [{fields:app.getJSON()}]}});
+		new DFRequest(newObject).makeRequest();
+	}
+	
+	$(document).ready(function() {
+		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+		$().dfcore();
+		makeAdminNav('apps');
+		
+		if(CommonUtilities.getQueryParameter('selectedApp')) {
+		
+			reselectApp = true;
+		}
+		
+		
+		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
+			deleteApp();
+		});
+		
+		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
+			if(selectApp) {
+				updateApp(selectApp);
+			} else {
+				createApp();
+			}
+		});
+		
+		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
+			navControl(true);
+			$('#appsList').dfPagerUI('enableAll');
+			showApp(null);
+		});
+		
+		$("#filemanager").button({icons: {primary: "ui-icon-folder-collapsed"}}).click(function(){
+			window.location = ('../filemanager/index.html?app='+selectApp.getName()+'&returnUrl='+escape(window.location.href.substring(0,window.location.href.indexOf('?'))+'?selectedApp='+selectApp.getName()));
+		});
+		
+		$("#savingDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
+		
+		$("#errorDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
+		
+		$( "#confirmDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					refreshList(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$( "#confirmDeleteAppDialog" ).dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Continue: function() {
+					deleteApp(true);
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$("#AppType").buttonset();
+		$("#active").buttonset();
+		
+		$('#appsList').dfPagerUI({
+			app: 'admin',
+			sys: true,
+			table: 'App',
+			pageNo: 0,
+			pageLimit: 1,
+			pageLimits: [10,25,50,100],
+			orderBy: 0,
+			orderFields: ['Id'],
+			renderer: function(container,json) {
+				showApp(null);
+				var apps = [];
+				for(var i in json.record) {
+					var app = new Application(json.record[i].fields);
+					apps[apps.length] = app;
+					if(reselectApp && app.getName() == CommonUtilities.getQueryParameter('selectedApp')) {
+						selectApp = app;
+					}
+				}
+				if(apps.length > 0) {
+					current_apps = apps;
+					renderApps(container,apps);
+					resizeUi();
+					showApp(null);
+					return apps.length;
+				} else {
+					renderApps(container,users);
+					container.append('<i>End Of List</i>');
+					resizeUi();
+					return 0;
+				}
+			}
+		});
+		
+	});
+		</script>
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="admin_radio"></div>
+			<div id="admin_panel" class="">
+				<div class="cLeft cW3333 cH100" id="appsList"></div>
+				<div class="cLeft cW50 cH100">
+					<div class="cP1">
+						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
+							<strong>Application Editor:</strong> Use these controls below to create, update and delete applications in the list
+							to the left.
+							<br/>
+							<br/>
+							<div>
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Name" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Label:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Label" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Description:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Description" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>URL:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Url" value="" size="32" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Type:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<div id="AppType">
+										<input type="radio" id="External" name="IsUrlExternal" onchange="makeClearable()"/><label for="External">External</label><input type="radio" id="Local" name="IsUrlExternal" onchange="makeClearable()" checked="checked" /><label for="Local">Local</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Status:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<div id="active">
+										<input type="radio" id="IsActive" name="IsActive" onchange="makeClearable()"/><label for="IsActive">Active</label><input type="radio" id="InActive" name="IsActive" onchange="makeClearable()" checked="checked" /><label for="InActive">Inactive</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>File&nbsp;Manager:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<button id="filemanager">Open FileManager</button>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<br/>
+							<br/>
+							<div class="cTM1">
+								<div class="cLeft cW75 " align="right">
+									<button id="clear">New App</button>
+									<button id="delete">Delete App</button>
+									<button id="save"><span id="saveLabel">Save App</span></button>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="cClear"><!--  --></div>
+				<div id="savingDialog" title="Saving, Please Wait..." class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						The changes are being saved. Please do not close this tab or the browser.
+					</p>
+				</div>
+				<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+					<p class="ui-state-error ui-corner-all cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="errorMsg"><!--  --></span>
+					</p>
+				</div>
+				<div id="confirmDialog" title="Please Confirm:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							The list of users has unsaved changes. Refreshing the list will destroy all changes made to the list.
+							<br/>
+							<br/>
+							Do you want to continue?
+						</span>
+					</p>
+				</div>
+				<div id="confirmDeleteAppDialog" title="Please Confirm Delete:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							You are about to delete <span id="deleteApp"><!--  --></span>. Are you sure you want to delete this Application?
+						</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
