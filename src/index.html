@@ -15,16 +15,13 @@
 		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
 		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
 		
-		<!-- 3rd Party Imports -->
-		<script src="../../libs/base64/base64.js"></script>
-		
 		<!-- DF Imports -->
-		<script src="../../dfcore/dfapi.js"></script>
-		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/dfio.js"></script>
 		<script src="../../dfcore/jquery.dfpager.js"></script>
-		<script src="../../dfcore/jquery.dfpagerui.js"></script>
 		
-		<script src="admin.js"></script>
+		<!-- DF Admin -->
+		<script src="js/admin.js"></script>
+		<script src="js/jquery.dfpagerui.js"></script>
 		
 		<!-- Initialize the system and start the application -->
 		<script>
@@ -41,8 +38,8 @@
 	function renderUsers(container,users) {
 		for(var i = 0; i < users.length; i++) {
 			if(!users[i]) continue;
-			makeUserButton(i,users[i].getFullName(),container);
-			if(selected_user_id > -1 && parseInt(users[i].getId()) == selected_user_id) {
+			makeUserButton(i,users[i].FullName,container);
+			if(selected_user_id > -1 && parseInt(users[i].Id) == selected_user_id) {
 				selected_user = i;
 				selected_user_id = -1;
 			}
@@ -57,18 +54,18 @@
 	function showUser(user) {
 		selectUser = user;
 		if(user) {
-			$('input:text[name=username]').val(user.getUserName());
-			$('input:text[name=fullname]').val(user.getFullName());
-			$('input:text[name=lastname]').val(user.getLastName());
-			$('input:text[name=firstname]').val(user.getFirstName());
-			$('input:text[name=email]').val(user.getEmail());
-			$('input:text[name=phone]').val(user.getPhone());
-			if(user.isActive()) {
+			$('input:text[name=username]').val(user.UserName);
+			$('input:text[name=fullname]').val(user.FullName);
+			$('input:text[name=lastname]').val(user.LastName);
+			$('input:text[name=firstname]').val(user.FirstName);
+			$('input:text[name=email]').val(user.Email);
+			$('input:text[name=phone]').val(user.Phone);
+			if(user.IsActive == 'true') {
 				$('input[name="isactive"]')[0].checked = true;
 			} else {
 				$('input[name="isactive"]')[1].checked = true;
 			}
-			if(user.isSysAdmin()) {
+			if(user.IsSysAdmin == 'true') {
 				$('input[name="issysadmin"]')[0].checked = true;
 			} else {
 				$('input[name="issysadmin"]')[1].checked = true;
@@ -109,32 +106,15 @@
 	}
 	
 	function makeClearable() {
-		navControl(false);
 		$('#clear').button({ disabled: false });
 		$('#usersList').dfPagerUI('disableAll');
 		$("#save").button({ disabled: false });
 	}
 	
-	function scrollToTop() {
-		var container = $('.scrollablePane'), scrollTo = $("#USER_"+selected_user);
-		container.animate({
-			scrollTop: 0
-		});
-	}
-	
-	function userIconPrimary(user) {
-		if(user.isDirty) {
-			if(!isListDirty) isListDirty = true;
-			return 'ui-icon-alert';
-		} else {
-			return 'ui-icon-person';
-		}
-	}
-	
-	var save_user_request = {
-		app: 'admin',
-		sys: true,
-		table: 'User',
+	var dfio = new DFRequest({
+		app: "admin",
+		service: "System",
+		resource: "/User",
 		type: DFRequestType.POST,
 		success: function(json) {
 			var errorMsg = checkFailure(json);
@@ -144,7 +124,6 @@
 			} else {
 				$('#usersList').dfPager('fetch');
 			}
-			navControl(true);
 			$("#save").button({ disabled: true });
 			$('#usersList').dfPagerUI('enableAll');
 		},
@@ -152,90 +131,50 @@
 			$('#errorMsg').html(err);
 			$('#errorDialog').dialog('open');
    		}
-	};
+	});
+	
+	function pullFormData(obj) {
+		obj.UserName  = $('input:text[name=username]').val();
+		obj.FullName  = $('input:text[name=fullname]').val();
+		obj.LastName  = $('input:text[name=lastname]').val();
+		obj.FirstName = $('input:text[name=firstname]').val();
+		obj.Email     = $('input:text[name=email]').val();
+		obj.Phone     = $('input:text[name=phone]').val();
+		
+		if($('input[name="isactive"]')[1].checked) {
+			obj.IsActive = 'false';
+		} else {
+			obj.IsActive = 'true';
+		}
+		
+		if($('input[name="issysadmin"]')[1].checked) {
+			obj.IsSysAdmin = 'false';
+		} else {
+			obj.IsSysAdmin = 'true';
+		}
+		
+		// make sure we are not sending back unused data
+		obj.CreatedById      = null;
+		obj.CreatedDate      = null;
+		obj.LastModifiedDate = null;
+		obj.LastModifiedById = null;
+		obj.ConfirmCode      = null;
+	}
 	
 	function deleteUser(confirmed) {
 		if(selectUser) {
 			if(confirmed) {
-				var req = {Ids:selectUser.getId()};
-				var newObject = jQuery.extend(true, {}, save_user_request);
-				newObject.action = DFRequestActions.DELETE;
-				newObject.data = JSON.stringify(req);
-				new DFRequest(newObject).makeRequest();
+				dfio.deletes(selectUser.Id);
 			} else {
-				$( "#deleteUser" ).html(selectUser.getFullName());
+				$( "#deleteUser" ).html(selectUser.FullName);
 				$( "#confirmDeleteUserDialog" ).dialog('open');
 			}
 		}
 	}
 	
-	function createUser() {
-		
-		var user = new DFUser({});
-		user.setUserName($('input:text[name=username]').val());
-		user.setFullName($('input:text[name=fullname]').val());
-		user.setLastName($('input:text[name=lastname]').val());
-		user.setFirstName($('input:text[name=firstname]').val());
-		user.setEmail($('input:text[name=email]').val());
-		user.setPhone($('input:text[name=phone]').val());
-		
-		if($('input[name="issysadmin"]')[1].checked) {
-			user.setSysAdmin('false');
-		} else {
-			user.setSysAdmin('true');
-		}
-		
-		if($('input[name="isactive"]')[1].checked) {
-			user.setActive('false');
-		} else {
-			user.setActive('true');
-		}
-		
-		var newObject = jQuery.extend(true, {}, save_user_request);
-		newObject.action = DFRequestActions.CREATE;
-		newObject.data = JSON.stringify({records:{record: [{fields:user.getJSON()}]}});
-		
-		new DFRequest(newObject).makeRequest();
-	}
-	
-	function updateUser(user) {
-		
-		user.setUserName($('input:text[name=username]').val());
-		user.setFullName($('input:text[name=fullname]').val());
-		user.setLastName($('input:text[name=lastname]').val());
-		user.setFirstName($('input:text[name=firstname]').val());
-		user.setEmail($('input:text[name=email]').val());
-		user.setPhone($('input:text[name=phone]').val());
-		
-		if($('input[name="isactive"]')[1].checked) {
-			user.setActive('false');
-		} else {
-			user.setActive('true');
-		}
-		
-		if($('input[name="issysadmin"]')[1].checked) {
-			user.setSysAdmin('false');
-		} else {
-			user.setSysAdmin('true');
-		}
-		
-		user.getJSON().CreatedById = null;
-		user.getJSON().CreatedDate = null;
-		user.getJSON().LastModifiedDate = null;
-		user.getJSON().LastModifiedById = null;
-		user.getJSON().ConfirmCode = null;
-		
-		var newObject = jQuery.extend(true, {}, save_user_request);
-		newObject.action = DFRequestActions.UPDATE;
-		newObject.data = JSON.stringify({records:{record: [{fields:user.getJSON()}]}});
-		new DFRequest(newObject).makeRequest();
-	}
-	
 	$(document).ready(function() {
 		
-		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-		
-		$().dfcore();
+		//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 		var current_button = 'index';
 		makeAdminNav(current_button);
 		
@@ -245,9 +184,12 @@
 		
 		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
 			if(selectUser) {
-				updateUser(selectUser);
+				pullFormData(selectUser);
+				dfio.update(selectUser);
 			} else {
-				createUser();
+				var user = {};
+				pullFormData(user);
+				dfio.create(user);
 			}
 		});
 		
@@ -298,22 +240,19 @@
 		$("#active").buttonset();
 		$("#sys_admin").buttonset();
 		
-		$('#usersList').dfPagerUI({
-			app: 'admin',
-			sys: true,
-			table: 'User',
+		$("#usersList").dfPagerUI({
+			app: "admin",
+			service: "System",
+			resource: "/User",
 			pageNo: 0,
 			pageLimit: 1,
 			pageLimits: [10,25,50,100],
 			orderBy: 0,
-			orderFields: ['Id','LastName','FirstName'],
+			orderFields: ["Id","LastName","FirstName"],
 			ctrl_btns: navControl,
 			renderer: function(container,json) {
 				showUser(null);
-				var users = [];
-				for(var i in json.record) {
-					users[users.length] = new DFUser(json.record[i].fields);
-				}
+				var users = CommonUtilities.flattenResponse(json);
 				if(users.length > 0) {
 					current_users = users;
 					renderUsers(container,users);
@@ -321,7 +260,7 @@
 					return users.length;
 				} else {
 					renderUsers(container,users);
-					container.append('<i>End Of List</i>');
+					container.append("<i>End Of List</i>");
 					resizeUi();
 					return 0;
 				}
