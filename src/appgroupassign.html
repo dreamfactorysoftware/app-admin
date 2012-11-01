@@ -14,16 +14,13 @@
 		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
 		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
 		
-		<!-- 3rd Party Imports -->
-		<script src="../../libs/base64/base64.js"></script>
-		
 		<!-- DF Imports -->
-		<script src="../../dfcore/dfapi.js"></script>
-		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/dfio.js"></script>
 		<script src="../../dfcore/jquery.dfpager.js"></script>
-		<script src="../../dfcore/jquery.dfpagerui.js"></script>
 		
-		<script src="admin.js"></script>
+		<!-- DF Admin -->
+		<script src="js/admin.js"></script>
+		<script src="js/jquery.dfpagerui.js"></script>
 		
 		<!-- Initialize the system and start the application -->
 		<script>
@@ -99,8 +96,8 @@
 					secondary_ico = ICON_APP_GRPS_LOCKED;
 				}
 			} else if(i == secondary_record) {
-				if($('#APP_'+primary_record).hasClass('GID_'+appGrp.getId())) {
-					$('#APP_'+primary_record).removeClass('GID_'+appGrp.getId());
+				if($('#APP_'+primary_record).hasClass('GID_'+appGrp.Id)) {
+					$('#APP_'+primary_record).removeClass('GID_'+appGrp.Id);
 					makeClearable();
 				} else {
 					addAppToGrp(primary_record,secondary_record);
@@ -108,7 +105,7 @@
 				}
 				secondary_record = null;
 			} else {
-				if($('#APP_'+primary_record).hasClass('GID_'+appGrp.getId())) {
+				if($('#APP_'+primary_record).hasClass('GID_'+appGrp.Id)) {
 					secondary_ico = ICON_CHECK;
 				}
 			}
@@ -117,12 +114,11 @@
 	}
 	
 	function addAppToGrp(appIndex,appGrpIndex) {
-		$('#APP_'+appIndex).addClass('GID_'+current_grps[appGrpIndex].getId());
+		$('#APP_'+appIndex).addClass('GID_'+current_grps[appGrpIndex].Id);
 		makeClearable();
 	}
 	
 	function makeClearable() {
-		navControl(false);
 		$('#clearLists').button({ disabled: false });
 		$('#'+TABLE_APP_GRPS).dfPagerUI('disableAll');
 		$('#'+TABLE_APPS).dfPagerUI('disableAll');
@@ -148,8 +144,8 @@
 				}
 			} else if(i == secondary_record) {
 				if(current_grps[primary_record]) {
-					if($('#APP_'+secondary_record).hasClass('GID_'+current_grps[primary_record].getId())) {
-						$('#APP_'+secondary_record).removeClass('GID_'+current_grps[primary_record].getId());
+					if($('#APP_'+secondary_record).hasClass('GID_'+current_grps[primary_record].Id)) {
+						$('#APP_'+secondary_record).removeClass('GID_'+current_grps[primary_record].Id);
 						makeClearable();
 					} else {
 						addAppToGrp(secondary_record,primary_record);
@@ -159,7 +155,7 @@
 				secondary_record = null;
 			} else {
 				if(current_grps[primary_record]) {
-					if($('#APP_'+i).hasClass('GID_'+current_grps[primary_record].getId())) {
+					if($('#APP_'+i).hasClass('GID_'+current_grps[primary_record].Id)) {
 						primary_ico = ICON_CHECK;
 					}
 				}
@@ -187,8 +183,8 @@
 	
 	function renderAppGrps(container,appGrps) {
 		for(var i in appGrps) {
-			makeAppGrpButton(i,appGrps[i].getName(),container);
-			if(selected_grp_id > -1 && parseInt(appGrps[i].getId()) == selected_grp_id) {
+			makeAppGrpButton(i,appGrps[i].Name,container);
+			if(selected_grp_id > -1 && parseInt(appGrps[i].Id) == selected_grp_id) {
 				selected_grp_id = -1;
 			}
 		}
@@ -205,8 +201,8 @@
 	function renderApps(container,apps) {
 		for(var i = 0; i < apps.length; i++) {
 			if(!apps[i]) continue;
-			makeAppButton(i,apps[i].getLabel(),container,apps[i].getAppGroupIds());
-			if(selected_app_id > -1 && parseInt(apps[i].getId()) == selected_app_id) {
+			makeAppButton(i,apps[i].Label,container,apps[i].AppGroupIds);
+			if(selected_app_id > -1 && parseInt(apps[i].Id) == selected_app_id) {
 				selected_app_id = -1;
 			}
 		}
@@ -253,9 +249,16 @@
 	
 	
 	$(document).ready(function() {
-		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-		$().dfcore();
+		//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 		makeAdminNav('appgroupassign');
+		
+		$("#errorDialog").dialog({
+			resizable: false,
+			modal: true,
+			autoOpen: false,
+			closeOnEscape: false,
+			buttons: {	}
+		});
 		
 		$("#clearLists").button({icons: {primary: "ui-icon-trash"}}).click(function(){
 			var users = $('#appsList').dfPagerUI('getUIContainer');
@@ -268,7 +271,27 @@
 			$('#appsList').dfPagerUI('enableAll');
 			$('#appGrpList').dfPagerUI('enableAll');
 			diableAllListControls();
-			navControl(true);
+		});
+		
+		var appio = new DFRequest({
+			app: 'admin',
+			service: "System",
+			resource: '/App',
+			success: function(json) {
+				var errorMsg = checkFailure(json);
+				if(errorMsg) {
+					$('#errorMsg').html(errorMsg);
+					$('#errorDialog').dialog('open');
+				}
+				$("#save").button({ disabled: true });
+				$("#clearLists").button({ disabled: true });
+				$('#appsList').dfPagerUI('enableAll');
+				$('#appGrpList').dfPagerUI('enableAll');
+			},
+			error: function(err) {
+				$('#errorMsg').html(err);
+				$('#errorDialog').dialog('open');
+	   		}
 		});
 		
 		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
@@ -286,54 +309,32 @@
 					tmp += ','+new_role_ids[j];
 				}
 				if(tmp.length > 0) tmp += ',';
-				if(tmp != current_apps[i].getAppGroupIds()) {
-					current_apps[i].setAppGroupIds(tmp);
-					changes[changes.length] = current_apps[i];
+				if(tmp != current_apps[i].AppGroupIds) {
+					current_apps[i].AppGroupIds = tmp;
+					var tmp = current_apps[i];
+					// purge unwanted updates
+					tmp.Name = null;
+					tmp.CreatedById = null;
+					tmp.CreatedDate = null;
+					tmp.Description = null;
+					tmp.IsActive = null;
+					tmp.IsUrlExternal = null;
+					tmp.Label = null;
+					tmp.LastModifiedById = null;
+					tmp.LastModifiedDate = null;
+					tmp.Url = null;
+					changes[changes.length] = tmp;
 				}
 			}
 			if(changes.length > 0) {
-				var res = {records:[]};
-				for(var i in changes) {
-					res.records[res.records.length] = changes[i].getJSON();
-				}
-				navControl(false);
-				var newObject = jQuery.extend(true, {}, save_app_request);
-				newObject.action = DFRequestActions.UPDATE;
-				newObject.data = JSON.stringify(res);
-				new DFRequest(newObject).makeRequest();
+				appio.update(changes);
 			}
 		});
 		
-		var save_app_request = {
-			app: 'admin',
-			sys: true,
-			table: 'App',
-			type: DFRequestType.POST,
-			success: function(json) {
-				var errorMsg = checkFailure(json);
-				if(errorMsg) {
-					$('#errorMsg').html(errorMsg);
-					$('#errorDialog').dialog('open');
-				}
-				navControl(true);
-				$("#save").button({ disabled: true });
-				$("#clearLists").button({ disabled: true });
-				$('#appsList').dfPagerUI('enableAll');
-				$('#appGrpList').dfPagerUI('enableAll');
-				//$('#savingDialog').dialog('close');
-			},
-			error: function(err) {
-				//$('#savingDialog').dialog('close');
-				//$('#errorMsg').html(err);
-				//$('#errorDialog').dialog('open');
-	   		}
-		};
-		
-		
 		$('#appsList').dfPagerUI({
-			app: 'admin',
-			sys: true,
-			table: 'App',
+			app: "admin",
+			service: "System",
+			resource: "/App",
 			pageNo: 0,
 			pageLimit: 1,
 			pageLimits: [10,25,50,100],
@@ -341,10 +342,7 @@
 			orderFields: ['Id','Name','Label'],
 			renderer: function(container,json) {
 				resetSelector(TABLE_APPS);
-				var apps = [];
-				for(var i in json.record) {
-					apps[apps.length] = new Application(json.record[i].fields);
-				}
+				var apps = CommonUtilities.flattenResponse(json);
 				if(apps.length > 0) {
 					current_apps = apps;
 					renderApps(container,apps);
@@ -362,9 +360,9 @@
 		});
 		
 		$('#appGrpList').dfPagerUI({
-			app: 'admin',
-			sys: true,
-			table: 'AppGroup',
+			app: "admin",
+			service: "System",
+			resource: "/AppGroup",
 			pageNo: 0,
 			pageLimit: 1,
 			pageLimits: [10,25,50,100],
@@ -372,10 +370,7 @@
 			orderFields: ['Id','Label','Name'],
 			renderer: function(container,json) {
 				resetSelector(TABLE_APP_GRPS);
-				var app_grps = [];
-				for(var i in json.record) {
-					app_grps[app_grps.length] = new ApplicationGroup(json.record[i].fields);
-				}
+				var app_grps = CommonUtilities.flattenResponse(json);
 				if(app_grps.length > 0) {
 					current_grps = app_grps;
 					renderAppGrps(container,app_grps);
@@ -412,6 +407,12 @@
 				<div class="cLeft cW3333 cH100" id="appsList"></div>
 				<div class="cClear"><!--  --></div>
 			</div>
+		</div>
+		<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+			<p class="ui-state-error ui-corner-all cP1">
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+				<span id="errorMsg"><!--  --></span>
+			</p>
 		</div>
 	</body>
 </html>

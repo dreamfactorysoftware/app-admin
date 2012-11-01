@@ -14,17 +14,14 @@
 		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
 		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
 		
-		<!-- 3rd Party Imports -->
-		<script src="../../libs/base64/base64.js"></script>
-		
 		<!-- DF Imports -->
-		<script src="../../dfcore/dfapi.js"></script>
-		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/dfio.js"></script>
+		<script src="../../dfcore/dferr.js"></script>
 		<script src="../../dfcore/jquery.dfpager.js"></script>
-		<script src="../../dfcore/jquery.dfpagerui.js"></script>
 		
-		<script src="admin.js"></script>
-		
+		<!-- DF Admin -->
+		<script src="js/admin.js"></script>
+		<script src="js/jquery.dfpagerui.js"></script>
 		
 		<!-- Initialize the system and start the application -->
 		<script>
@@ -42,8 +39,8 @@
 	function renderApps(container,apps) {
 		for(var i = 0; i < apps.length; i++) {
 			if(!apps[i]) continue;
-			makeAppButton(i,apps[i].getLabel(),container);
-			if(selected_app_id > -1 && parseInt(apps[i].getId()) == selected_app_id) {
+			makeAppButton(i,apps[i].Label,container);
+			if(selected_app_id > -1 && parseInt(apps[i].Id) == selected_app_id) {
 				selected_user = i;
 				selected_app_id = -1;
 			}
@@ -65,30 +62,30 @@
 		}
 		
 		if(app) {
-			
-			$('input:text[name=Name]').val(app.getName());
-			$('input:text[name=Label]').val(app.getLabel());
-			$('input:text[name=Description]').val(app.getDescription());
-			$('input:text[name=Url]').val(app.getUrl());
-			if(app.isActive()) {
+			$('input:text[name=Name]').val(app.Name);
+			$('input:text[name=Label]').val(app.Label);
+			$('input:text[name=Description]').val(app.Description);
+			$('input:text[name=Url]').val(app.Url);
+			if(app.IsActive == "true") {
 				$('input[name="IsActive"]')[0].checked = true;
 			} else {
 				$('input[name="IsActive"]')[1].checked = true;
 			}
-			if(app.isUrlExternal()) {
+			if(app.IsUrlExternal == "true") {
 				$('input[name="IsUrlExternal"]')[0].checked = true;
 			} else {
 				$('input[name="IsUrlExternal"]')[1].checked = true;
 			}
 			$('#active').buttonset('refresh');
 			$('#AppType').buttonset('refresh');
-			//$('#saveLabel').html('Save Application');
 			$("#save").button({ disabled: true });
-			if(!app.isUrlExternal()) {
-				$("#filemanager").button({ disabled: false });
-			} else {
+			if(app.IsUrlExternal == "true") {
 				$("#filemanager").button({ disabled: true });
+			} else {
+				$("#filemanager").button({ disabled: false });
 			}
+			hideImport();
+			$("#export").button({ disabled: false });
 		} else {
 			if(current_apps) {
 				for(var i in current_apps) {
@@ -103,9 +100,10 @@
 			$('input[name="IsUrlExternal"]')[1].checked = true;
 			$('#active').buttonset('refresh');
 			$('#AppType').buttonset('refresh');
-			//$('#saveLabel').html('Add New Application');
 			$('#save').button({ disabled: false });
+			showImport();
 			$("#filemanager").button({ disabled: true });
+			$("#export").button({ disabled: true });
 		}
 		if(app) {
 			$('#delete').button({ disabled: false });
@@ -117,17 +115,15 @@
 	}
 	
 	function makeClearable() {
-		navControl(false);
 		$('#clear').button({ disabled: false });
 		$('#appsList').dfPagerUI('disableAll');
 		$("#save").button({ disabled: false });
 	}
 	
-	var save_app_request = {
-		app: 'admin',
-		sys: true,
-		table: 'App',
-		type: DFRequestType.POST,
+	var appio = new DFRequest({
+		app: "admin",
+		service: "System",
+		resource: "/App",
 		success: function(json) {
 			var errorMsg = checkFailure(json);
 			if(errorMsg) {
@@ -136,97 +132,93 @@
 			} else {
 				$('#appsList').dfPager('fetch');
 			}
-			navControl(true);
 			$("#save").button({ disabled: true });
 			$('#appsList').dfPagerUI('enableAll');
-			$('#savingDialog').dialog('close');
 		},
-		error: function(err) {
-			$('#savingDialog').dialog('close');
-			$('#errorMsg').html(err);
+		error: function(d1,d2) {
+			$('#errorMsg').html(d1+" "+d2);
 			$('#errorDialog').dialog('open');
    		}
-	};
+	});
 	
 	function deleteApp(confirmed) {
 		if(selectApp) {
 			if(confirmed) {
-				var req = {Ids:selectApp.getId()};
-				var newObject = jQuery.extend(true, {}, save_app_request);
-				newObject.action = DFRequestActions.DELETE;
-				newObject.data = JSON.stringify(req);
-				new DFRequest(newObject).makeRequest();
+				appio.deletes(selectApp.Id);
 			} else {
-				$( "#deleteApp" ).html(selectApp.getLabel());
+				$( "#deleteApp" ).html(selectApp.Label);
 				$( "#confirmDeleteAppDialog" ).dialog('open');
 			}
 		}
 	}
 	
-	function createApp() {
-		
-		var app = new Application({});
-		
-		app.setName($('input:text[name=Name]').val());
-		app.setLabel($('input:text[name=Label]').val());
-		app.setDescription($('input:text[name=Description]').val());
-		app.setUrl($('input:text[name=Url]').val());
+	function getForm(app) {
+		app.Name = $('input:text[name=Name]').val();
+		app.Label = $('input:text[name=Label]').val();
+		app.Description = $('input:text[name=Description]').val();
+		app.Url = $('input:text[name=Url]').val();
 		
 		if($('input[name="IsActive"]')[0].checked) {
-			app.setActive(true);
+			app.IsActive = true;
 		} else {
-			app.setActive(false);
+			app.IsActive = false;
 		}
 		
 		if($('input[name="IsUrlExternal"]')[0].checked) {
-			app.setUrlExternal(true);
+			app.UrlExternal = true;
 		} else {
-			app.setUrlExternal(false);
+			app.UrlExternal = false;
 		}
-		
-		var newObject = jQuery.extend(true, {}, save_app_request);
-		newObject.action = DFRequestActions.CREATE;
-		newObject.data = JSON.stringify({records:{record: [{fields:app.getJSON()}]}});
-		new DFRequest(newObject).makeRequest();
 	}
 	
-	function updateApp(app) {
-		
-		//$('#savingDialog').dialog('open');
-		
-		
-		app.setLabel($('input:text[name=Label]').val());
-		app.setDescription($('input:text[name=Description]').val());
-		app.setUrl($('input:text[name=Url]').val());
-		
-		if($('input[name="IsActive"]')[0].checked) {
-			app.setActive(true);
-		} else {
-			app.setActive(false);
+	function showImport() {
+		$("#fileManagement").show();
+	}
+	
+	function hideImport() {
+		$("#fileManagement").hide();
+	}
+	
+	function checkResults(iframe) {
+		var that = $(iframe);
+		var str = that.contents().text();
+		if(str && str.length > 0) {
+			try {
+				str = JSON.parse(str);
+				var result = parseErrors(str,function(errs,data){
+					var str = '';
+					if(errs.length > 1) {
+						'The following errors occured;\n';
+						for(var i in errs) {
+							str += '\n\t'+(i+1)+'. '+errs[i];
+						}
+					} else {
+						str += 'The following error occured; '+errs[0];
+					}
+					alert(str+="\n\n");
+				});
+				appio.retrieve();
+			} catch (e) {
+				alert(e);
+			}
 		}
-		
-		if($('input[name="IsUrlExternal"]')[0].checked) {
-			app.setUrlExternal(true);
-		} else {
-			app.setUrlExternal(false);
-		}
-		
-		var newObject = jQuery.extend(true, {}, save_app_request);
-		newObject.action = DFRequestActions.UPDATE;
-		newObject.data = JSON.stringify({records:{record: [{fields:app.getJSON()}]}});
-		new DFRequest(newObject).makeRequest();
 	}
 	
 	$(document).ready(function() {
-		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-		$().dfcore();
+		//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 		makeAdminNav('apps');
 		
 		if(CommonUtilities.getQueryParameter('selectedApp')) {
-		
 			reselectApp = true;
 		}
 		
+		$("#import").button({icons: {primary: "ui-icon-circle-arrow-n"}}).click(function(){
+			$("#uploadFileInput").trigger("click");
+		});
+		
+		$("#export").button({icons: {primary: "ui-icon-circle-arrow-s"}}).click(function(){
+			$("#uploadFileIframe").attr("src","/REST/admin/APP/"+selectApp.Name+"/?export=true&");
+		});
 		
 		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
 			deleteApp();
@@ -234,20 +226,23 @@
 		
 		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
 			if(selectApp) {
-				updateApp(selectApp);
+				getForm(selectApp);
+				selectApp.Name = null;
+				appio.update(selectApp);
 			} else {
-				createApp();
+				var app = {};
+				getForm(app);
+				appio.create(app);
 			}
 		});
 		
 		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-			navControl(true);
 			$('#appsList').dfPagerUI('enableAll');
 			showApp(null);
 		});
 		
 		$("#filemanager").button({icons: {primary: "ui-icon-folder-collapsed"}}).click(function(){
-			window.location = ('../filemanager/index.html?app='+selectApp.getName()+'&returnUrl='+escape(window.location.href.substring(0,window.location.href.indexOf('?'))+'?selectedApp='+selectApp.getName()));
+			window.location = ('../filemanager/index.html?hostApp=admin&path='+selectApp.Name+'&returnUrl='+escape(window.location.href.substring(0,window.location.href.indexOf('?'))+'?selectedApp='+selectApp.Name));
 		});
 		
 		$("#savingDialog").dialog({
@@ -301,21 +296,19 @@
 		
 		$('#appsList').dfPagerUI({
 			app: 'admin',
-			sys: true,
-			table: 'App',
+			service: "System",
+			resource: '/App',
 			pageNo: 0,
 			pageLimit: 1,
 			pageLimits: [10,25,50,100],
 			orderBy: 0,
-			orderFields: ['Id'],
+			orderFields: ['Id','Name','Label','IsActive','Url','IsUrlExternal'],
 			renderer: function(container,json) {
 				showApp(null);
-				var apps = [];
-				for(var i in json.record) {
-					var app = new Application(json.record[i].fields);
-					apps[apps.length] = app;
-					if(reselectApp && app.getName() == CommonUtilities.getQueryParameter('selectedApp')) {
-						selectApp = app;
+				var apps = CommonUtilities.flattenResponse(json);
+				for(var i in apps) {
+					if(reselectApp && apps[i].Name == CommonUtilities.getQueryParameter('selectedApp')) {
+						selectApp = apps[i];
 					}
 				}
 				if(apps.length > 0) {
@@ -420,6 +413,13 @@
 								<div class="cClear"><!--  --></div>
 							</div>
 							
+							<div class="cTM1">
+								<div class="cLeft cW50 cLM25">
+									<button id="export">Export Application</button>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
 							<br/>
 							<br/>
 							<div class="cTM1">
@@ -430,10 +430,32 @@
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
+							
+							<br/>
+							<br/>
+							
+							<div id="fileManagement" style="display:none;">
+								<div class="cTM1">
+								<div class="cLeft cW50 cLM25">
+									<button id="import">Import Application</button>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="cClear"><!--  --></div>
+				
+				
+				<div id="uploadFileHidden" style="display:none;">
+					<form id="uploadFileForm" method="POST" enctype="multipart/form-data" target="uploadFileIframe" action="/REST/admin/APP/">
+						<input type="hidden" name="import" value="true"/>
+						<input id="uploadFileInput" type="file" name="files" onchange="this.form.submit()"/>
+					</form>
+					<iframe id="uploadFileIframe" name="uploadFileIframe" src="about:blank" width="100%" height="70px" frameborder="0" scrolling="no" onload="checkResults(this)"></iframe>
+				</div>
+				
 				<div id="savingDialog" title="Saving, Please Wait..." class="cTxtLeft">
 					<p class="cP1">
 						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
