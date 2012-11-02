@@ -343,6 +343,72 @@
 			});
 		});
 		
+		$("#REC_READ").click(function(){
+			var $this = $(this);
+			if($this.hasClass("ui-icon-check")) {
+				$this.removeClass("ui-icon-check");
+				$this.addClass("ui-icon-close");
+			} else {
+				$this.addClass("ui-icon-check");
+				$this.removeClass("ui-icon-close");
+			}
+		});
+		
+		$("#REC_CREATE").click(function(){
+			var $this = $(this);
+			if($this.hasClass("ui-icon-check")) {
+				$this.removeClass("ui-icon-check");
+				$this.addClass("ui-icon-close");
+			} else {
+				$this.addClass("ui-icon-check");
+				$this.removeClass("ui-icon-close");
+			}
+		});
+		
+		$("#REC_UPDATE").click(function(){
+			var $this = $(this);
+			if($this.hasClass("ui-icon-check")) {
+				$this.removeClass("ui-icon-check");
+				$this.addClass("ui-icon-close");
+			} else {
+				$this.addClass("ui-icon-check");
+				$this.removeClass("ui-icon-close");
+			}
+		});
+		
+		$("#REC_DELETE").click(function(){
+			var $this = $(this);
+			if($this.hasClass("ui-icon-check")) {
+				$this.removeClass("ui-icon-check");
+				$this.addClass("ui-icon-close");
+			} else {
+				$this.addClass("ui-icon-check");
+				$this.removeClass("ui-icon-close");
+			}
+		});
+		
+		$("#addService").button({text:false,icons: {primary: "ui-icon-plusthick"}}).click(function(){
+			// add application to list
+			var id = $("#serviceId").val();
+			var label = $("#serviceId option:selected").text();
+			
+			/*
+			if($("#APP_ID_"+id).data('label') == label) return;
+			
+			
+			var n = $('<div id="APP_ID_'+id+'" data-aid="'+id+'" data-label="'+label+'"><span class="ui-icon ui-icon-closethick cRight" id="REMOVE_'+id+'" title="Remove '+label+' From List"></span>'+label+'</div><div class="cClear"><!--  --></div>');
+			
+			
+			$("#APP_ID_LIST").append(n);
+			
+			$('#REMOVE_'+id).click(function(){
+				var c = confirm("Are you sure you want to remove "+$(this).parent().data('label')+" from the list?");
+				if(c) $("#APP_ID_"+id).remove();
+				//alert($(this).parent().data('aid'));
+			});
+			*/
+		});
+		
 		$( "#savingDialog" ).dialog( "destroy" );
 		$("#savingDialog").dialog({
 			resizable: false,
@@ -352,7 +418,7 @@
 			buttons: {	}
 		});
 		
-		$( "#errorDialog" ).dialog( "destroy" );
+		$("#errorDialog" ).dialog( "destroy" );
 		$("#errorDialog").dialog({
 			resizable: false,
 			modal: true,
@@ -469,9 +535,65 @@
 										<option>[ Loading, Please Wait... ]</option>
 									</select>
 									<button id="addApp">Add Application To List</button>
-									<div  style="height:55px;">
+									<div style="height:75px;">
 										<div id="APPS_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-all " align="center">
 											<div id="APP_ID_LIST" class="cM1" align="left"></div>
+										</div>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<br/>
+							
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong><br/>Services:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									
+									<div>
+										<div class="cLeft cW30">
+											&nbsp;
+										</div>
+										<div class="cLeft cW30">
+											&nbsp;
+										</div>
+										<div class="cLeft cW30">
+											<div align="center" class="cLeft " style="width:16px;height:16px;" id="" title=""><strong>R</strong></div>
+											<div align="center" class="cLeft " style="width:16px;height:16px;" id="" title=""><strong>C</strong></div>
+											<div align="center" class="cLeft " style="width:16px;height:16px;" id="" title=""><strong>U</strong></div>
+											<div align="center" class="cLeft " style="width:16px;height:16px;" id="" title=""><strong>D</strong></div>
+										</div>
+										<div class="cClear"><!--  --></div>
+									</div>
+									
+									<div>
+										<div class="cLeft cW30">
+											<select id="serviceId" class="cW100 ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()">
+												<option>All</option>
+											</select>
+										</div>
+										<div class="cLeft cW30">
+											<select id="extension" class="cW100 ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()">
+												<option>All</option>
+											</select>
+										</div>
+										<div class="cLeft cW40">
+											<button class="cRight" id="addService">Add Service To List</button>
+											<span class="cLeft ui-icon ui-icon-close" id="REC_READ" title=""></span>
+											<span class="cLeft ui-icon ui-icon-close" id="REC_CREATE" title=""></span>
+											<span class="cLeft ui-icon ui-icon-close" id="REC_UPDATE" title=""></span>
+											<span class="cLeft ui-icon ui-icon-close" id="REC_DELETE" title=""></span>
+										</div>
+										<div class="cClear"><!--  --></div>
+									</div>
+									
+									
+									<div  style="height:75px;">
+										<div id="SERVICE_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-all " align="center">
+											<div id="SERVICE_ID_LIST" class="cM1" align="left"></div>
 										</div>
 									</div>
 								</div>
