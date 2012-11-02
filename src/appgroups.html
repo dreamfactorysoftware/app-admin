@@ -14,16 +14,13 @@
 		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
 		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
 		
-		<!-- 3rd Party Imports -->
-		<script src="../../libs/base64/base64.js"></script>
-		
 		<!-- DF Imports -->
-		<script src="../../dfcore/dfapi.js"></script>
-		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/dfio.js"></script>
 		<script src="../../dfcore/jquery.dfpager.js"></script>
-		<script src="../../dfcore/jquery.dfpagerui.js"></script>
 		
-		<script src="admin.js"></script>
+		<!-- DF Admin -->
+		<script src="js/admin.js"></script>
+		<script src="js/jquery.dfpagerui.js"></script>
 		
 		
 		<!-- Initialize the system and start the application -->
@@ -42,8 +39,8 @@
 	function renderApps(container,appGrp) {
 		for(var i = 0; i < appGrp.length; i++) {
 			if(!appGrp[i]) continue;
-			makeAppGrpButton(i,appGrp[i].getName(),container);
-			if(selected_app_grp_id > -1 && parseInt(appGrp[i].getId()) == selected_app_grp_id) {
+			makeAppGrpButton(i,appGrp[i].Name,container);
+			if(selected_app_grp_id > -1 && parseInt(appGrp[i].Id) == selected_app_grp_id) {
 				selected_app_grp_id = -1;
 			}
 		}
@@ -57,10 +54,8 @@
 	function showAppGrp(appGrp) {
 		selectAppGrp = appGrp;
 		if(appGrp) {
-			
-			$('input:text[name=Name]').val(appGrp.getName());
-			$('input:text[name=Description]').val(appGrp.getDescription());
-			//$('#saveLabel').html('Save Group');
+			$('input:text[name=Name]').val(appGrp.Name);
+			$('input:text[name=Description]').val(appGrp.Description);
 			$("#save").button({ disabled: true });
 		} else {
 			if(current_app_grps) {
@@ -70,7 +65,6 @@
 			}
 			$('input:text[name=Name]').val('');
 			$('input:text[name=Description]').val('');
-			//$('#saveLabel').html('Add New Group');
 			$('#save').button({ disabled: false });
 		}
 		if(appGrp) {
@@ -83,16 +77,15 @@
 	}
 	
 	function makeClearable() {
-		navControl(false);
 		$('#clear').button({ disabled: false });
 		$('#appGrpList').dfPagerUI('disableAll');
 		$("#save").button({ disabled: false });
 	}
 	
-	var save_app_grp_request = {
+	var appgrpio = new DFRequest({
 		app: 'admin',
-		sys: true,
-		table: 'AppGroup',
+		service: "System",
+		resource: '/AppGroup',
 		type: DFRequestType.POST,
 		success: function(json) {
 			var errorMsg = checkFailure(json);
@@ -102,7 +95,6 @@
 			} else {
 				$('#appGrpList').dfPager('fetch');
 			}
-			navControl(true);
 			$("#save").button({ disabled: true });
 			$('#appGrpList').dfPagerUI('enableAll');
 			$('#savingDialog').dialog('close');
@@ -112,46 +104,26 @@
 			$('#errorMsg').html(err);
 			$('#errorDialog').dialog('open');
    		}
-	};
+	});
 	
 	function deleteAppGrp(confirmed) {
 		if(selectAppGrp) {
 			if(confirmed) {
-				var req = {Ids:selectAppGrp.getId()}
-				var newObject = jQuery.extend(true, {}, save_app_grp_request);
-				newObject.action = DFRequestActions.DELETE;
-				newObject.data = JSON.stringify(req);
-				new DFRequest(newObject).makeRequest();
+				appgrpio.deletes(selectAppGrp.Id);
 			} else {
-				$( "#deleteAppGrp" ).html(selectAppGrp.getName());
+				$( "#deleteAppGrp" ).html(selectAppGrp.Name);
 				$( "#confirmDeleteAppGrpDialog" ).dialog('open');
 			}
 		}
 	}
 	
-	function createAppGrp() {
-		var appGrp = new Application({});
-		appGrp.setName($('input:text[name=Name]').val());
-		appGrp.setDescription($('input:text[name=Description]').val());
-		var newObject = jQuery.extend(true, {}, save_app_grp_request);
-		newObject.action = DFRequestActions.CREATE;
-		newObject.data = JSON.stringify({records:{record: [{fields:appGrp.getJSON()}]}});
-		new DFRequest(newObject).makeRequest();
-		
-	}
-	
-	function updateAppGrp(app) {
-		app.setName($('input:text[name=Name]').val());
-		app.setDescription($('input:text[name=Description]').val());
-		var newObject = jQuery.extend(true, {}, save_app_grp_request);
-		newObject.action = DFRequestActions.UPDATE;
-		newObject.data = JSON.stringify({records:{record: [{fields:app.getJSON()}]}});
-		new DFRequest(newObject).makeRequest();
+	function getForm(grp) {
+		grp.Name = $('input:text[name=Name]').val();
+		grp.Description = $('input:text[name=Description]').val();
 	}
 	
 	$(document).ready(function() {
-		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-		$().dfcore();
+		//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 		makeAdminNav('appgroups');
 		
 		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
@@ -160,9 +132,12 @@
 		
 		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
 			if(selectAppGrp) {
-				updateAppGrp(selectAppGrp);
+				getForm(selectAppGrp)
+				appgrpio.update(selectAppGrp);
 			} else {
-				createAppGrp();
+				var appGrp = {};
+				getForm(appGrp);
+				appgrpio.create(appGrp);
 			}
 		});
 		
@@ -223,8 +198,8 @@
 		
 		$('#appGrpList').dfPagerUI({
 			app: 'admin',
-			sys: true,
-			table: 'AppGroup',
+			service: "System",
+			resource: '/AppGroup',
 			pageNo: 0,
 			pageLimit: 1,
 			pageLimits: [10,25,50,100],
@@ -232,10 +207,7 @@
 			orderFields: ['Id'],
 			renderer: function(container,json) {
 				showAppGrp(null);
-				var apps = [];
-				for(var i in json.record) {
-					apps[apps.length] = new Application(json.record[i].fields);
-				}
+				var apps = CommonUtilities.flattenResponse(json);
 				if(apps.length > 0) {
 					current_app_grps = apps;
 					renderApps(container,apps);
@@ -260,7 +232,7 @@
 				<div class="cLeft cW50 cH100">
 					<div class="cP1">
 						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
-							<strong>Application Editor:</strong> Use these controls below to create, update and delete applications in the list
+							<strong>Group Editor:</strong> Use these controls below to create, update and delete groups in the list
 							to the left.
 							<br/>
 							<br/>

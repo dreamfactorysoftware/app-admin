@@ -14,17 +14,13 @@
 		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
 		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
 		
-		<!-- 3rd Party Imports -->
-		<script src="../../libs/base64/base64.js"></script>
-		
 		<!-- DF Imports -->
-		<script src="../../dfcore/dfapi.js"></script>
-		<script src="../../dfcore/jquery.dfcore.js"></script>
+		<script src="../../dfcore/dfio.js"></script>
 		<script src="../../dfcore/jquery.dfpager.js"></script>
-		<script src="../../dfcore/jquery.dfpagerui.js"></script>
 		
-		<script src="admin.js"></script>
-		
+		<!-- DF Admin -->
+		<script src="js/admin.js"></script>
+		<script src="js/jquery.dfpagerui.js"></script>
 		
 		<!-- Initialize the system and start the application -->
 		<script>
@@ -93,15 +89,15 @@
 			} else if(i == selected_role) {
 				primary_ico = ICON_REFERENCED;
 			} else {
-				primary_ico = role.getAppId() ? 'ui-icon-wrench' : 'ui-icon-gear';
+				primary_ico = role.AppId ? 'ui-icon-wrench' : 'ui-icon-gear';
 			}
 			if(locked_table == TABLE_ROLES) {
 				if(i == primary_record) {
 					secondary_ico = ICON_ROLE_LOCKED;
 				}
 			} else if(i == secondary_record) {
-				if($('#USER_'+primary_record).hasClass('RID_'+role.getId())) {
-					$('#USER_'+primary_record).removeClass('RID_'+role.getId());
+				if($('#USER_'+primary_record).hasClass('RID_'+role.Id)) {
+					$('#USER_'+primary_record).removeClass('RID_'+role.Id);
 					makeClearable();
 				} else {
 					addRoleToUser(primary_record,secondary_record);
@@ -109,7 +105,7 @@
 				}
 				secondary_record = null;
 			} else {
-				if($('#USER_'+primary_record).hasClass('RID_'+role.getId())) {
+				if($('#USER_'+primary_record).hasClass('RID_'+role.Id)) {
 					secondary_ico = ICON_CHECK;
 				}
 			}
@@ -119,10 +115,10 @@
 	
 	function addRoleToUser(userIndex,roleIndex) {
 		var role = current_roles[roleIndex];
-		var app_id = parseInt(role.getAppId());
+		var app_id = parseInt(role.AppId);
 		for(var i in current_roles) {
-			if(app_id == parseInt(current_roles[i].getAppId())) {
-				if($('#USER_'+userIndex).hasClass('RID_'+current_roles[i].getId())) {
+			if(app_id == parseInt(current_roles[i].AppId)) {
+				if($('#USER_'+userIndex).hasClass('RID_'+current_roles[i].Id)) {
 					if(i < roleIndex) {
 						var icos = $('#ROLE_'+i).button( "option", "icons");
 						$('#ROLE_'+i).button( "option", "icons", {primary: icos.primary, secondary: ''});
@@ -131,7 +127,7 @@
 				}
 			}
 		}
-		$('#USER_'+userIndex).addClass('RID_'+role.getId());
+		$('#USER_'+userIndex).addClass('RID_'+role.Id);
 		
 		makeClearable();
 	}
@@ -163,8 +159,8 @@
 				}
 			} else if(i == secondary_record) {
 				if(current_roles[primary_record]) {
-					if($('#USER_'+secondary_record).hasClass('RID_'+current_roles[primary_record].getId())) {
-						$('#USER_'+secondary_record).removeClass('RID_'+current_roles[primary_record].getId());
+					if($('#USER_'+secondary_record).hasClass('RID_'+current_roles[primary_record].Id)) {
+						$('#USER_'+secondary_record).removeClass('RID_'+current_roles[primary_record].Id);
 						makeClearable();
 					} else {
 						addRoleToUser(secondary_record,primary_record);
@@ -174,7 +170,7 @@
 				secondary_record = null;
 			} else {
 				if(current_roles[primary_record]) {
-					if($('#USER_'+i).hasClass('RID_'+current_roles[primary_record].getId())) {
+					if($('#USER_'+i).hasClass('RID_'+current_roles[primary_record].Id)) {
 						primary_ico = ICON_CHECK;
 					}
 				}
@@ -202,8 +198,8 @@
 	
 	function renderRoles(container,roles) {
 		for(var i in roles) {
-			makeRoleButton(i,roles[i].getName(),container);
-			if(selected_role_id > -1 && parseInt(roles[i].getId()) == selected_role_id) {
+			makeRoleButton(i,roles[i].Name,container);
+			if(selected_role_id > -1 && parseInt(roles[i].Id) == selected_role_id) {
 				selected_role_id = -1;
 			}
 		}
@@ -220,8 +216,8 @@
 	function renderUsers(container,users) {
 		for(var i = 0; i < users.length; i++) {
 			if(!users[i]) continue;
-			makeUserButton(i,users[i].getFullName(),container,users[i].getRoleIds());
-			if(selected_user_id > -1 && parseInt(users[i].getId()) == selected_user_id) {
+			makeUserButton(i,users[i].FullName,container,users[i].RoleIds);
+			if(selected_user_id > -1 && parseInt(users[i].Id) == selected_user_id) {
 				selected_user_id = -1;
 			}
 		}
@@ -232,6 +228,7 @@
 	}
 	
 	var refresh_to = null;
+	
 	function doRefresh() {
 		if(refresh_to) return;
 		if(current_users && current_roles) {
@@ -243,6 +240,7 @@
 	}
 	
 	var reset_to = null;
+	
 	function resetSelector(table) {
 		if(reset_to) return;
 		if(current_users && current_roles && !refresh_to) {
@@ -266,13 +264,34 @@
 		$("#save").button({ disabled: true });
 	}
 	
-	
 	$(document).ready(function() {
-		$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-		$().dfcore();
-		
+		//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+
 		var current_button = 'roleassign';
 		makeAdminNav(current_button);
+		
+		var userio = new DFRequest({
+			app: 'admin',
+			service: "System",
+			resource: '/User',
+			type: DFRequestType.POST,
+			action: DFRequestActions.UPDATE,
+			success: function(json) {
+				var errorMsg = checkFailure(json);
+				if(errorMsg) {
+					$('#errorMsg').html(errorMsg);
+					$('#errorDialog').dialog('open');
+				}
+				$("#save").button({ disabled: true });
+				$("#clearLists").button({ disabled: true });
+				$('#usersList').dfPagerUI('enableAll')
+				$('#rolesList').dfPagerUI('enableAll');
+			},
+			error: function(err) {
+				$('#errorMsg').html(err);
+				$('#errorDialog').dialog('open');
+	   		}
+		});
 		
 		$("#clearLists").button({icons: {primary: "ui-icon-trash"}}).click(function(){
 			var users = $('#usersList').dfPagerUI('getUIContainer');
@@ -285,7 +304,6 @@
 			$('#usersList').dfPagerUI('enableAll')
 			$('#rolesList').dfPagerUI('enableAll');
 			diableAllListControls();
-			navControl(true);
 		});
 		
 		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
@@ -303,53 +321,21 @@
 					tmp += ','+new_role_ids[j];
 				}
 				if(tmp.length > 0) tmp += ',';
-				if(tmp != current_users[i].getRoleIds()) {
-					current_users[i].setRoleIds(tmp);
+				if(tmp != current_users[i].RoleIds) {
+					current_users[i].RoleIds = tmp;
 					changes[changes.length] = current_users[i];
 				}
 			}
 			if(changes.length > 0) {
-				var res = {records:[]};
-				for(var i in changes) {
-					res.records[res.records.length] = changes[i].getJSON();
-				}
-				navControl(false);
-				var newObject = jQuery.extend(true, {}, save_user_request);
-				newObject.action = DFRequestActions.UPDATE;
-				newObject.data = JSON.stringify(res);
-				new DFRequest(newObject).makeRequest();
+				userio.update(changes);
 			}
 		});
 		
 		
-		var save_user_request = {
-			app: 'admin',
-			sys: true,
-			table: 'User',
-			type: DFRequestType.POST,
-			success: function(json) {
-				var errorMsg = checkFailure(json);
-				if(errorMsg) {
-					$('#errorMsg').html(errorMsg);
-					$('#errorDialog').dialog('open');
-				}
-				navControl(true);
-				$("#save").button({ disabled: true });
-				$("#clearLists").button({ disabled: true });
-				$('#usersList').dfPagerUI('enableAll')
-				$('#rolesList').dfPagerUI('enableAll');
-			},
-			error: function(err) {
-				$('#errorMsg').html(err);
-				$('#errorDialog').dialog('open');
-	   		}
-		};
-		
-		
 		$('#usersList').dfPagerUI({
 			app: 'admin',
-			sys: true,
-			table: 'User',
+			service: "System",
+			resource: '/User',
 			pageNo: 0,
 			pageLimit: 1,
 			pageLimits: [10,25,50,100],
@@ -357,10 +343,7 @@
 			orderFields: ['Id','LastName','FirstName'],
 			renderer: function(container,json) {
 				resetSelector(TABLE_USERS);
-				var users = [];
-				for(var i in json.record) {
-					users[users.length] = new DFUser(json.record[i].fields);
-				}
+				var users = CommonUtilities.flattenResponse(json);
 				if(users.length > 0) {
 					current_users = users;
 					renderUsers(container,users);
@@ -379,8 +362,8 @@
 		
 		$('#rolesList').dfPagerUI({
 			app: 'admin',
-			sys: true,
-			table: 'Role',
+			service: "System",
+			resource: '/Role',
 			pageNo: 0,
 			pageLimit: 1,
 			pageLimits: [10,25,50,100],
@@ -388,10 +371,7 @@
 			orderFields: ['Id','AppId','Name'],
 			renderer: function(container,json) {
 				resetSelector(TABLE_ROLES);
-				var roles = [];
-				for(var i in json.record) {
-					roles[roles.length] = new Role(json.record[i].fields);
-				}
+				var roles = CommonUtilities.flattenResponse(json);
 				if(roles.length > 0) {
 					current_roles = roles;
 					renderRoles(container,roles);
