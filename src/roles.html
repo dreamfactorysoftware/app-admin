@@ -319,9 +319,28 @@
 		});
 		
 		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-			navControl(true);
 			$('#rolesList').dfPagerUI('enableAll');
 			showRole(null);
+		});
+		
+		$("#addApp").button({text:false,icons: {primary: "ui-icon-plusthick"}}).click(function(){
+			// add application to list
+			var id = $("#appId").val();
+			var label = $("#appId option:selected").text();
+			
+			if($("#APP_ID_"+id).data('label') == label) return;
+			
+			
+			var n = $('<div id="APP_ID_'+id+'" data-aid="'+id+'" data-label="'+label+'"><span class="ui-icon ui-icon-closethick cRight" id="REMOVE_'+id+'" title="Remove '+label+' From List"></span>'+label+'</div><div class="cClear"><!--  --></div>');
+			
+			
+			$("#APP_ID_LIST").append(n);
+			
+			$('#REMOVE_'+id).click(function(){
+				var c = confirm("Are you sure you want to remove "+$(this).parent().data('label')+" from the list?");
+				if(c) $("#APP_ID_"+id).remove();
+				//alert($(this).parent().data('aid'));
+			});
 		});
 		
 		$( "#savingDialog" ).dialog( "destroy" );
@@ -420,19 +439,6 @@
 						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
 							<strong>Role Editor:</strong> Use these controls below to create, update and delete roles in the list
 							to the left.
-							<br/>
-							<br/>
-							<div>
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Application:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW50">
-									<select id="appId" class="ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()">
-										<option>[ Loading, Please Wait... ]</option>
-									</select>
-								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
 							
 							<div class="cTM1">
 								<div class="cLeft cW25 formLabel" align="right">
@@ -454,6 +460,27 @@
 								<div class="cClear"><!--  --></div>
 							</div>
 							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Applications:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW50">
+									<select id="appId" class="ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()">
+										<option>[ Loading, Please Wait... ]</option>
+									</select>
+									<button id="addApp">Add Application To List</button>
+									<div  style="height:55px;">
+										<div id="APPS_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-all " align="center">
+											<div id="APP_ID_LIST" class="cM1" align="left"></div>
+										</div>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<br/>
+							
+							<div style="display:none;">
 							<div class="cTM1">
 								<div class="cLeft cW25 formLabel" align="right">
 									<strong>Records:&nbsp;</strong>
@@ -489,6 +516,8 @@
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
+						</div>
+						
 						</div>
 						
 						<br/>
