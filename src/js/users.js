@@ -190,7 +190,6 @@ $(document).ready(function() {
 	});
 	
 	$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-		navControl(true);
 		$('#usersList').dfPagerUI('enableAll');
 		showUser(null);
 	});

@@ -78,7 +78,6 @@ function showRole(role) {
 
 function makeClearable() {
 	$('#clear').button({ disabled: false });
-	navControl(false);
 	$('#save').button({ disabled: false });
 	$('#rolesList').dfPagerUI('disableAll');
 }

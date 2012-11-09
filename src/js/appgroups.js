@@ -117,7 +117,6 @@ $(document).ready(function() {
 	});
 	
 	$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-		navControl(true);
 		$('#appGrpList').dfPagerUI('enableAll');
 		showAppGrp(null);
 	});

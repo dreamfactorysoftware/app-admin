@@ -93,7 +93,6 @@ var serviceio = new DFRequest({
 		} else {
 			$('#serviceList').dfPager('fetch');
 		}
-		navControl(true);
 		$("#save").button({ disabled: true });
 		$('#serviceList').dfPagerUI('enableAll');
 	},
@@ -146,7 +145,6 @@ $(document).ready(function() {
 	});
 	
 	$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-		navControl(true);
 		$('#serviceList').dfPagerUI('enableAll');
 		showService(null);
 	});

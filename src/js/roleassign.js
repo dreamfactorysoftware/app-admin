@@ -109,7 +109,6 @@ function addRoleToUser(userIndex,roleIndex) {
 }
 
 function makeClearable() {
-	navControl(false);
 	$('#clearLists').button({ disabled: false });
 	$('#rolesList').dfPagerUI('disableAll');
 	$('#usersList').dfPagerUI('disableAll');
