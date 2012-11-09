@@ -13,7 +13,7 @@ var selectUser = null;
  * @param container
  */
 function makeUserButton(id,name,container) {
-	container.append($('<button id="USER_'+id+'" class="user_button" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="USER_'+id+'" class="user_button selector_btn cW100"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
 }
 
 /**
@@ -31,10 +31,27 @@ function renderUsers(container,users) {
 		}
 	}
 	$('.user_button').button({icons: {primary: "ui-icon-person"}}).click(function(){
-		showUser(null); // clear user selection
+		showUser(); // clear user selection
 		$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
 		showUser(current_users[parseInt($(this).attr('id').substring('USER_'.length))]);
 	});
+}
+
+/**
+ * 
+ */
+function selectCurrentUser() {
+	if(selectUser && current_users) {
+		for(var i in current_users) {
+			if(current_users[i].FullName == selectUser.FullName && current_users[i].LastName == selectUser.LastName && current_users[i].FirstName == selectUser.FirstName) {
+				$('#USER_'+i).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
+				showUser(current_users[i]);
+				return;
+			}
+		}
+	} else {
+		showUser();
+	}
 }
 
 /**
@@ -61,6 +78,8 @@ function showUser(user) {
 			$('input[name="issysadmin"]')[1].checked = true;
 		}
 		$("#save").button({ disabled: true });
+		$('#delete').button({ disabled: false });
+		$('#clear').button({ disabled: false });
 	} else {
 		if(current_users) {
 			for(var i in current_users) {
@@ -76,16 +95,9 @@ function showUser(user) {
 		$('input[name="isactive"]')[1].checked = true;
 		$('input[name="issysadmin"]')[1].checked = true;
 		$('#save').button({ disabled: false });
-	}
-	
-	if(user) {
-		$('#delete').button({ disabled: false });
-		$('#clear').button({ disabled: false });
-	} else {
 		$('#delete').button({ disabled: true });
 		$('#clear').button({ disabled: true });
 	}
-	
 }
 
 /**
@@ -161,6 +173,7 @@ function deleteUser(confirmed) {
 	if(selectUser) {
 		if(confirmed) {
 			dfio.deletes(selectUser.Id);
+			showUser();
 		} else {
 			$( "#deleteUser" ).html(selectUser.FullName);
 			$( "#confirmDeleteUserDialog" ).dialog('open');
@@ -186,13 +199,13 @@ $(document).ready(function() {
 			var user = {};
 			pullFormData(user);
 			dfio.create(user);
+			selectUser = user;
 		}
 	});
 	
 	$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-		navControl(true);
 		$('#usersList').dfPagerUI('enableAll');
-		showUser(null);
+		showUser();
 	});
 	
 	$("#errorDialog").dialog({
@@ -243,17 +256,18 @@ $(document).ready(function() {
 		orderBy: 0,
 		orderFields: ["Id","LastName","FirstName"],
 		renderer: function(container,json) {
-			showUser(null);
 			var users = CommonUtilities.flattenResponse(json);
 			if(users.length > 0) {
 				current_users = users;
 				renderUsers(container,users);
 				resizeUi();
+				selectCurrentUser();
 				return users.length;
 			} else {
 				renderUsers(container,users);
 				container.append("<i>End Of List</i>");
 				resizeUi();
+				showUser();
 				return 0;
 			}
 		}

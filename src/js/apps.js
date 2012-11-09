@@ -14,7 +14,7 @@ var reselectApp = false;
  * @param container
  */
 function makeAppButton(id,name,container) {
-	container.append($('<button id="APP_'+id+'" class="app_button" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="APP_'+id+'" class="app_button selector_btn cW100"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
 }
 
 /**
@@ -38,6 +38,22 @@ function renderApps(container,apps) {
 	});
 }
 
+/**
+ * 
+ */
+function selectCurrentApp() {
+	if(selectApp && current_apps) {
+		for(var i in current_apps) {
+			if(current_apps[i].Name == selectApp) {
+				$('#APP_'+i).button( "option", "icons", {primary: "ui-icon-seek-next", secondary:"ui-icon-seek-next"} );
+				showApp(current_apps[i]);
+				return;
+			}
+		}
+	} else {
+		showApp();
+	}
+}
 /**
  * 
  * @param app
@@ -66,8 +82,6 @@ function showApp(app) {
 		} else {
 			$('input[name="IsUrlExternal"]')[1].checked = true;
 		}
-		//$('#active').buttonset('refresh');
-		//$('#AppType').buttonset('refresh');
 		$("#save").button({ disabled: true });
 		if(app.IsUrlExternal == "true") {
 			$("#filemanager").button({ disabled: true });
@@ -76,6 +90,8 @@ function showApp(app) {
 		}
 		hideImport();
 		$("#export").button({ disabled: false });
+		$('#delete').button({ disabled: false });
+		$('#clear').button({ disabled: false });
 	} else {
 		if(current_apps) {
 			for(var i in current_apps) {
@@ -88,17 +104,10 @@ function showApp(app) {
 		$('input:text[name=Url]').val('');
 		$('input[name="IsActive"]')[1].checked = true;
 		$('input[name="IsUrlExternal"]')[1].checked = true;
-		//$('#active').buttonset('refresh');
-		//$('#AppType').buttonset('refresh');
 		$('#save').button({ disabled: false });
 		showImport();
 		$("#filemanager").button({ disabled: true });
 		$("#export").button({ disabled: true });
-	}
-	if(app) {
-		$('#delete').button({ disabled: false });
-		$('#clear').button({ disabled: false });
-	} else {
 		$('#delete').button({ disabled: true });
 		$('#clear').button({ disabled: true });
 	}
@@ -145,6 +154,7 @@ function deleteApp(confirmed) {
 	if(selectApp) {
 		if(confirmed) {
 			appio.deletes(selectApp.Id);
+			showApp();
 		} else {
 			$( "#deleteApp" ).html(selectApp.Label);
 			$( "#confirmDeleteAppDialog" ).dialog('open');
@@ -242,18 +252,21 @@ $(document).ready(function() {
 	$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
 		if(selectApp) {
 			getForm(selectApp);
+			var t = selectApp.Name;
 			selectApp.Name = null;
 			appio.update(selectApp);
+			selectApp = t;
 		} else {
 			var app = {};
 			getForm(app);
 			appio.create(app);
+			selectApp = app;
 		}
 	});
 	
 	$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
 		$('#appsList').dfPagerUI('enableAll');
-		showApp(null);
+		showApp();
 	});
 	
 	$("#filemanager").button({icons: {primary: "ui-icon-folder-collapsed"}}).click(function(){
@@ -306,9 +319,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	//$("#AppType").buttonset();
-	//$("#active").buttonset();
-	
 	$('#appsList').dfPagerUI({
 		app: 'admin',
 		service: "System",
@@ -319,7 +329,6 @@ $(document).ready(function() {
 		orderBy: 0,
 		orderFields: ['Id','Name','Label','IsActive','Url','IsUrlExternal'],
 		renderer: function(container,json) {
-			showApp(null);
 			var apps = CommonUtilities.flattenResponse(json);
 			for(var i in apps) {
 				if(reselectApp && apps[i].Name == CommonUtilities.getQueryParameter('selectedApp')) {
@@ -330,12 +339,13 @@ $(document).ready(function() {
 				current_apps = apps;
 				renderApps(container,apps);
 				resizeUi();
-				showApp(null);
+				selectCurrentApp();
 				return apps.length;
 			} else {
 				renderApps(container,users);
 				container.append('<i>End Of List</i>');
 				resizeUi();
+				showApp();
 				return 0;
 			}
 		}
