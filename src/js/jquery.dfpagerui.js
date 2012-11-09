@@ -5,10 +5,10 @@
 		'<div id="ID_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-all " align="center">'+
 		'<div id="ID_LIST" class="cM1" align="left"></div></div></div><div class="cClear"></div>'+
 		'<div id="ID_CTRL" class="cW100 cTM2 cP1" align="center">'+
-		'<strong>Sort:&nbsp;</strong><select id="ID_SORT" onchange="$(\'#ID\').dfPagerUI(\'sortBy\',this)" class="ui-widget ui-state-default ui-corner-all selectPadding"></select>'+
-		'&nbsp;<select id="ID_LIMITS" onchange="$(\'#ID\').dfPagerUI(\'limit\',this)" class="ui-widget ui-state-default ui-corner-all selectPadding"></select>'+
+		'<strong>Sort:&nbsp;</strong><select id="ID_SORT" onchange="$(\'#ID\').dfPagerUI(\'sortBy\',this)" class=""></select>'+
+		'&nbsp;<select id="ID_LIMITS" onchange="$(\'#ID\').dfPagerUI(\'limit\',this)" class=""></select>'+
 		'&nbsp;<button id="ID_PREV">Prev</button>'+
-		'&nbsp;<input id="ID_PAGENO" type="text" class="ui-widget ui-state-default ui-corner-all fieldPadding" onfocus="this.value=$(\'#ID\').dfPagerUI(\'getPageNo\')" onchange="$(\'#ID\').dfPagerUI(\'gotoPage\',parseInt(this.value))" size="4" value=""/>'+
+		'&nbsp;<input id="ID_PAGENO" type="text" class="" onfocus="this.value=$(\'#ID\').dfPagerUI(\'getPageNo\')" onchange="$(\'#ID\').dfPagerUI(\'gotoPage\',parseInt(this.value))" size="4" value=""/>'+
 		'&nbsp;<button id="ID_NEXT">Next</button>'+
 		'</div>';
 	
