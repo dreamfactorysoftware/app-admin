@@ -154,7 +154,7 @@ function convertGrpIdsToClasses(grpIds) {
 }
 
 function makeAppGrpButton(id,name,container) {
-	container.append($('<button id="APP_GRPS_'+id+'" class="app_grp_button" style="width:100%;margin-top: 4px;"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="APP_GRPS_'+id+'" class="app_grp_button selector_btn cW100"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
 }
 
 function renderAppGrps(container,appGrps) {
@@ -171,7 +171,7 @@ function renderAppGrps(container,appGrps) {
 }
 
 function makeAppButton(id,name,container,grpIds) {
-	container.append($('<button id="APP_'+id+'" class="app_button '+convertGrpIdsToClasses(grpIds)+'" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="APP_'+id+'" class="app_button '+convertGrpIdsToClasses(grpIds)+' selector_btn cW100"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
 }
 
 function renderApps(container,apps) {

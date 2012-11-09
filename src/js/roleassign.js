@@ -168,7 +168,7 @@ function convertRoleIdsToClasses(roleIds) {
 }
 
 function makeRoleButton(id,name,container) {
-	container.append($('<button id="ROLE_'+id+'" class="role_button" style="width:100%;margin-top: 4px;"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="ROLE_'+id+'" class="role_button selector_btn cW100"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
 }
 
 function renderRoles(container,roles) {
@@ -185,7 +185,7 @@ function renderRoles(container,roles) {
 }
 
 function makeUserButton(id,name,container,roleIds) {
-	container.append($('<button id="USER_'+id+'" class="user_button '+convertRoleIdsToClasses(roleIds)+'" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="USER_'+id+'" class="user_button '+convertRoleIdsToClasses(roleIds)+' selector_btn cW100"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
 }
 
 function renderUsers(container,users) {

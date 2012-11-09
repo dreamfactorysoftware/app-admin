@@ -8,7 +8,7 @@ var current_app_grps = null;
 var selectAppGrp = null;
 
 function makeAppGrpButton(id,name,container) {
-	container.append($('<button id="APP_GRP_'+id+'" class="app_grp_button" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="APP_GRP_'+id+'" class="app_grp_button selector_btn cW100"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
 }
 
 function renderApps(container,appGrp) {
@@ -20,10 +20,27 @@ function renderApps(container,appGrp) {
 		}
 	}
 	$('.app_grp_button').button({icons: {primary: "ui-icon-star"}}).click(function(){
-		showAppGrp(null); // clear user selection
+		showAppGrp(); // clear user selection
 		$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
 		showAppGrp(current_app_grps[parseInt($(this).attr('id').substring('APP_GRP_'.length))]);
 	});
+}
+
+/**
+ * 
+ */
+function selectCurrentRole() {
+	if(selectAppGrp && current_app_grps) {
+		for(var i in current_app_grps) {
+			if(current_app_grps[i].Name == selectAppGrp.Name) {
+				$('#APP_GRP_'+i).button( "option", "icons", {primary: "ui-icon-seek-next", secondary:"ui-icon-seek-next"} );
+				showAppGrp(current_app_grps[i]);
+				return;
+			}
+		}
+	} else {
+		showAppGrp();
+	}
 }
 
 function showAppGrp(appGrp) {
@@ -32,6 +49,8 @@ function showAppGrp(appGrp) {
 		$('input:text[name=Name]').val(appGrp.Name);
 		$('input:text[name=Description]').val(appGrp.Description);
 		$("#save").button({ disabled: true });
+		$('#delete').button({ disabled: false });
+		$('#clear').button({ disabled: false });
 	} else {
 		if(current_app_grps) {
 			for(var i in current_app_grps) {
@@ -41,11 +60,6 @@ function showAppGrp(appGrp) {
 		$('input:text[name=Name]').val('');
 		$('input:text[name=Description]').val('');
 		$('#save').button({ disabled: false });
-	}
-	if(appGrp) {
-		$('#delete').button({ disabled: false });
-		$('#clear').button({ disabled: false });
-	} else {
 		$('#delete').button({ disabled: true });
 		$('#clear').button({ disabled: true });
 	}
@@ -85,6 +99,7 @@ function deleteAppGrp(confirmed) {
 	if(selectAppGrp) {
 		if(confirmed) {
 			appgrpio.deletes(selectAppGrp.Id);
+			showAppGrp();
 		} else {
 			$( "#deleteAppGrp" ).html(selectAppGrp.Name);
 			$( "#confirmDeleteAppGrpDialog" ).dialog('open');
@@ -113,12 +128,13 @@ $(document).ready(function() {
 			var appGrp = {};
 			getForm(appGrp);
 			appgrpio.create(appGrp);
+			selectAppGrp = appGrp;
 		}
 	});
 	
 	$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
 		$('#appGrpList').dfPagerUI('enableAll');
-		showAppGrp(null);
+		showAppGrp();
 	});
 	
 	$("#savingDialog").dialog({
@@ -180,17 +196,18 @@ $(document).ready(function() {
 		orderBy: 0,
 		orderFields: ['Id'],
 		renderer: function(container,json) {
-			showAppGrp(null);
 			var apps = CommonUtilities.flattenResponse(json);
 			if(apps.length > 0) {
 				current_app_grps = apps;
 				renderApps(container,apps);
 				resizeUi();
+				selectCurrentRole();
 				return apps.length;
 			} else {
 				renderApps(container,users);
 				container.append('<i>End Of List</i>');
 				resizeUi();
+				showAppGrp();
 				return 0;
 			}
 		}

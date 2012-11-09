@@ -10,10 +10,21 @@ var selectRole = null;
 var services = [];
 var servicesLookup = {};
 
+/**
+ * Makes the Role button to select the role in the UI
+ * @param id
+ * @param name
+ * @param container
+ */
 function makeRoleButton(id,name,container) {
-	container.append($('<button id="ROLE_'+id+'" class="role_button" style="width:100%;margin-top: 4px;"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="ROLE_'+id+'" class="role_button selector_btn cW100"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
 }
 
+/**
+ * 
+ * @param container
+ * @param roles
+ */
 function renderRoles(container,roles) {
 	for(var i in roles) {
 		makeRoleButton(i,roles[i].Name,container);
@@ -33,6 +44,9 @@ function renderRoles(container,roles) {
 	});
 }
 
+/**
+ * 
+ */
 function resetRoles() {
 	if(current_roles) {
 		for(var i in current_roles) {
@@ -41,64 +55,59 @@ function resetRoles() {
 	}
 }
 
+/**
+ * 
+ */
 function selectCurrentRole() {
 	if(selectRole && current_roles) {
 		for(var i in current_roles) {
-			if(current_roles[i] == selectRole) {
-				$('#ROLE_'+i).button().trigger("onclick");
+			if(current_roles[i].Name == selectRole.Name) {
+				$('#ROLE_'+i).button( "option", "icons", {primary: "ui-icon-seek-next", secondary:"ui-icon-seek-next"} );
+				showRole(current_roles[i]);
 				return;
 			}
 		}
+	} else {
+		showRole();
 	}
 }
 
+/**
+ * 
+ * @param role
+ */
 function showRole(role) {
 	selectRole = role;
 	if(role) {
-		makeServiceList(role);
 		$('#rName').val(role.Name);
 		$('#rDescription').val(role.Description);
 		$('#save').button({ disabled: true });
+		$('#delete').button({ disabled: false });
+		$('#clear').button({ disabled: false });
 	} else {
-		makeServiceList();
 		resetRoles();
 		$('#rName').val('');
 		$('#rDescription').val('');
 		$('#save').button({ disabled: false });
-	}
-	selectApps(role);
-	if(role) {
-		$('#delete').button({ disabled: false });
-		$('#clear').button({ disabled: false });
-	} else {
 		$('#delete').button({ disabled: true });
 		$('#clear').button({ disabled: true });
 	}
+	selectApps(role);
+	makeServiceList(role);
 }
 
+/**
+ * 
+ */
 function makeClearable() {
 	$('#clear').button({ disabled: false });
 	$('#save').button({ disabled: false });
 	$('#rolesList').dfPagerUI('disableAll');
 }
 
-function roleIconPrimary(role) {
-	if(role.isDirty) {
-		if(!isListDirty) isListDirty = true;
-		return 'ui-icon-alert';
-	} else {
-		if(role.AppId) {
-			return 'ui-icon-wrench';
-		} else {
-			return 'ui-icon-gear';
-		}
-	}
-}
-
-function clearRole() {
-	showRole(-1);
-}
-
+/**
+ * The Role IO object
+ */
 var roleio = new DFRequest({
 	app: 'admin',
 	service: 'System',
@@ -122,6 +131,9 @@ var roleio = new DFRequest({
   	}
 });
 
+/**
+ * The Application IO object
+ */
 var appio = new DFRequest({
 	app:  "admin",
 	service: "System",
@@ -149,10 +161,15 @@ var appio = new DFRequest({
   	}
 });
 
+/**
+ * 
+ * @param confirmed
+ */
 function deleteRole(confirmed) {
 	if(selectRole) {
 		if(confirmed) {
 			roleio.deletes(selectRole.Id);
+			showRole();
 		} else {
 			$( "#deleteRole" ).html(selectRole.Name);
 			$( "#confirmDeleteRoleDialog" ).dialog('open');
@@ -160,6 +177,9 @@ function deleteRole(confirmed) {
 	}
 }
 
+/**
+ * 
+ */
 function addService() {
 	var index = 0;
 	var id = $("#serviceId").val();
@@ -193,13 +213,7 @@ function addService() {
 			Update:$('#Update').prop('checked')+"",
 			Delete:$('#Delete').prop('checked')+""
 		}));
-		$('#REMOVE_SRV_'+index).click(function(){
-			var $this = $(this);
-			var index = $this.data("index");
-			var label = $this.data("label");
-			var c = confirm("Are you sure you want to remove the service '"+label+"' from the list? ");
-			if(c) $("#SRV_"+index).remove();
-		});
+		$('#REMOVE_SRV_'+index).click(removeService);
 		$("#serviceSelect").val("*").trigger("onchange");
 		$('#Read').prop('checked',false);
 		$('#Create').prop('checked',false);
@@ -208,6 +222,10 @@ function addService() {
 	}
 }
 
+/**
+ * 
+ * @param apps
+ */
 function showApps(apps) {
 	var con = $('#APP_ID_LIST');
 	con.html('');
@@ -216,6 +234,10 @@ function showApps(apps) {
 	}
 }
 
+/**
+ * 
+ * @param role
+ */
 function selectApps(role) {
 	$(".APP_CBX").each(function(){
 		$(this).prop('checked',false);
@@ -231,6 +253,10 @@ function selectApps(role) {
 	}
 }
 
+/**
+ * 
+ * @param role
+ */
 function processForm(role) {
 	role.Name = $('#rName').val();
 	role.Description = $('#rDescription').val();
@@ -238,6 +264,10 @@ function processForm(role) {
 	role.AppIds = getSelectAppIds();
 }
 
+/**
+ * 
+ * @returns {String}
+ */
 function getSelectAppIds() {
 	var str = "";
 	$(".APP_CBX").each(function(){
@@ -250,6 +280,10 @@ function getSelectAppIds() {
 	return str;
 }
 
+/**
+ * 
+ * @returns {Array}
+ */
 function getServices() {
 	var tmp = [];
 	$(".SERVICE_ITEM").each(function(index){
@@ -265,6 +299,9 @@ function getServices() {
 	return tmp;
 }
 
+/**
+ * The Service IO object
+ */
 var serviceDescriptor = new DFRequest({
 	app: 'admin',
 	service: "",
@@ -295,6 +332,10 @@ var serviceDescriptor = new DFRequest({
   	}
 });
 
+/**
+ * 
+ * @param srv
+ */
 function doListSelect(srv) {
 	var $this = $(srv);
 	var index = parseInt($this.data("index"));
@@ -313,27 +354,49 @@ function doListSelect(srv) {
 	}
 }
 
+function removeService() {
+	var $this = $(this);
+	var index = $this.data("index");
+	var label = $this.data("label");
+	var c = confirm("Are you sure you want to remove the service '"+label+"' from the list? ");
+	if(c) {
+		$("#SRV_"+index).remove();
+		makeClearable();
+	}
+}
+
+/**
+ * 
+ * @param role
+ */
 function makeServiceList(role) {
 	$("#serviceSelect").val("*").trigger("onchange");
 	$("#SERVICE_ID_LIST").html("");
 	if(role) {
 		for(var i in role.Services ) {
 			$("#SERVICE_ID_LIST").append(makeServiceComponentLine(i,role.Services[i]));
-			$('#REMOVE_SRV_'+i).click(function(){
-				var $this = $(this);
-				var index = $this.data("index");
-				var label = $this.data("label");
-				var c = confirm("Are you sure you want to remove the service '"+label+"' from the list? ");
-				if(c) $("#SRV_"+index).remove();
-			});
+			$('#REMOVE_SRV_'+i).click(removeService);
 		};
 	}
 }
 
+/**
+ * 
+ * @param index
+ * @param service
+ * @param title
+ * @returns
+ */
 function makeCheckBox(index,service,title) {
 	return $('<div class="cLeft cW25"><input type="checkbox" value="true" title="'+title+'" onchange="makeClearable()" id="'+title+'_'+index+'" '+(service[title] == "true"?"CHECKED":"")+'/></div>');
 }
 
+/**
+ * 
+ * @param index
+ * @param service
+ * @returns
+ */
 function makeServiceComponentLine(index,service) {
 	
 	// create major elements...
@@ -399,6 +462,7 @@ $(document).ready(function() {
 			var role = {};
 			processForm(role);
 			roleio.create(role);
+			selectRole = role;
 		}
 	});
 	
@@ -513,12 +577,12 @@ $(document).ready(function() {
 		orderBy: 0,
 		orderFields: ["Id","AppId","Name"],
 		renderer: function(container,json) {
-			showRole(null);
 			var roles = CommonUtilities.flattenResponse(json);
 			if(roles.length > 0) {
 				current_roles = roles;
 				renderRoles(container,roles);
 				resizeUi();
+				selectCurrentRole();
 				return roles.length;
 			} else {
 				renderRoles(container,roles);

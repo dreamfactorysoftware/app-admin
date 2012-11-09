@@ -7,7 +7,7 @@ var current_service = null;
 var selectService = null;
 
 function makeServiceButton(id,name,container) {
-	container.append($('<button id="SERV_'+id+'" class="service_button" style="width:100%;margin-top: 4px;"><span id="DFServiceLabel_'+id+'">'+name+'</span></button>'));
+	container.append($('<button id="SERV_'+id+'" class="service_button selector_btn cW100"><span id="DFServiceLabel_'+id+'">'+name+'</span></button>'));
 }
 
 function renderServices(container,services) {
@@ -24,6 +24,20 @@ function renderServices(container,services) {
 		$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
 		showService(current_service[parseInt($(this).attr('id').substring('SERV_'.length))]);
 	});
+}
+
+function selectCurrentRole() {
+	if(selectService && current_service) {
+		for(var i in current_service) {
+			if(current_service[i].Name == selectService.Name) {
+				$('#SERV_'+i).button( "option", "icons", {primary: "ui-icon-seek-next", secondary:"ui-icon-seek-next"} );
+				showService(current_service[i]);
+				return;
+			}
+		}
+	} else {
+		showService();
+	}
 }
 
 function showService(service) {
@@ -106,6 +120,7 @@ function deleteService(confirmed) {
 	if(selectService) {
 		if(confirmed) {
 			serviceio.deletes(selectService.Id);
+			showService();
 		} else {
 			$( "#deleteService" ).html(selectService.Label);
 			$( "#confirmDeleteUserDialog" ).dialog('open');
@@ -141,12 +156,13 @@ $(document).ready(function() {
 			var service = {};
 			getForm(service);
 			serviceio.create(service);
+			selectService = service;
 		}
 	});
 	
 	$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
 		$('#serviceList').dfPagerUI('enableAll');
-		showService(null);
+		showService();
 	});
 	
 	$("#errorDialog").dialog({
@@ -187,8 +203,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	//$("#active").buttonset();
-	//$("#sys_admin").buttonset();
 	$("#WebOptions").hide();
 	
 	$('#serviceType').change(function(){
@@ -218,17 +232,18 @@ $(document).ready(function() {
 		orderBy: 0,
 		orderFields: ["Id","Name"],
 		renderer: function(container,json) {
-			showService(null);
 			var services = CommonUtilities.flattenResponse(json);
 			if(services.length > 0) {
 				current_service = services;
 				renderServices(container,services);
 				resizeUi();
+				selectCurrentRole();
 				return services.length;
 			} else {
 				renderServices(container,services);
 				container.append("<i>End Of List</i>");
 				resizeUi();
+				showService();
 				return 0;
 			}
 		}
