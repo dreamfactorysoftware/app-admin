@@ -1,5 +1,4 @@
 
-
 function makeAdminNav(current_button) {
 	$( '#admin_radio' ).append('<input type="radio" id="index" name="radio"'+(current_button == 'index' ? 'checked="checked"' : '')+'/><label for="index">Users</label>');
 	$( '#admin_radio' ).append('<input type="radio" id="roles" name="radio" '+(current_button == 'roles' ? 'checked="checked"' : '')+'/><label for="roles">Roles</label>');
@@ -17,14 +16,6 @@ function makeAdminNav(current_button) {
 		}
 	});
 	
-}
-
-function navControl(show) {
-	if(show == undefined) {
-		// no param call...
-	} else {
-		//$( '#admin_radio' ).buttonset({ disabled: !show });
-	}
 }
 
 function resizeUi() {

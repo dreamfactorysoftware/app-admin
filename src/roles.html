@@ -1,692 +1,177 @@
-
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		
-		<!-- Standard CSS -->
-		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
-		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
-		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 		
 		<!-- jQuery Imports -->
-		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
-		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/jquery-1.8.2.min.js"></script>
+		<script src="../../jQuery/jquery-ui-1.9.1.custom.min.js"></script>
 		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
 		
 		<!-- DF Imports -->
+		<link rel="stylesheet" href="../../themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
 		<script src="../../dfcore/dfio.js"></script>
+		<script src="../../dfcore/dferr.js"></script>
 		<script src="../../dfcore/jquery.dfpager.js"></script>
 		
-		<!-- DF Admin -->
+		<!-- Initialize the system and start the application -->
 		<script src="js/admin.js"></script>
 		<script src="js/jquery.dfpagerui.js"></script>
-		
-		<!-- Initialize the system and start the application -->
-		<script>
-		
-	var isPageDirty = false;
-	var current_roles = null;
-	var selected_role = -1;
-	var selected_role_id = -1;
-	
-	
-	var KEY_CHECKED = 'checked';
-	var KEY_REFRESH = 'refresh';
-	
-	function makeRoleButton(id,name,container) {
-		container.append($('<button id="ROLE_'+id+'" class="role_button" style="width:100%;margin-top: 4px;"><span id="DFRoleLabel_'+id+'">'+name+'</span></button>'));
-	}
-	
-	function showApps(apps) {
-		var con = $('#appId');
-		con.html('');
-		con.append('<option value="">System Level Roles</option>');
-		for(var i in apps) {
-			con.append('<option value="'+apps[i].Id+'">'+apps[i].Name+'</option>');
-		}
-	}
-	
-	function showApp(appId) {
-		var con = document.getElementById('appId');
-		var opts = con.options;
-		if(appId == '') {
-			opts.selectedIndex = 0;
-		} else {
-			appId = parseInt(appId);
-			if(appId == -1) {
-				opts.selectedIndex = -1;
-				return;
-			}
-			for(var i = 0; i < opts.length; i++) {
-				if(!opts[i].value) continue;
-				var key = parseInt(opts[i].value);
-				if(key == appId) {
-					opts.selectedIndex = i;
-				}
-			}
-		}
-	}
-	
-	function renderRoles(container,roles) {
-		for(var i in roles) {
-			makeRoleButton(i,roles[i].Name,container);
-			if(selected_role_id > -1 && parseInt(roles[i].Id) == selected_role_id) {
-				selected_role = i;
-				selected_role_id = -1;
-			}
-		}
-		$('.role_button').button({icons: {primary: "ui-icon-gear"}}).click(function(){
-			showRole(current_roles[parseInt($(this).attr('id').substring('ROLE_'.length))]);
-		});
-	}
-	
-	function showRoles(roles) {
-		var con = $('#role_selector');
-		con.html('');
-		for(var i in roles) {
-			makeRoleButton(i,roles[i].Name,con);
-			if(selected_role_id > -1 && parseInt(roles[i].Id) == selected_role_id) {
-				selected_role = i;
-				selected_role_id = -1;
-			}
-		}
-		$('.role_button').button({icons: {primary: "ui-icon-gear"}}).click(function(){
-			showRole(parseInt($(this).attr('id').substring('ROLE_'.length)));
-		});
-	}
-	
-	function markRolesAsDirtyOrSelected() {
-		isListDirty = false;
-		for(var i in current_roles) {
-			var role = current_roles[i];
-			if(i == selected_role) {
-				$('#ROLE_'+i).button( "option", "icons", {primary: roleIconPrimary(role), secondary:'ui-icon-seek-next'} );
-			} else {
-				$('#ROLE_'+i).button( "option", "icons", {primary: roleIconPrimary(role), secondary:''} );
-			}
-			if($('#DFRoleLabel_'+i).html() != role.Name) {
-				$('#DFRoleLabel_'+i).html(role.Name);
-			}
-		}
-	}
-	
-	var selectRole = null;
-	
-	function showRole(role) {
-		selectRole = role;
-		if(role) {
-			showApp(role.AppId);
-			$('#appId').attr('disabled', 'disabled');
-			$('#rName').val(role.Name);
-			$('#rDescription').val(role.Description);
-			if(role.CreateRecords == 'true') {
-				$('#rcreate').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#rcreate').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			if(role.ReadRecords == 'true') {
-				$('#rread').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#rread').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			if(role.UpdateRecords == 'true') {
-				$('#rupdate').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#rupdate').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			if(role.DeleteRecords == 'true') {
-				$('#rdelete').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#rdelete').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			if(role.AdminUsers == 'true') {
-				$('#auser').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#auser').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			if(role.ReadUsers == 'true') {
-				$('#ruser').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#ruser').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			if(role.AdminRoles == 'true') {
-				$('#roadmin').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#roadmin').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			if(role.AssignRoles == 'true') {
-				$('#roassign').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#roassign').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			if(role.ReadRoles == 'true') {
-				$('#roread').attr(KEY_CHECKED,true).button(KEY_REFRESH);
-			} else {
-				$('#roread').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			}
-			
-			$('#save').button({ disabled: true });
-			
-		} else {
-			showApp(-1);
-			$('#appId').removeAttr('disabled');
-			$('#rName').val('');
-			$('#rDescription').val('');
-			$('#rcreate').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			$('#rread').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			$('#rupdate').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			$('#rdelete').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			$('#auser').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			$('#ruser').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			$('#roread').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			$('#roassign').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			$('#roadmin').removeAttr(KEY_CHECKED).button(KEY_REFRESH);
-			
-			$('#save').button({ disabled: false });
-		}
-		
-		if(role) {
-			$('#delete').button({ disabled: false });
-			$('#clear').button({ disabled: false });
-		} else {
-			$('#delete').button({ disabled: true });
-			$('#clear').button({ disabled: true });
-		}
-		
-	}
-	
-	function makeClearable() {
-		$('#clear').button({ disabled: false });
-		navControl(false);
-		$('#save').button({ disabled: false });
-		$('#rolesList').dfPagerUI('disableAll');
-	}
-	
-	function roleIconPrimary(role) {
-		if(role.isDirty) {
-			if(!isListDirty) isListDirty = true;
-			return 'ui-icon-alert';
-		} else {
-			if(role.AppId) {
-				return 'ui-icon-wrench';
-			} else {
-				return 'ui-icon-gear';
-			}
-		}
-	}
-	
-	function clearRole() {
-		showRole(-1);
-	}
-	
-	var roleio = new DFRequest({
-		app: 'admin',
-		service: 'System',
-		resource: '/Role',
-		type: DFRequestType.POST,
-		success: function(xml) {
-			var errorMsg = checkFailure(xml);
-			if(errorMsg) {
-				$('#errorMsg').html(errorMsg);
-				$('#errorDialog').dialog('open');
-			} else {selectRole
-				$('#save').button({ disabled: true });
-				$('#rolesList').dfPager('fetch');
-			}
-			$("#save").button({ disabled: true });
-			$('#rolesList').dfPagerUI('enableAll');
-			$('#savingDialog').dialog('close');
-		},
-		error: function(err) {
-			$('#savingDialog').dialog('close');
-			$('#errorMsg').html(err);
-			$('#errorDialog').dialog('open');
-   		}
-	});
-	
-	var appio = new DFRequest({
-		app: 'admin',
-		service: "System",
-		resource: '/App',
-		success: function(json) {
-			var errorMsg = checkFailure(json);
-			if(errorMsg) {
-				$('#errorMsg').html(errorMsg);
-				$('#errorDialog').dialog('open');
-			} else {
-				current_apps = CommonUtilities.flattenResponse(json);
-				showApps(current_apps);
-				showApp(-1);
-			}
-		},
-		error: function(err) {
-			$('#errorMsg').html(err);
-			$('#errorDialog').dialog('open');
-   		}
-	});
-	
-	function deleteRole(confirmed) {
-		if(selectRole) {
-			if(confirmed) {
-				roleio.deletes(selectRole.Id);
-			} else {
-				$( "#deleteRole" ).html(selectRole.Name);
-				$( "#confirmDeleteRoleDialog" ).dialog('open');
-			}
-		}
-	}
-	
-	function processForm(role) {
-		role.Name = $('#rName').val();
-		role.Description = $('#rDescription').val();
-		role.CreateRecords = $('#rcreate').attr('checked')=='checked';
-		role.ReadRecords = $('#rread').attr('checked')=='checked';
-		role.UpdateRecords = $('#rupdate').attr('checked')=='checked';
-		role.DeleteRecords = $('#rdelete').attr('checked')=='checked';
-		role.AdminUsers = $('#auser').attr('checked')=='checked';
-		role.ReadUsers = $('#ruser').attr('checked')=='checked';
-		role.AdminRoles = $('#roadmin').attr('checked')=='checked';
-		role.AssignRoles = $('#roassign').attr('checked')=='checked';
-		role.ReadRoles = $('#roread').attr('checked')=='checked';
-	}
-	
-	$(document).ready(function() {
-		
-		//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-		
-		var current_button = 'roles';
-		makeAdminNav(current_button);
-		
-		// set radio button to role panel...
-		$('input[name="radio"]')[1].checked = true;
-		$('#admin_radio').buttonset(KEY_REFRESH);
-		
-		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
-			deleteRole();
-		});
-		
-		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
-			if(selectRole) {
-				processForm(selectRole);
-				roleio.update(selectRole);
-			} else {
-				var role = {};
-				processForm(role);
-				roleio.create(role);
-			}
-		});
-		
-		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-			$('#rolesList').dfPagerUI('enableAll');
-			showRole(null);
-		});
-		
-		$("#addApp").button({text:false,icons: {primary: "ui-icon-plusthick"}}).click(function(){
-			// add application to list
-			var id = $("#appId").val();
-			var label = $("#appId option:selected").text();
-			
-			if($("#APP_ID_"+id).data('label') == label) return;
-			
-			
-			var n = $('<div id="APP_ID_'+id+'" data-aid="'+id+'" data-label="'+label+'"><span class="ui-icon ui-icon-closethick cRight" id="REMOVE_'+id+'" title="Remove '+label+' From List"></span>'+label+'</div><div class="cClear"><!--  --></div>');
-			
-			
-			$("#APP_ID_LIST").append(n);
-			
-			$('#REMOVE_'+id).click(function(){
-				var c = confirm("Are you sure you want to remove "+$(this).parent().data('label')+" from the list?");
-				if(c) $("#APP_ID_"+id).remove();
-				//alert($(this).parent().data('aid'));
-			});
-		});
-		
-		$("#REC_READ").click(function(){
-			var $this = $(this);
-			if($this.hasClass("ui-icon-check")) {
-				$this.removeClass("ui-icon-check");
-				$this.addClass("ui-icon-close");
-			} else {
-				$this.addClass("ui-icon-check");
-				$this.removeClass("ui-icon-close");
-			}
-		});
-		
-		$("#REC_CREATE").click(function(){
-			var $this = $(this);
-			if($this.hasClass("ui-icon-check")) {
-				$this.removeClass("ui-icon-check");
-				$this.addClass("ui-icon-close");
-			} else {
-				$this.addClass("ui-icon-check");
-				$this.removeClass("ui-icon-close");
-			}
-		});
-		
-		$("#REC_UPDATE").click(function(){
-			var $this = $(this);
-			if($this.hasClass("ui-icon-check")) {
-				$this.removeClass("ui-icon-check");
-				$this.addClass("ui-icon-close");
-			} else {
-				$this.addClass("ui-icon-check");
-				$this.removeClass("ui-icon-close");
-			}
-		});
-		
-		$("#REC_DELETE").click(function(){
-			var $this = $(this);
-			if($this.hasClass("ui-icon-check")) {
-				$this.removeClass("ui-icon-check");
-				$this.addClass("ui-icon-close");
-			} else {
-				$this.addClass("ui-icon-check");
-				$this.removeClass("ui-icon-close");
-			}
-		});
-		
-		$("#addService").button({text:false,icons: {primary: "ui-icon-plusthick"}}).click(function(){
-			// add application to list
-			var id = $("#serviceId").val();
-			var label = $("#serviceId option:selected").text();
-			
-			/*
-			if($("#APP_ID_"+id).data('label') == label) return;
-			
-			
-			var n = $('<div id="APP_ID_'+id+'" data-aid="'+id+'" data-label="'+label+'"><span class="ui-icon ui-icon-closethick cRight" id="REMOVE_'+id+'" title="Remove '+label+' From List"></span>'+label+'</div><div class="cClear"><!--  --></div>');
-			
-			
-			$("#APP_ID_LIST").append(n);
-			
-			$('#REMOVE_'+id).click(function(){
-				var c = confirm("Are you sure you want to remove "+$(this).parent().data('label')+" from the list?");
-				if(c) $("#APP_ID_"+id).remove();
-				//alert($(this).parent().data('aid'));
-			});
-			*/
-		});
-		
-		$( "#savingDialog" ).dialog( "destroy" );
-		$("#savingDialog").dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			closeOnEscape: false,
-			buttons: {	}
-		});
-		
-		$("#errorDialog" ).dialog( "destroy" );
-		$("#errorDialog").dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			closeOnEscape: false,
-			buttons: {	}
-		});
-		
-		$( "#confirmDialog" ).dialog( "destroy" );
-		$( "#confirmDialog" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				Continue: function() {
-					refreshList(true);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-		
-		$( "#confirmDeleteRoleDialog" ).dialog( "destroy" );
-		$( "#confirmDeleteRoleDialog" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				Continue: function() {
-					deleteRole(true);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-		
-		$( "#recordsgroup" ).buttonset();
-		$( "#admingroup" ).buttonset();
-		$( "#rolesgroup" ).buttonset();
-		
-		appio.retrieve();
-		
-		$('#rolesList').dfPagerUI({
-			app: 'admin',
-			service: "System",
-			resource: '/Role',
-			pageNo: 0,
-			pageLimit: 1,
-			pageLimits: [10,25,50,100],
-			orderBy: 0,
-			orderFields: ['Id','AppId','Name'],
-			renderer: function(container,json) {
-				showRole(null);
-				var roles = CommonUtilities.flattenResponse(json);
-				if(roles.length > 0) {
-					current_roles = roles;
-					renderRoles(container,roles);
-					resizeUi();
-					return roles.length;
-				} else {
-					renderRoles(container,roles);
-					container.append('<i>End Of List</i>');
-					resizeUi();
-					return 0;
-				}
-			}
-		});
-		
-		
-	});
-		</script>
+		<script src="js/roles.js"></script>
 	</head>
 	<body>
 		<div id="main_content" align="left">
 			<div id="admin_radio"></div>
 			<div id="admin_panel" class="">
-				<div class="cLeft cW3333 cH100" id="rolesList"></div>
-				<div class="cLeft cW50 cH100">
+				<div class="cLeft cW33 cH100" id="rolesList"></div>
+				<div class="cLeft cW66 cH100">
 					<div class="cP1">
 						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
-							<strong>Role Editor:</strong> Use these controls below to create, update and delete roles in the list
-							to the left.
-							
+							<strong>Role Editor:</strong> Use these controls below to create, update and delete roles in the list to the left.
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>Name:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" id="rName" value="" size="32" onkeyup="makeClearable()"/>
+								<div class="cLeft cW85">
+									<input type="text" class="cW98" id="rName" value="" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
-							
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>Description:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" id="rDescription" value="" size="32" onkeyup="makeClearable()"/>
+								<div class="cLeft cW85">
+									<input type="text" class="cW98" id="rDescription" value="" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
-							
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>Applications:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<select id="appId" class="ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()">
-										<option>[ Loading, Please Wait... ]</option>
-									</select>
-									<button id="addApp">Add Application To List</button>
+								<div class="cLeft cW85">
 									<div style="height:75px;">
 										<div id="APPS_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-all " align="center">
-											<div id="APP_ID_LIST" class="cM1" align="left"></div>
+											<div id="APP_ID_LIST" class="" align="left"></div>
 										</div>
 									</div>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
-							
 							<br/>
-							
-							
-							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong><br/>Services:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW50">
-									
-									<div>
-										<div class="cLeft cW30">
-											&nbsp;
-										</div>
-										<div class="cLeft cW30">
-											&nbsp;
-										</div>
-										<div class="cLeft cW30">
-											<div align="center" class="cLeft " style="width:16px;height:16px;" id="" title=""><strong>R</strong></div>
-											<div align="center" class="cLeft " style="width:16px;height:16px;" id="" title=""><strong>C</strong></div>
-											<div align="center" class="cLeft " style="width:16px;height:16px;" id="" title=""><strong>U</strong></div>
-											<div align="center" class="cLeft " style="width:16px;height:16px;" id="" title=""><strong>D</strong></div>
-										</div>
-										<div class="cClear"><!--  --></div>
-									</div>
-									
-									<div>
-										<div class="cLeft cW30">
-											<select id="serviceId" class="cW100 ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()">
-												<option>All</option>
-											</select>
-										</div>
-										<div class="cLeft cW30">
-											<select id="extension" class="cW100 ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()">
-												<option>All</option>
-											</select>
-										</div>
-										<div class="cLeft cW40">
-											<button class="cRight" id="addService">Add Service To List</button>
-											<span class="cLeft ui-icon ui-icon-close" id="REC_READ" title=""></span>
-											<span class="cLeft ui-icon ui-icon-close" id="REC_CREATE" title=""></span>
-											<span class="cLeft ui-icon ui-icon-close" id="REC_UPDATE" title=""></span>
-											<span class="cLeft ui-icon ui-icon-close" id="REC_DELETE" title=""></span>
-										</div>
-										<div class="cClear"><!--  --></div>
-									</div>
-									
-									
-									<div  style="height:75px;">
-										<div id="SERVICE_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-all " align="center">
-											<div id="SERVICE_ID_LIST" class="cM1" align="left"></div>
-										</div>
-									</div>
-								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
-							
 							<br/>
-							
-							<div style="display:none;">
-							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Records:&nbsp;</strong>
+							<div class="cTM1 cClear">
+								<div class="cLeft cW15 formLabel" align="right">
+									<strong>Services:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<div id="recordsgroup">
-										<input type="checkbox" id="rcreate" onchange="makeClearable()"/><label for="rcreate">Create</label><input type="checkbox" id="rread" onchange="makeClearable()"/><label for="rread">Read</label><input type="checkbox" id="rupdate" onchange="makeClearable()"/><label for="rupdate">Update</label><input type="checkbox" id="rdelete" onchange="makeClearable()"/><label for="rdelete">Delete</label>
+								<div class="cLeft cW85">
+										<div class="scrollablePane cClear ui-widget ui-state-default ui-corner-top " align="center">
+											<div>
+												<div class="cLeft cW30" align="center">
+													Service
+												</div>
+												<div class="cLeft cW30 cLM1" align="center">
+													Component
+												</div>
+												<div class="cLeft cW30" align="center">
+													<div class="cLeft cW25" align="center">
+														C
+													</div>
+													<div class="cLeft cW25" align="center">
+														R
+													</div>
+													<div class="cLeft cW25" align="center">
+														U
+													</div>
+													<div class="cLeft cW25" align="center">
+														D
+													</div>
+													<div class="cClear"><!--  --></div>
+												</div>
+												<div class="cClear"><!--  --></div>
+											</div>
+											<div class="">
+												<div class="cLeft cW30">
+													<select id="serviceSelect" data-index="-1" class="cW100" onchange="doListSelect(this);">
+														<option value="All">All</option>
+													</select>
+												</div>
+												<div class="cLeft cW30 cLM1">
+													<select id="componentSelect" class="cW100">
+														<option value="All">All</option>
+													</select>
+												</div>
+												<div class="cLeft cW30">
+													<div class="cLeft cW25">
+														<input type="checkbox" title="Create" id="Create">
+													</div>
+													<div class="cLeft cW25">
+														<input type="checkbox" title="Read" id="Read">
+													</div>
+													<div class="cLeft cW25">
+														<input type="checkbox" title="Update" id="Update">
+													</div>
+													<div class="cLeft cW25">
+														<input type="checkbox" title="Delete" id="Delete">
+													</div>
+													<div class="cClear"><!--  --></div>
+												</div>
+												<button id="addService" class="ui-state-df-green">Add Service To List</button>
+												<div class="cClear"><!--  --></div>
+											</div>
+										</div>
+									<div style="height:150px;position:relative;top:-1px;">
+										<div id="SERVICE_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-bottom " align="center">
+											<div id="SERVICE_ID_LIST" class="cTM2" align="left"></div>
+										</div>
 									</div>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
-							
-							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Administration:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW50">
-									<div id="admingroup">
-										<input type="checkbox" id="auser" onchange="makeClearable()"/><label for="auser">Admin Users</label><input type="checkbox" id="ruser" onchange="makeClearable()"/><label for="ruser">Read Users</label>
-									</div>
-								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
-							
-							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Roles:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW50">
-									<div id="rolesgroup">
-										<input type="checkbox" id="roread" onchange="makeClearable()"/><label for="roread">Read</label><input type="checkbox" id="roassign" onchange="makeClearable()"/><label for="roassign">Assign</label><input type="checkbox" id="roadmin" onchange="makeClearable()"/><label for="roadmin">Admin</label>
-									</div>
-								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
-						</div>
-						
-						</div>
-						
-						<br/>
-						<br/>
-						<div class="cTM1">
-							<div class="cLeft cW75 " align="right">
+							<br/>
+							<div class="cTM1" align="right">
 								<button id="clear">New Role</button>
 								<button id="delete">Delete Role</button>
 								<button id="save"><span id="saveLabel">Save Role</span></button>
 							</div>
-							<div class="cClear"><!--  --></div>
 						</div>
 					</div>
 				</div>
-				<div class="cClear"><!--  --></div>
-				<div id="savingDialog" title="Saving, Please Wait..." class="cTxtLeft">
-					<p class="cP1">
-						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-						The changes are being saved. Please do not close this tab or the browser.
-					</p>
-				</div>
-				<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
-					<p class="ui-state-error ui-corner-all cP1">
-						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-						<span id="errorMsg"><!--  --></span>
-					</p>
-				</div>
-				<div id="confirmDialog" title="Please Confirm:" class="cTxtLeft">
-					<p class="cP1">
-						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-						<span id="confirmMsg">
-							The list of roles has unsaved changes. Refreshing the list will destroy all changes made to the list.
-							<br/>
-							<br/>
-							Do you want to continue?
-						</span>
-					</p>
-				</div>
-				<div id="confirmDeleteRoleDialog" title="Please Confirm Delete:" class="cTxtLeft">
-					<p class="cP1">
-						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-						<span id="confirmMsg">
-							You are about to delete <span id="deleteRole"><!--  --></span>. Are you sure you want to delete this role from the system?
-						</span>
-					</p>
-				</div>
 			</div>
+		</div>
+		<div id="savingDialog" title="Saving, Please Wait..." class="cTxtLeft">
+			<p class="cP1">
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+				The changes are being saved. Please do not close this tab or the browser.
+			</p>
+		</div>
+		<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+			<p class="ui-state-error ui-corner-all cP1">
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+				<span id="errorMsg"><!--  --></span>
+			</p>
+		</div>
+		<div id="confirmDialog" title="Please Confirm:" class="cTxtLeft">
+			<p class="cP1">
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+				<span id="confirmMsg">
+					The list of roles has unsaved changes. Refreshing the list will destroy all changes made to the list.
+					<br/>
+					<br/>
+					Do you want to continue?
+				</span>
+			</p>
+		</div>
+		<div id="confirmDeleteRoleDialog" title="Please Confirm Delete:" class="cTxtLeft">
+			<p class="cP1">
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+				<span id="confirmMsg">
+					You are about to delete <span id="deleteRole"><!--  --></span>. Are you sure you want to delete this role from the system?
+				</span>
+			</p>
 		</div>
 	</body>
 </html>

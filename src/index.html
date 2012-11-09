@@ -2,279 +2,32 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 		
 		<!-- Standard CSS -->
-		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
+		<link rel="stylesheet" href="../../themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
 		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
 		
-		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
-		
 		<!-- jQuery Imports -->
-		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
-		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/jquery-1.8.2.min.js"></script>
+		<script src="../../jQuery/jquery-ui-1.9.1.custom.min.js"></script>
 		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
 		
 		<!-- DF Imports -->
 		<script src="../../dfcore/dfio.js"></script>
 		<script src="../../dfcore/jquery.dfpager.js"></script>
 		
-		<!-- DF Admin -->
+		<!-- Initialize the system and start the application -->
+		<script src="js/users.js"></script>
 		<script src="js/admin.js"></script>
 		<script src="js/jquery.dfpagerui.js"></script>
-		
-		<!-- Initialize the system and start the application -->
-		<script>
-
-	var isPageDirty = false;
-	var selected_user_id = -1;
-	var current_users = null;
-	var selectUser = null;
-	
-	function makeUserButton(id,name,container) {
-		container.append($('<button id="USER_'+id+'" class="user_button" style="width:100%;margin-top: 4px;"><span id="DFUserLabel_'+id+'">'+name+'</span></button>'));
-	}
-	
-	function renderUsers(container,users) {
-		for(var i = 0; i < users.length; i++) {
-			if(!users[i]) continue;
-			makeUserButton(i,users[i].FullName,container);
-			if(selected_user_id > -1 && parseInt(users[i].Id) == selected_user_id) {
-				selected_user = i;
-				selected_user_id = -1;
-			}
-		}
-		$('.user_button').button({icons: {primary: "ui-icon-person"}}).click(function(){
-			showUser(null); // clear user selection
-			$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
-			showUser(current_users[parseInt($(this).attr('id').substring('USER_'.length))]);
-		});
-	}
-	
-	function showUser(user) {
-		selectUser = user;
-		if(user) {
-			$('input:text[name=username]').val(user.UserName);
-			$('input:text[name=fullname]').val(user.FullName);
-			$('input:text[name=lastname]').val(user.LastName);
-			$('input:text[name=firstname]').val(user.FirstName);
-			$('input:text[name=email]').val(user.Email);
-			$('input:text[name=phone]').val(user.Phone);
-			if(user.IsActive == 'true') {
-				$('input[name="isactive"]')[0].checked = true;
-			} else {
-				$('input[name="isactive"]')[1].checked = true;
-			}
-			if(user.IsSysAdmin == 'true') {
-				$('input[name="issysadmin"]')[0].checked = true;
-			} else {
-				$('input[name="issysadmin"]')[1].checked = true;
-			}
-			$('#active').buttonset('refresh');
-			$('#sys_admin').buttonset('refresh');
-			//$('#saveLabel').html('Save');
-			$("#save").button({ disabled: true });
-		} else {
-			if(current_users) {
-				for(var i in current_users) {
-					$('#USER_'+i).button( "option", "icons", {primary: 'ui-icon-person', secondary:''} );
-				}
-			}
-			$('input:text[name=username]').val('');
-			$('input:text[name=fullname]').val('');
-			$('input:text[name=lastname]').val('');
-			$('input:text[name=firstname]').val('');
-			$('input:text[name=email]').val('');
-			$('input:text[name=phone]').val('');
-			$('input[name="isactive"]')[1].checked = true;
-			$('input[name="issysadmin"]')[1].checked = true;
-			$('#active').buttonset('refresh');
-			$('#sys_admin').buttonset('refresh');
-			//$('#saveLabel').html('Add New User');
-			
-			$('#save').button({ disabled: false });
-		}
-		
-		if(user) {
-			$('#delete').button({ disabled: false });
-			$('#clear').button({ disabled: false });
-		} else {
-			$('#delete').button({ disabled: true });
-			$('#clear').button({ disabled: true });
-		}
-		
-	}
-	
-	function makeClearable() {
-		$('#clear').button({ disabled: false });
-		$('#usersList').dfPagerUI('disableAll');
-		$("#save").button({ disabled: false });
-	}
-	
-	var dfio = new DFRequest({
-		app: "admin",
-		service: "System",
-		resource: "/User",
-		type: DFRequestType.POST,
-		success: function(json) {
-			var errorMsg = checkFailure(json);
-			if(errorMsg) {
-				$('#errorMsg').html(errorMsg);
-				$('#errorDialog').dialog('open');
-			} else {
-				$('#usersList').dfPager('fetch');
-			}
-			$("#save").button({ disabled: true });
-			$('#usersList').dfPagerUI('enableAll');
-		},
-		error: function(err) {
-			$('#errorMsg').html(err);
-			$('#errorDialog').dialog('open');
-   		}
-	});
-	
-	function pullFormData(obj) {
-		obj.UserName  = $('input:text[name=username]').val();
-		obj.FullName  = $('input:text[name=fullname]').val();
-		obj.LastName  = $('input:text[name=lastname]').val();
-		obj.FirstName = $('input:text[name=firstname]').val();
-		obj.Email     = $('input:text[name=email]').val();
-		obj.Phone     = $('input:text[name=phone]').val();
-		
-		if($('input[name="isactive"]')[1].checked) {
-			obj.IsActive = 'false';
-		} else {
-			obj.IsActive = 'true';
-		}
-		
-		if($('input[name="issysadmin"]')[1].checked) {
-			obj.IsSysAdmin = 'false';
-		} else {
-			obj.IsSysAdmin = 'true';
-		}
-		
-		// make sure we are not sending back unused data
-		obj.CreatedById      = null;
-		obj.CreatedDate      = null;
-		obj.LastModifiedDate = null;
-		obj.LastModifiedById = null;
-		obj.ConfirmCode      = null;
-	}
-	
-	function deleteUser(confirmed) {
-		if(selectUser) {
-			if(confirmed) {
-				dfio.deletes(selectUser.Id);
-			} else {
-				$( "#deleteUser" ).html(selectUser.FullName);
-				$( "#confirmDeleteUserDialog" ).dialog('open');
-			}
-		}
-	}
-	
-	$(document).ready(function() {
-		
-		//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-		var current_button = 'index';
-		makeAdminNav(current_button);
-		
-		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
-			deleteUser();
-		});
-		
-		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
-			if(selectUser) {
-				pullFormData(selectUser);
-				dfio.update(selectUser);
-			} else {
-				var user = {};
-				pullFormData(user);
-				dfio.create(user);
-			}
-		});
-		
-		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-			navControl(true);
-			$('#usersList').dfPagerUI('enableAll');
-			showUser(null);
-		});
-		
-		$("#errorDialog").dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			closeOnEscape: false,
-			buttons: {	}
-		});
-		
-		$( "#confirmDialog" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				Continue: function() {
-					refreshList(true);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-		
-		$( "#confirmDeleteUserDialog" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				Continue: function() {
-					deleteUser(true);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-		
-		$("#active").buttonset();
-		$("#sys_admin").buttonset();
-		
-		$("#usersList").dfPagerUI({
-			app: "admin",
-			service: "System",
-			resource: "/User",
-			pageNo: 0,
-			pageLimit: 1,
-			pageLimits: [10,25,50,100],
-			orderBy: 0,
-			orderFields: ["Id","LastName","FirstName"],
-			ctrl_btns: navControl,
-			renderer: function(container,json) {
-				showUser(null);
-				var users = CommonUtilities.flattenResponse(json);
-				if(users.length > 0) {
-					current_users = users;
-					renderUsers(container,users);
-					resizeUi();
-					return users.length;
-				} else {
-					renderUsers(container,users);
-					container.append("<i>End Of List</i>");
-					resizeUi();
-					return 0;
-				}
-			}
-		});
-	});
-		</script>
 	</head>
 	<body>
 		<div id="main_content" align="left">
 			<div id="admin_radio"></div>
 			<div id="admin_panel" class="">
-				<div class="cLeft cW3333 cH100" id="usersList"></div>
-				<div class="cLeft cW50 cH100">
+				<div class="cLeft cW33 cH100" id="usersList"></div>
+				<div class="cLeft cW66 cH100">
 					<div class="cP1">
 						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
 							<strong>User Editor:</strong> Use these controls below to create, update and delete users in the list
@@ -282,65 +35,65 @@
 							<br/>
 							<br/>
 							<div>
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>User Name:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="username" value="" size="32" onkeyup="makeClearable()"/>
+								<div class="cLeft cW85">
+									<input type="text" class="cW98" name="username" value="" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>Full Name:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="fullname" value="" size="32" onkeyup="makeClearable()"/>
+								<div class="cLeft cW85">
+									<input type="text" class="cW98" name="fullname" value="" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>First Name:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="firstname" value="" size="32" onkeyup="makeClearable()"/>
+								<div class="cLeft cW85">
+									<input type="text" class="cW98" name="firstname" value="" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>Last Name:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="lastname" value="" size="32" onkeyup="makeClearable()"/>
+								<div class="cLeft cW85">
+									<input type="text" class="cW98" name="lastname" value="" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>Email:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="email" value="" size="32" onkeyup="makeClearable()"/>
+								<div class="cLeft cW85">
+									<input type="text" class="cW98" name="email" value="" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>Telephone:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="phone" value="" size="32" onkeyup="makeClearable()"/>
+								<div class="cLeft cW85">
+									<input type="text" class="cW98" name="phone" value="" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
 							
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>Status:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
+								<div class="cLeft cW85">
 									<div id="active">
 										<input type="radio" id="isactive" name="isactive" onchange="makeClearable()"/><label for="isactive">Active</label><input type="radio" id="inactive" name="isactive" onchange="makeClearable()" checked="checked" /><label for="inactive">Inactive</label>
 									</div>
@@ -349,10 +102,10 @@
 							</div>
 							
 							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
+								<div class="cLeft cW15 formLabel" align="right">
 									<strong>User Type:&nbsp;</strong>
 								</div>
-								<div class="cLeft cW50">
+								<div class="cLeft cW85">
 									<div id="sys_admin">
 										<input type="radio" id="sysadmin" name="issysadmin" onchange="makeClearable()" /><label for="sysadmin">Administrator</label><input type="radio" id="sysuser" name="issysadmin" onchange="makeClearable()" checked="checked" /><label for="sysuser">Standard User</label>
 									</div>
@@ -362,13 +115,10 @@
 							
 							<br/>
 							<br/>
-							<div class="cTM1">
-								<div class="cLeft cW75 " align="right">
-									<button id="clear">New User</button>
-									<button id="delete">Delete User</button>
-									<button id="save"><span id="saveLabel">Save User</span></button>
-								</div>
-								<div class="cClear"><!--  --></div>
+							<div class="cTM1" align="right">
+								<button id="clear">New User</button>
+								<button id="delete">Delete User</button>
+								<button id="save"><span id="saveLabel">Save User</span></button>
 							</div>
 						</div>
 					</div>

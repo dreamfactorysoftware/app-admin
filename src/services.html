@@ -2,267 +2,25 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 		
 		<!-- Standard CSS -->
-		<link rel="stylesheet" href="../../css/base.css" type="text/css" />
+		<link rel="stylesheet" href="../../themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
 		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
 		
-		<link rel="stylesheet" href="../../themes/ui-lightness/jquery-ui-1.8.23.custom.css" type="text/css" />
-		
 		<!-- jQuery Imports -->
-		<script src="../../jQuery/jquery-1.8.1.min.js"></script>
-		<script src="../../jQuery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+		<script src="../../jQuery/jquery-1.8.2.min.js"></script>
+		<script src="../../jQuery/jquery-ui-1.9.1.custom.min.js"></script>
 		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
 		
 		<!-- DF Imports -->
 		<script src="../../dfcore/dfio.js"></script>
 		<script src="../../dfcore/jquery.dfpager.js"></script>
 		
-		<!-- DF Admin -->
+		<!-- Initialize the system and start the application -->
+		<script src="js/services.js"></script>
 		<script src="js/admin.js"></script>
 		<script src="js/jquery.dfpagerui.js"></script>
-		
-		<!-- Initialize the system and start the application -->
-		<script>
-
-	var isPageDirty = false;
-	var selected_service_id = -1;
-	var current_service = null;
-	var selectService = null;
-	
-	function makeServiceButton(id,name,container) {
-		container.append($('<button id="SERV_'+id+'" class="service_button" style="width:100%;margin-top: 4px;"><span id="DFServiceLabel_'+id+'">'+name+'</span></button>'));
-	}
-	
-	function renderServices(container,services) {
-		for(var i = 0; i < services.length; i++) {
-			if(!services[i]) continue;
-			makeServiceButton(i,services[i].Label,container);
-			if(selected_service_id > -1 && parseInt(services[i].Id) == selected_service_id) {
-				selected_user = i;
-				selected_service_id = -1;
-			}
-		}
-		$('.service_button').button({icons: {primary: "ui-icon-star"}}).click(function(){
-			showService(null); // clear user selection
-			$(this).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
-			showService(current_service[parseInt($(this).attr('id').substring('SERV_'.length))]);
-		});
-	}
-	
-	function showService(service) {
-		selectService = service;
-		if(service) {
-			$('input:text[name=Name]').val(service.Name);
-			$('input:text[name=Label]').val(service.Label);
-			if(service.IsActive == 'true') {
-				$('input[name="IsActive"]')[0].checked = true;
-			} else {
-				$('input[name="IsActive"]')[1].checked = true;
-			}
-			
-			$("#serviceType").val(service.Type);
-			$("#serviceType").trigger('change');
-			
-			$('input:text[name=BaseUrl]').val(service.BaseUrl);
-			$('textarea#HeaderList').val(service.HeaderList);
-			$('textarea#ParamList').val(service.ParamList);
-			$('#active').buttonset('refresh');
-			$("#save").button({ disabled: true });
-		} else {
-			if(current_service) {
-				for(var i in current_service) {
-					$('#SERV_'+i).button( "option", "icons", {primary: 'ui-icon-star', secondary:''} );
-				}
-			}
-			$('input:text[name=Name]').val('');
-			$('input:text[name=Label]').val('');
-			
-			$("#serviceType").val('');
-			$("#serviceType").trigger('change');
-			
-			$('input:text[name=BaseUrl]').val('');
-			$('textarea#HeaderList').val('');
-			$('textarea#ParamList').val('');
-			$('input[name="IsActive"]')[0].checked = true;
-			$('#active').buttonset('refresh');
-			$('#save').button({ disabled: false });
-		}
-		if(service) {
-			$('#delete').button({ disabled: false });
-			$('#clear').button({ disabled: false });
-		} else {
-			$('#delete').button({ disabled: true });
-			$('#clear').button({ disabled: true });
-		}
-		
-	}
-	
-	function makeClearable() {
-		$('#clear').button({ disabled: false });
-		$('#serviceList').dfPagerUI('disableAll');
-		$("#save").button({ disabled: false });
-	}
-	
-	var serviceio = new DFRequest({
-		app: 'admin',
-		service: "System",
-		resource: '/Service',
-		type: DFRequestType.POST,
-		success: function(json) {
-			var errorMsg = checkFailure(json);
-			if(errorMsg) {
-				$('#errorMsg').html(errorMsg);
-				$('#errorDialog').dialog('open');
-			} else {
-				$('#serviceList').dfPager('fetch');
-			}
-			navControl(true);
-			$("#save").button({ disabled: true });
-			$('#serviceList').dfPagerUI('enableAll');
-		},
-		error: function(err) {
-			$('#errorMsg').html(err);
-			$('#errorDialog').dialog('open');
-   		}
-	});
-	
-	function deleteService(confirmed) {
-		if(selectService) {
-			if(confirmed) {
-				serviceio.deletes(selectService.Id);
-			} else {
-				$( "#deleteService" ).html(selectService.Label);
-				$( "#confirmDeleteUserDialog" ).dialog('open');
-			}
-		}
-	}
-	
-	function getForm(ws) {
-		ws.Name = $('input:text[name=Name]').val();
-		ws.Label = $('input:text[name=Label]').val();
-		ws.Type = $('input:text[name=Type]').val();
-		ws.BaseUrl = $('input:text[name=BaseUrl]').val();
-		ws.HeaderList = $('textarea#HeaderList').val();
-		ws.ParamList = $('textarea#ParamList').val();
-		ws.IsActive = !$('input[name="IsActive"]')[1].checked;
-	}
-	
-	$(document).ready(function() {
-		
-		//$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
-		
-		makeAdminNav('services');
-		
-		$("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
-			deleteService();
-		});
-		
-		$("#save").button({icons: {primary: "ui-icon-disk"}}).click(function(){
-			if(selectService) {
-				getForm(selectService);
-				serviceio.update(selectService);
-			} else {
-				var service = {};
-				getForm(service);
-				serviceio.create(service);
-			}
-		});
-		
-		$("#clear").button({icons: {primary: "ui-icon-document"}}).click(function(){
-			navControl(true);
-			$('#serviceList').dfPagerUI('enableAll');
-			showService(null);
-		});
-		
-		$("#errorDialog").dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			closeOnEscape: false,
-			buttons: {	}
-		});
-		
-		$( "#confirmDialog" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				Continue: function() {
-					refreshList(true);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-		
-		$( "#confirmDeleteUserDialog" ).dialog({
-			resizable: false,
-			modal: true,
-			autoOpen: false,
-			buttons: {
-				Continue: function() {
-					deleteService(true);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-		
-		$("#active").buttonset();
-		$("#sys_admin").buttonset();
-		$("#WebOptions").hide();
-		
-		$('#serviceType').change(function(){
-			switch($(this).val()) {
-				case 'Native':
-					$("#WebOptions").hide();
-					break;
-				case 'Managed':
-					$("#WebOptions").hide();
-					break;
-				case 'Web':
-					$("#WebOptions").show();
-					break;
-				default:
-					$("#WebOptions").hide();
-					break;
-			}
-		});
-		
-		$("#serviceList").dfPagerUI({
-			app: "admin",
-			service: "System",
-			resource: "/Service",
-			pageNo: 0,
-			pageLimit: 1,
-			pageLimits: [10,25,50,100],
-			orderBy: 0,
-			orderFields: ["Id","Name"],
-			ctrl_btns: navControl,
-			renderer: function(container,json) {
-				showService(null);
-				var services = CommonUtilities.flattenResponse(json);
-				if(services.length > 0) {
-					current_service = services;
-					renderServices(container,services);
-					resizeUi();
-					return services.length;
-				} else {
-					renderServices(container,services);
-					container.append("<i>End Of List</i>");
-					resizeUi();
-					return 0;
-				}
-			}
-		});
-	});
-		</script>
 	</head>
 	<body>
 		<div id="main_content" align="left">
@@ -281,7 +39,7 @@
 									<strong>Name:&nbsp;</strong>
 								</div>
 								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Name" value="" size="32" onkeyup="makeClearable()"/>
+									<input type="text" class="" name="Name" value="" size="32" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
@@ -290,7 +48,7 @@
 									<strong>Label:&nbsp;</strong>
 								</div>
 								<div class="cLeft cW50">
-									<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="Label" value="" size="32" onkeyup="makeClearable()"/>
+									<input type="text" class="" name="Label" value="" size="32" onkeyup="makeClearable()"/>
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
@@ -314,7 +72,7 @@
 									<strong>Type:&nbsp;</strong>
 								</div>
 								<div class="cLeft cW50">
-									<select class="ui-widget ui-state-default ui-corner-all cP2" onchange="makeClearable()" name="Type" id="serviceType">
+									<select class="" onchange="makeClearable()" name="Type" id="serviceType">
 										<option value="">[Please Select A Type]</option>
 										<option value="Native">Native</option>
 										<option value="Managed">Managed</option>
@@ -330,7 +88,7 @@
 										<strong>Base URL:&nbsp;</strong>
 									</div>
 									<div class="cLeft cW50">
-										<input type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="BaseUrl" value="" size="32" onkeyup="makeClearable()"/>
+										<input type="text" class="" name="BaseUrl" value="" size="32" onkeyup="makeClearable()"/>
 									</div>
 									<div class="cClear"><!--  --></div>
 								</div>
@@ -340,7 +98,7 @@
 										<strong>Header List:&nbsp;</strong>
 									</div>
 									<div class="cLeft cW50">
-										<textarea class="ui-widget ui-state-default ui-corner-all cP2" name="HeaderList" id="HeaderList" cols="32" rows="3" onkeyup="makeClearable()"></textarea>
+										<textarea class="" name="HeaderList" id="HeaderList" cols="32" rows="3" onkeyup="makeClearable()"></textarea>
 									</div>
 									<div class="cClear"><!--  --></div>
 								</div>
@@ -350,7 +108,7 @@
 										<strong>Parameter List:&nbsp;</strong>
 									</div>
 									<div class="cLeft cW50">
-										<textarea type="text" class="ui-widget ui-state-default ui-corner-all cP2" name="ParamList" id="ParamList" cols="32" rows="3" onkeyup="makeClearable()"></textarea>
+										<textarea class="" name="ParamList" id="ParamList" cols="32" rows="3" onkeyup="makeClearable()"></textarea>
 									</div>
 									<div class="cClear"><!--  --></div>
 								</div>
@@ -361,7 +119,7 @@
 							<br/>
 							<div class="cTM1">
 								<div class="cLeft cW75 " align="right">
-									<button id="clear">New Serive</button>
+									<button id="clear">New Service</button>
 									<button id="delete">Delete Service</button>
 									<button id="save"><span id="saveLabel">Save Service</span></button>
 								</div>
