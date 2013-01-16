@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.2.min.js"></script>
+		<script src="../../jQuery/jquery-ui-1.9.1.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.cookies.2.2.0.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfio.js"></script>
+		<script src="../../dfcore/dferr.js"></script>
+		
+		<!-- DF FileManager -->
+		<script src="js/jquery.dfdropfiles.js"></script>
+		<script src="js/filemanagement.js"></script>
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="fileManagerPanel">
+				<div align="left" class="cH100 ui-widget ui-state-default ui-corner-all ">
+					<div class="cTM1" align="left">
+						<div id="browserControl">
+							<div class="cRight fmToolbar cRM1">
+								<span id="edit_tools">
+									<button id="cut">Cut</button><button id="copy">Copy</button><button id="paste">Paste</button>
+								</span>
+								&nbsp;&nbsp;&nbsp;
+								<span id="madatory_tools">
+									<button id="mkdir">Create Folder</button>&nbsp;<button id="uzip">Upload Zip</button>&nbsp;<button id="rm">Delete Item(s)</button>
+								</span>
+							</div>
+							<div class="cLeft cLM1 fmToolbar">
+								<button id="exit">FILE&nbsp;MANAGER:</button>
+								PATH:<span id="breadcrumbs">/</span>
+							</div>
+							<div class="cClear"><!--  --></div>
+						</div>
+						<div id="fileControl">
+							<div class="cRight fmToolbar">
+								<span id="fileControl_madatory_tools">
+									<button id="exitEditor">Close Editor</button>
+								</span>
+							</div>
+							<strong>EDITING&nbsp;FILE:</strong> <span id="fileControl_breadcrumbs">/</span>
+						</div>
+					</div>
+					<div id="dndPanel" data-target="??CURRENT??" data-type="folder" align="left" style="background: #fff;" class="cCenter cW98 cH90 ui-widget ui-state-default ui-corner-all">
+						<div id="listing" class="scrollablePane cH95 cW98">
+							
+						</div>
+					</div>
+					<div id="editPanel" data-target="??CURRENT??" data-type="folder" align="left" class="cCenter cW98 cH90">
+						<iframe id="editing" width="100%" height="100%" src="about:blank" class="ui-widget ui-state-default ui-corner-all"></iframe>
+					</div>
+				</div>
+				<div class="cClear"></div>
+			</div>
+		</div>
+		<div class="cHidden">
+			<div id="uploadFileHidden" style="display:none;">
+				<form id="uploadFileForm" method="POST" enctype="multipart/form-data" target="uploadFileIframe" action="">
+					<input type="hidden" name="expand" value="true"/>
+					<input id="uploadFileInput" type="file" name="files" onchange="this.form.submit()"/>
+				</form>
+				<iframe id="uploadFileIframe" name="uploadFileIframe" src="about:blank" width="100%" height="70px" onload="checkResults(this)"></iframe>
+			</div>
+			<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+				<p class="ui-state-error ui-corner-all cP1">
+					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+					<span id="errorMsg"><!--  --></span>
+				</p>
+			</div>
+		</div>
+	</body>
+</html>

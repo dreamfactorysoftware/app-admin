@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.2.min.js"></script>
+		<script src="../../jQuery/jquery-ui-1.9.1.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.cookies.2.2.0.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfio.js"></script>
+		
+		<!-- Initialize the system and start the application -->
+		<script src="js/editor.js"></script>
+	</head>
+	<body>
+		<textarea id="editor" style="width:100%;" rows="20" wrap="soft" onkeydown="return catchTab(this,event)"></textarea>
+		<div align="center">
+			<button id="save">Save</button><button id="close">Close</button>
+		</div>
+		<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+			<p class="ui-state-error ui-corner-all cP1">
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+				<span id="errorMsg"><!--  --></span>
+			</p>
+		</div>
+	</body>
+</html>
