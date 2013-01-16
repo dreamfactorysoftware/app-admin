@@ -15,19 +15,21 @@
 		
 		<!-- DF Imports -->
 		<script src="../../dfcore/dfio.js"></script>
-		<script src="../../dfcore/jquery.dfpager.js"></script>
+		<script src="../../dfcore/dferr.js"></script>
+		<script src="../../dfui/jquery.dfsearchwidget.js"></script>
 		
 		<!-- Initialize the system and start the application -->
-		<script src="js/roleassign.js"></script>
+		<script src="js/appgroupassign.js"></script>
 		<script src="js/admin.js"></script>
-		<script src="js/jquery.dfpagerui.js"></script>
 	</head>
 	<body>
 		<div id="main_content" align="left">
 			<div id="admin_radio"></div>
 			<div id="admin_panel" class="">
-				<div class="cLeft cW40 cH100" id="rolesList"></div>
-				<div class="cLeft cW15 cH100">
+				<div class="cLeft cW35 cH100" id="">
+					<div class="cTM2" id="appGrpList"></div>
+				</div>
+				<div class="cLeft cW20 cH100">
 					<div class="cP1 cH95" align="center">
 						<div class="cH35">
 							&nbsp;
@@ -36,9 +38,16 @@
 						<button id="save" class="cW75 cTM1">Save</button>
 					</div>
 				</div>
-				<div class="cLeft cW40 cH100" id="usersList"></div>
+				<div class="cLeft cW35 cH100" id="">
+					<div class="cTM2" id="appsList"></div></div>
 				<div class="cClear"><!--  --></div>
 			</div>
+		</div>
+		<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+			<p class="ui-state-error ui-corner-all cP1">
+				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+				<span id="errorMsg"><!--  --></span>
+			</p>
 		</div>
 	</body>
 </html>

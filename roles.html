@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.2.min.js"></script>
+		<script src="../../jQuery/jquery-ui-1.9.1.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- DF Imports -->
+		<link rel="stylesheet" href="../../themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		<script src="../../dfcore/dfio.js"></script>
+		<script src="../../dfcore/dferr.js"></script>
+		<script src="../../dfui/jquery.dfsearchwidget.js"></script>
+		
+		<!-- Initialize the system and start the application -->
+		<script src="js/admin.js"></script>
+		<script src="js/roles.js"></script>
+		
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="admin_radio"></div>
+			<div id="admin_panel" class="">
+				<div class="cLeft cW33 cH100" id="">
+					<div class="cTM2" id="rolesList"></div>
+				</div>
+				<div class="cLeft cW66 cH100">
+					<div class="cP1">
+						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
+							<strong>Role Editor:</strong> Use these controls below to create, update and delete roles in the list to the left.
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW75">
+									<input type="text" class="cW98 ONKEYUP" id="rName" value=""/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Description:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW75">
+									<input type="text" class="cW98 ONKEYUP" id="rDescription" value=""/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1 cClear">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Applications:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW75">
+									<div style="height:70px;">
+										<div class="scrollablePane cClear ui-widget ui-state-default ui-corner-top " align="left">
+											<div>
+												<input type="checkbox" id="SELECT_ALL_APPS" name="SELECT_ALL_APPS" value="ALL" class="APP_SELECT_ALL ONCHANGE"/>All Applications
+											</div>
+										</div>
+										<div style="height:75px;position:relative;top:-1px;">
+											<div id="APPS_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-bottom whitebg" align="center">
+												<div id="APP_ID_LIST" class="" align="left"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="cTM1 cClear" style="margin-top: 140px;">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Services:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW75">
+										<div class="scrollablePane cClear ui-widget ui-state-default ui-corner-top ">
+											<div id="ServicesHeaders">
+												<div class="cLeft cW30" align="center">
+													Service
+												</div>
+												<div class="cLeft cW30 cLM1" align="center">
+													Component
+												</div>
+												<div class="cLeft cW30" align="center">
+													<div class="cLeft cW25" align="center">
+														C
+													</div>
+													<div class="cLeft cW25" align="center">
+														R
+													</div>
+													<div class="cLeft cW25" align="center">
+														U
+													</div>
+													<div class="cLeft cW25" align="center">
+														D
+													</div>
+													<div class="cClear"><!--  --></div>
+												</div>
+											</div>
+											<div id="ServicesWidgets">
+												
+												<div class="cLeft cW30">
+													<select id="serviceSelect" data-index="-1" class="cW100">
+														<option value="*">All</option>
+													</select>
+												</div>
+												
+												<div class="cLeft cW30 cLM1">
+													<select id="componentSelect" class="cW100">
+														<option value="*">All</option>
+													</select>
+												</div>
+												
+												<div class="cLeft cW30">
+													<div class="cLeft cW25" align="center">
+														<input type="checkbox" title="Create" id="create">
+													</div>
+													<div class="cLeft cW25" align="center">
+														<input type="checkbox" title="Read" id="read">
+													</div>
+													<div class="cLeft cW25" align="center">
+														<input type="checkbox" title="Update" id="update">
+													</div>
+													<div class="cLeft cW25" align="center">
+														<input type="checkbox" title="Delete" id="delete">
+													</div>
+													<div class="cClear"><!--  --></div>
+												</div>
+												<button style="position:relative; top:12px; left: -5px;" id="addService" class="ui-state-df-green">Add Service To List</button>
+												<!--span style="position:relative; top:13px; left: 3px;" class="ui-state-df-green"><span class="ui-icon ui-icon-plusthick offTop3 cLM1" id="addService" title="Add To List"></span></span-->
+												<div class="cClear"><!--  --></div>
+											</div>
+										</div>
+									<div style="height:125px;position:relative;top:-1px;">
+										<div id="SERVICE_SCROLLER" class="scrollablePane cH98 cClear ui-widget ui-state-default ui-corner-bottom whitebg">
+											<div id="SERVICE_ID_LIST" class="cTM2" align="left"></div>
+										</div>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<br/>
+							<div class="cTM1" align="right">
+								<button id="newrole">New Role</button>
+								<button id="deleterole">Delete Role</button>
+								<button id="saverole"><span id="saveLabel">Save Role</span></button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="cHidden">
+			<div id="confirmDeleteRoleDialog" title="Please Confirm Delete:" class="cTxtLeft">
+				<p class="cP1">
+					<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+					<span id="confirmMsg">
+						You are about to delete <span id="deleteconf"><!--  --></span>. Are you sure you want to delete this role from the system?
+					</span>
+				</p>
+			</div>
+		</div>
+	</body>
+</html>

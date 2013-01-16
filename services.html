@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+		
+		<!-- Standard CSS -->
+		<link rel="stylesheet" href="../../themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/layout.css" type="text/css" />
+		
+		<!-- jQuery Imports -->
+		<script src="../../jQuery/jquery-1.8.2.min.js"></script>
+		<script src="../../jQuery/jquery-ui-1.9.1.custom.min.js"></script>
+		<script src="../../jQuery/plugins/jquery.blockUI.js"></script>
+		
+		<!-- DF Imports -->
+		<script src="../../dfcore/dfio.js"></script>
+		<script src="../../dfcore/dferr.js"></script>
+		<script src="../../dfui/jquery.dfsearchwidget.js"></script>
+		
+		<!-- Initialize the system and start the application -->
+		<script src="js/services.js"></script>
+		<script src="js/admin.js"></script>
+	</head>
+	<body>
+		<div id="main_content" align="left">
+			<div id="admin_radio"></div>
+			<div id="admin_panel" class="">
+				<div class="cLeft cW3333 cH100" id="">
+					<div class="cTM2" id="serviceList"></div>
+				</div>
+				<div class="cLeft cW50 cH100">
+					<div class="cP1">
+						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
+							<strong>Web Service Editor:</strong> Use these controls below to create, update and delete Web Services in the list
+							to the left.
+							<br/>
+							<br/>
+							<div>
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Name:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW75">
+									<input type="text" class="cW98" name="Name" value="" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Label:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW75">
+									<input type="text" class="cW98" name="Label" value="" onkeyup="makeClearable()"/>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Status:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW75">
+									<div id="active">
+										<input type="radio" id="IsActive" name="IsActive" onchange="makeClearable()"/><label for="IsActive">Active</label><input type="radio" id="InActive" name="IsActive" onchange="makeClearable()" checked="checked" /><label for="InActive">Inactive</label>
+									</div>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							
+							<div class="cTM1">
+								<div class="cLeft cW25 formLabel" align="right">
+									<strong>Type:&nbsp;</strong>
+								</div>
+								<div class="cLeft cW75">
+									<select class="cW98" onchange="makeClearable()" name="Type" id="serviceType">
+										<option value="">[Please Select A Type]</option>
+										<option value="Native">Native</option>
+                                        <option value="Local File Storage">Local File Storage</option>
+                                        <option value="Remote File Storage">Remote File Storage</option>
+                                        <option value="Local SQL DB">Local SQL DB</option>
+                                        <option value="Remote SQL DB">Remote SQL DB</option>
+										<option value="Remote Web Service">Remote Web Service</option>
+                                        <option value="Local Email Service">Local Email Service</option>
+                                        <option value="Remote Email Service">Remote Email Service</option>
+									</select>
+								</div>
+								<div class="cClear"><!--  --></div>
+							</div>
+							
+							<div id="WebOptions">
+								<div class="cTM1">
+									<div class="cLeft cW25 formLabel" align="right">
+										<strong>Base URL:&nbsp;</strong>
+									</div>
+									<div class="cLeft cW75">
+										<input type="text" class="cW98" name="BaseUrl" value="" onkeyup="makeClearable()"/>
+									</div>
+									<div class="cClear"><!--  --></div>
+								</div>
+								
+								<div class="cTM1">
+									<div class="cLeft cW25 formLabel" align="right">
+										<strong>Header List:&nbsp;</strong>
+									</div>
+									<div class="cLeft cW75">
+										<textarea class="cW98" id="HeaderList" rows="3" onkeyup="makeClearable()"></textarea>
+									</div>
+									<div class="cClear"><!--  --></div>
+								</div>
+								
+								<div class="cTM1">
+									<div class="cLeft cW25 formLabel" align="right">
+										<strong>Parameter List:&nbsp;</strong>
+									</div>
+									<div class="cLeft cW75">
+										<textarea class="cW98" id="ParamList" rows="3" onkeyup="makeClearable()"></textarea>
+									</div>
+									<div class="cClear"><!--  --></div>
+								</div>
+							</div>
+							
+                            <div id="FileOptions">
+                                <div class="cTM1">
+                                    <div class="cLeft cW25 formLabel" align="right">
+                                        <strong>Base Folder Name:&nbsp;</strong>
+                                    </div>
+                                    <div class="cLeft cW75">
+                                        <input type="text" class="cW98" name="StorageName" value="" onkeyup="makeClearable()"/>
+                                    </div>
+                                    <div class="cClear"><!--  --></div>
+                                </div>
+                            </div>
+
+                            <div id="RemoteFileOptions">
+                                <div class="cTM1">
+                                    <div class="cLeft cW25 formLabel" align="right">
+                                        <strong>Storage Type:&nbsp;</strong>
+                                    </div>
+                                    <div class="cLeft cW75">
+                                        <select class="cW98" onchange="makeClearable()" name="StorageType" id="storageType">
+                                            <option value="">[Please Select A Type]</option>
+                                            <option value="Azure Blob">Windows Azure Blob</option>
+                                            <option value="AWS S3">Amazon Web Services S3</option>
+                                        </select>
+                                    </div>
+                                    <div class="cClear"><!--  --></div>
+                                </div>
+
+                                <div class="cTM1">
+                                    <div class="cLeft cW25 formLabel" align="right">
+                                        <strong>Credentials:&nbsp;</strong>
+                                    </div>
+                                    <div class="cLeft cW75">
+                                        <textarea class="cW98" id="Credentials" rows="3" onkeyup="makeClearable()"></textarea>
+                                    </div>
+                                    <div class="cClear"><!--  --></div>
+                                </div>
+
+                            </div>
+
+
+							<br/>
+							<br/>
+							<div class="cTM1" align="right">
+								<button id="new">New Service</button>
+								<button id="delete">Delete Service</button>
+								<button id="save"><span id="saveLabel">Save Service</span></button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="cClear"><!--  --></div>
+				<div id="confirmDeleteServiceDialog" title="Please Confirm Delete:" class="cTxtLeft">
+					<p class="cP1">
+						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+						<span id="confirmMsg">
+							You are about to delete <span id="deleteService"><!--  --></span>. Are you sure you want to delete this service?
+						</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -15,36 +15,51 @@
 		
 		<!-- DF Imports -->
 		<script src="../../dfcore/dfio.js"></script>
-		<script src="../../dfcore/jquery.dfpager.js"></script>
+		<script src="../../dfcore/dferr.js"></script>
 		
 		<!-- Initialize the system and start the application -->
-		<script src="js/appgroupassign.js"></script>
+		<script src="js/roleassign.js"></script>
 		<script src="js/admin.js"></script>
-		<script src="js/jquery.dfpagerui.js"></script>
+		<script src="../../dfui/jquery.dfsearchwidget.js"></script>
 	</head>
 	<body>
 		<div id="main_content" align="left">
 			<div id="admin_radio"></div>
 			<div id="admin_panel" class="">
-				<div class="cLeft cW40 cH100" id="appGrpList"></div>
-				<div class="cLeft cW15 cH100">
-					<div class="cP1 cH95" align="center">
-						<div class="cH35">
-							&nbsp;
+				<div class="cLeft cW33 cH98">
+					<div class="cM1 cH100">
+						<div class="cH5">
+							<button id="Refresh" class="cW100">Available Roles</button>
 						</div>
-						<button id="clearLists" class="cW75">Revert</button>
-						<button id="save" class="cW75 cTM1">Save</button>
+						<div class="cH90 cTM1">
+							<div id="rolesList"></div>
+						</div>
 					</div>
 				</div>
-				<div class="cLeft cW40 cH100" id="appsList"></div>
+				
+				<div class="cLeft cW33 cH98">
+					<div class="cM1 cH100">
+						<div class="cH5">
+							<button id="URemove" class="ui-state-df-red cW100">Remove Selected Users From Role</button>
+						</div>
+						<div class="cH90 cTM1">
+							<div id="usersList"></div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="cLeft cW33 cH98">
+					<div class="cM1 cH100">
+						<div class="cH5">
+							<button id="UAdd" class="ui-state-df-green cW100">Add Selected Users To Role</button>
+						</div>
+						<div class="cH90 cTM1">
+							<div id="searchUsersList"></div>
+						</div>
+					</div>
+				</div>
 				<div class="cClear"><!--  --></div>
 			</div>
-		</div>
-		<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
-			<p class="ui-state-error ui-corner-all cP1">
-				<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-				<span id="errorMsg"><!--  --></span>
-			</p>
 		</div>
 	</body>
 </html>
