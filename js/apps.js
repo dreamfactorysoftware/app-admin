@@ -357,7 +357,7 @@ $(document).ready(function() {
     });
 
     $("#filemanager").button({icons: {primary: "ui-icon-folder-collapsed"}}).click(function(){
-        window.location = ('../filemanager/index.html?hostApp=admin&path='+selectApp.name+'&returnUrl='+escape(window.location.href.substring(0,window.location.href.indexOf('?'))+'?selectedApp='+selectApp.name));
+        window.location = ('filemanager/index.html?hostApp=admin&path='+selectApp.name+'&returnUrl='+escape(window.location.href.substring(0,window.location.href.indexOf('?'))+'?selectedApp='+selectApp.name));
     });
 
     $( "#confirmDeleteAppDialog" ).dialog({
