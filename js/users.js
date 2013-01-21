@@ -52,7 +52,7 @@ $(document).ready(function() {
     $("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function() {
 
         if (selectUser) {
-            $( "#deleteUser" ).html(selectUser.full_name);
+            $( "#deleteUser" ).html(selectUser.display_name);
             $( "#confirmDeleteUserDialog" ).dialog('open');
         }
     });
@@ -79,7 +79,7 @@ $(document).ready(function() {
         resource: "/user",
         offsetHeight: 25,
         filter: function(name,val){
-            if(!name) name = "full_name";
+            if(!name) name = "display_name";
             return {
                 filter: name+" LIKE '%"+val+"%'"
             };
@@ -143,7 +143,7 @@ function inviteUser() {
         processData: false,
         success:function (response) {
             if(!parseErrors(response, errorHandler)) {
-                alert(selectUser.full_name + ' has been invited.')
+                alert(selectUser.display_name + ' has been invited.')
             } else {
                 alert('There was an error sending the invite.')
             }
@@ -293,7 +293,7 @@ function renderUsers(container,users) {
 
     for(var i = 0; i < users.length; i++) {
         if(!users[i]) continue;
-        makeUserButton(i,users[i].full_name,container);
+        makeUserButton(i,users[i].display_name,container);
     }
     $('.user_button').button({icons: {primary: "ui-icon-person"}}).click(function(){
         showUser(null); // clear user selection
@@ -306,7 +306,7 @@ function selectCurrentUser() {
 
     if(selectUser && current_users) {
         for(var i in current_users) {
-            if(current_users[i].full_name == selectUser.full_name && current_users[i].last_name == selectUser.last_name && current_users[i].first_name == selectUser.first_name) {
+            if(current_users[i].display_name == selectUser.display_name && current_users[i].last_name == selectUser.last_name && current_users[i].first_name == selectUser.first_name) {
                 $('#USER_'+i).button( "option", "icons", {primary: 'ui-icon-seek-next', secondary:'ui-icon-seek-next'} );
                 showUser(current_users[i]);
                 return;
@@ -322,9 +322,9 @@ function showUser(user) {
     selectUser = user;
     if(user) {
         $('input:text[name=username]').val(user.username);
-        $('input:text[name=fullname]').val(user.full_name);
         $('input:text[name=lastname]').val(user.last_name);
         $('input:text[name=firstname]').val(user.first_name);
+        $('input:text[name=displayname]').val(user.display_name);
         $('input:text[name=email]').val(user.email);
         $('input:text[name=phone]').val(user.phone);
         if(user.is_active) {
@@ -352,7 +352,7 @@ function showUser(user) {
         $('input:text[name=username]').val('');
         $('#Password').val("");
         $('#VPassword').val("");
-        $('input:text[name=fullname]').val('');
+        $('input:text[name=displayname]').val('');
         $('input:text[name=lastname]').val('');
         $('input:text[name=firstname]').val('');
         $('input:text[name=email]').val('');
@@ -389,9 +389,9 @@ function getUserFormData(obj) {
     $('#Password').val("").trigger("keyup");
     $('#VPassword').val("").trigger("keyup");
 
-    obj.full_name  = $('input:text[name=fullname]').val();
     obj.last_name  = $('input:text[name=lastname]').val();
     obj.first_name = $('input:text[name=firstname]').val();
+    obj.display_name  = $('input:text[name=displayname]').val();
     obj.email     = $('input:text[name=email]').val();
     obj.phone     = $('input:text[name=phone]').val();
 
