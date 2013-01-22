@@ -162,8 +162,12 @@ $(document).ready(function() {
         resource: "/app",
         success: function(json,request) {
             if(!parseErrors(json,errorHandler)) {
-                $("#appsList").dfSearchWidget('go');
+                $("#appsList").dfSearchWidget('init');
                 window.top.Actions.upDateSession();
+            }else{
+                if(console){
+                    console.log('there were errors');
+                }
             }
             $("#save").button({ disabled: true });
         }
