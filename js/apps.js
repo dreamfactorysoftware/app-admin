@@ -162,27 +162,8 @@ $(document).ready(function() {
         resource: "/app",
         success: function(json,request) {
             if(!parseErrors(json,errorHandler)) {
-                if(request) {
-                    switch(request.action) {
-                        case DFRequestActions.UPDATE:
-                            $("#appsList").dfSearchWidget('go');
-                            window.top.Actions.upDateSession();
-                            break;
-                        case DFRequestActions.CREATE:
-                            $("#appsList").dfSearchWidget('go');
-                            //updateLaunchPad("Do you want to update LaunchPad now with the new Application?");
-                            window.top.Actions.upDateSession();
-                            break;
-                        case DFRequestActions.DELETE:
-                            $("#appsList").dfSearchWidget('go');
-                            //updateLaunchPad("Do you want to update LaunchPad now without the Application?");
-                            window.top.Actions.upDateSession();
-                            break;
-                        default:
-                            window.top.Actions.upDateSession();
-                            break;
-                    }
-                }
+                $("#appsList").dfSearchWidget('go');
+                window.top.Actions.upDateSession();
             }
             $("#save").button({ disabled: true });
         }
