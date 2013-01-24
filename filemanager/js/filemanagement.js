@@ -67,7 +67,7 @@ function printLocation(path) {
         for(var i in tmp) {
            if (tmp[i].length > 0) {
                builder += tmp[i]+'/';
-               console.log("path=" + tmp[i] + ", builder=" + builder);
+               //console.log("path=" + tmp[i] + ", builder=" + builder);
                text += '/<a href="javascript: loadFolder(\''+builder+'\')">'+tmp[i]+'</a>';
            }
         }
