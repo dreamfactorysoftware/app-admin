@@ -10,6 +10,7 @@ EditorActions = {
             url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path'),
             data:'app_name=filemanager&method=GET',
             cache:false,
+            processData: false,
             success:function (response) {
                 EditorActions.loadEditor(response);
             },
@@ -27,9 +28,10 @@ EditorActions = {
     },
     saveFile:function(){
         $.ajax({
-            url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path') + '?&app_name=filemanager&method=MERGE',
+            url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path') + '?&app_name=filemanager',
             data: Editor.getValue(),
-            type:'POST',
+            type:'MERGE',
+            processData: false,
             cache:false,
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("X-File-Name",EditorActions.getFileName());
@@ -45,7 +47,6 @@ EditorActions = {
         });
     },
     loadEditor:function(contents){
-        console.log('loaded');
         Editor = ace.edit("editor");
         Editor.setTheme("ace/theme/twilight");
         Editor.getSession().setMode("ace/mode/javascript");
