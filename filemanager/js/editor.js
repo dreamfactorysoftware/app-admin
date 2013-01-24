@@ -32,7 +32,7 @@ EditorActions = {
             type:'POST',
             cache:false,
             beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-File-Name",Actions.getFileName());
+                xhr.setRequestHeader("X-File-Name",EditorActions.getFileName());
             },
             success:function (response) {
                 window.close();
