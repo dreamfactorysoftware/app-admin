@@ -4,14 +4,14 @@
 //document.write('<title>Editing: '+CommonUtilities.getQueryParameter('path')+'</title>');
 
 
-Actions = {
+EditorActions = {
     getFile : function(){
         $.ajax({
-            url:'http://' + location.host + '/rest/app/' + Actions.getQueryParameter('path'),
+            url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path'),
             data:'app_name=filemanager&method=GET',
             cache:false,
             success:function (response) {
-                Actions.loadEditor(response);
+                EditorActions.loadEditor(response);
             },
             error:function (response) {
                 if (response.status == 401) {
@@ -21,13 +21,13 @@ Actions = {
         });
     },
     getFileName:function () {
-        var pathArray = Actions.getQueryParameter('path').split('/');
+        var pathArray = EditorActions.getQueryParameter('path').split('/');
 
         return pathArray[pathArray.length - 1];
     },
     saveFile:function(){
         $.ajax({
-            url:'http://' + location.host + '/rest/app/' + Actions.getQueryParameter('path') + '?&app_name=filemanager&method=MERGE',
+            url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path') + '?&app_name=filemanager&method=MERGE',
             data: Editor.getValue(),
             type:'POST',
             cache:false,
@@ -52,7 +52,7 @@ Actions = {
         Editor.setValue(contents);
 
         $("#save").click(function(){
-            Actions.saveFile();
+            EditorActions.saveFile();
         });
 
         $("#close").click(function(){
@@ -66,6 +66,6 @@ Actions = {
     }
 };
 $(document).ready(function(){
-    Actions.getFile();
+    EditorActions.getFile();
 
 });
