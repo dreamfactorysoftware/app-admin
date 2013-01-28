@@ -86,10 +86,6 @@ $(document).ready(function() {
         },
         orderBy: [
             {
-                label: "[Sort By]",
-                value: "id"
-            },
-            {
                 label: "First Name",
                 value: "first_name"
             },
@@ -98,7 +94,11 @@ $(document).ready(function() {
                 value: "last_name"
             },
             {
-                label: "Last Modified",
+                label: "Created Date",
+                value: "created_date"
+            },
+            {
+                label: "Last Modified Date",
                 value: "last_modified_date"
             }
         ],
