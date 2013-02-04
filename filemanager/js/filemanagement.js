@@ -21,19 +21,19 @@ $(document).ready(function() {
         buttons: {	}
     });
 
-    $("#mkdir").button({icons:{primary:"ui-icon-folder-collapsed"}}).click(function() {
+    $("#mkdir").click(function() {
         var name = prompt("Enter name for new folder");
         if(name) {
             createFolder(currentpath, name);
         }
     });
 
-    $("#rm").button({icons:{primary:"ui-icon-trash"}}).click(function() {
+    $("#rm").click(function() {
 
         deleteSelected();
     });
 
-    $("#exit").button({text:false,icons:{primary:"ui-icon-close"}}).click(function() {
+    $("#exit").click(function() {
         window.location = CommonUtilities.getQueryParameter('returnUrl');
     });
 
@@ -44,13 +44,16 @@ $(document).ready(function() {
         $('#dndPanel').show();
     });
 
-    $("#importzip").button({icons: {primary: "ui-icon-circle-arrow-n"}}).click(function() {
-        $("#zipFileForm").attr("action","/REST/APP/" + currentpath + "?extract=true&clean=false&app_name=" + CommonUtilities.getQueryParameter('hostApp'));
-        $("#zipFileInput").trigger("click");
+    $("#exportzip").click(function() {
+        $("#fileIframe").attr("src","/REST/APP/" + currentpath + "?zip=true&app_name=" + CommonUtilities.getQueryParameter('hostApp'));
     });
 
-    $("#exportzip").button({icons: {primary: "ui-icon-circle-arrow-s"}}).click(function() {
-        $("#zipFileIframe").attr("src","/REST/APP/" + currentpath + "?zip=true&app_name=" + CommonUtilities.getQueryParameter('hostApp'));
+    $("#importExtract").click(function() {
+        if ($(this).prop("checked")) {
+            $("#importReplace").removeAttr("disabled");
+        } else {
+            $("#importReplace").attr("disabled", "disabled");
+        }
     });
 
     loadRootFolder();
@@ -67,7 +70,6 @@ function printLocation(path) {
         for(var i in tmp) {
            if (tmp[i].length > 0) {
                builder += tmp[i]+'/';
-               //console.log("path=" + tmp[i] + ", builder=" + builder);
                text += '/<a href="javascript: loadFolder(\''+builder+'\')">'+tmp[i]+'</a>';
            }
         }
@@ -114,17 +116,26 @@ function buildItem(path,icon,name,type,editor,extra) {
 	'</div>';
 }
 
+function allowEdit(mime) {
+
+    if(mime.indexOf('text/') > -1 || mime == "application/javascript" || mime == "application/xml") {
+        return true;
+    }
+    return false;
+}
+
 function buildEditor(mime,path) {
 
-	if(mime.indexOf('text/') > -1 || mime == "application/javascript") {
-		return '<button class="editor cRight" data-mime="' + mime + '" data-path="'+ path + '">Edit</button>';
+
+	if (allowEdit(mime)) {
+        return '<a href="#" class="btn btn-small fmSquareButton cRight editor" data-mime="' + mime + '" data-path="' + path + '"><i class="icon-pencil"></i></a>';
 	}
     return '';
 }
 
 function buildFolderControl(path) {
 
-	return '<button class="folder_open cRight" data-path="' + path + '">Open</button>';
+    return '<a href="#" class="btn btn-small fmSquareButton cRight folder_open" data-path="' + path + '"><i class="icon-folder-open"></i></a>';
 }
 
 function buildListingUI(json) {
@@ -154,12 +165,7 @@ function buildListingUI(json) {
 	}
 	$('#listing').html(html);
 
-    $('.editor').button({
-        text:false,
-        icons:{
-            primary:"ui-icon-pencil"
-        }
-    }).click(function(){
+    $('.editor').click(function(){
             var path = $(this).data('path');
             var mime = $(this).data('mime');
             var w = window.open('editor.html?path='+path+'&mime='+mime+'&',path+" "+mime,'width=800,height=400,toolbars=no,statusbar=no,resizable=no');
@@ -167,12 +173,7 @@ function buildListingUI(json) {
             return false;
         });
 
-    $('.folder_open').button({
-        text:false,
-        icons:{
-            primary:"ui-icon-folder-open"
-        }
-    }).click(function() {
+    $('.folder_open').click(function() {
             loadFolder($(this).data('path'));
             return false;
         });
@@ -268,14 +269,13 @@ function loadFolder(path) {
         cache:false,
         success:function (response) {
             try {document.getSelection().removeAllRanges();} catch(e) {/* silent! */};
-            if(!parseErrors(response, errorHandler)) {
-                currentpath = path;
-                printLocation(path);
-                buildListingUI(response);
-            }
+            currentpath = path;
+            printLocation(path);
+            buildListingUI(response);
         },
         error:function (response) {
-
+            var result = JSON.parse(response.responseText);
+            alert(result.error[0].message);
         }
     });
 }
@@ -318,12 +318,11 @@ function createFile(target, file) {
         cache:false,
         processData: false,
         success:function (response) {
-            if(!parseErrors(response, errorHandler)) {
-
-            }
             loadFolder(target);
         },
         error:function (response) {
+            var result = JSON.parse(response.responseText);
+            alert(result.error[0].message);
             loadFolder(target);
         }
     });
@@ -342,12 +341,11 @@ function createFolder(target, name) {
         cache:false,
         processData: false,
         success:function (response) {
-            if(!parseErrors(response, errorHandler)) {
-
-            }
             loadFolder(target);
         },
         error:function (response) {
+            var result = JSON.parse(response.responseText);
+            alert(result.error[0].message);
             loadFolder(target);
         }
     });
@@ -384,12 +382,11 @@ function deleteSelected() {
                 cache:false,
                 processData: false,
                 success:function (response) {
-                    if(!parseErrors(response, errorHandler)) {
-
-                    }
                     loadFolder(currentpath);
                 },
                 error:function (response) {
+                    var result = JSON.parse(response.responseText);
+                    alert(result.error[0].message);
                     loadFolder(currentpath);
                 }
             });
@@ -442,3 +439,93 @@ $(window).bind('resize', function() {
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = setTimeout(resizeUi, 100);
 });
+
+function setMode(mode) {
+
+    if (mode == 'url') {
+        $('#urlImportText').show();
+        $('#fileImportForm').hide();
+        $('#url-btn').attr('class','btn btn-primary');
+        $('#file-btn').attr('class','btn');
+    } else {
+        $('#urlImportText').hide();
+        $('#fileImportForm').show();
+        $('#url-btn').attr('class','btn');
+        $('#file-btn').attr('class','btn btn-primary');
+    }
+}
+
+function getMode() {
+
+    var sel = $('.btn-group .btn-primary');
+    if (sel) {
+        return sel.text();
+    }
+    return '';
+}
+
+function getFileName() {
+
+    var filename;
+    switch (getMode()) {
+        case "URL":
+            filename = $('#urlImportText').val();
+            break;
+        case "File":
+            filename = $('#fileInput').val();
+            break;
+        default:
+            filename = '';
+            break;
+    }
+    return filename;
+}
+
+function importFile() {
+
+    var params = 'app_name=' + CommonUtilities.getQueryParameter('hostApp');
+    var filename = getFileName();
+    if (filename == '') {
+        alert("Please specify a file to import.");
+        return;
+    }
+    if(filename.substr(filename.length - 4) == '.zip') {
+        if ($('#importExtract').prop('checked')) {
+            params += '&extract=true';
+            if ($('#importReplace').prop('checked')) {
+                params += '&clean=true';
+            }
+        }
+    }
+    switch (getMode()) {
+        case 'URL':
+            params += '&url=' + escape(filename);
+            $.ajax({
+                dataType:'json',
+                type :'POST',
+                url:'http://' + location.host + "/rest/app/" + currentpath + "?" + params,
+                data: '',
+                cache:false,
+                processData: false,
+                success:function (response) {
+                    exitModal();
+                },
+                error:function (response) {
+                    var result = JSON.parse(response.responseText);
+                    alert(result.error[0].message);
+                }
+            });
+            break;
+        case 'File':
+            $("#fileImportForm").attr("action","/rest/app/" + currentpath + "?" + params);
+            $("#fileImportForm").submit();
+            exitModal();
+            break;
+    }
+}
+
+function exitModal() {
+
+    reloadFolder();
+    $('#fileModal').modal('toggle');
+}

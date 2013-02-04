@@ -130,8 +130,8 @@
                                 </div>
 								<div class="cLeft cW75">
                                    <button id="filemanager" class="cLeft" style="margin-right:5px">Open File Mgr</button>
-                                   <button id="exportpkg" style="margin-right:5px">Export App</button>
-                                   <button id="importpkg" style="margin-right:5px">Import App</button>
+                                   <button id="exportpkg" style="margin-right:5px">Export Package</button>
+                                   <button id="importpkg" style="margin-right:5px">Import Package</button>
                                 </div>
 								<div class="cClear"><!--  --></div>
 							</div>
@@ -155,7 +155,7 @@
                 <div id="pkgFileHidden" style="display:none;">
                     <form id="pkgFileForm" method="POST" enctype="multipart/form-data" target="pkgFileIframe" action="/REST/APP/">
                         <input type="hidden" name="app_name" value="admin"/>
-                        <input id="pkgFileInput" type="file" name="files" onchange="this.form.submit()"/>
+                        <input id="pkgFileInput" type="file" name="files" onchange="importPkg()"/>
                     </form>
                     <iframe id="pkgFileIframe" name="pkgFileIframe" src="about:blank" width="100%" height="70px"></iframe>
                 </div>

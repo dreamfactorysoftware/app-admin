@@ -437,5 +437,14 @@ $(document).ready(function() {
             }
         }
     });
-
 });
+
+function importPkg() {
+
+    var filename = $("#pkgFileInput").val();
+    if(filename.substr(filename.length - 6) != '.dfpkg') {
+        alert("Please select a package file that ends with the extension '.dfpkg'.");
+        return;
+    }
+    $("#pkgFileInput").form.submit();
+}
