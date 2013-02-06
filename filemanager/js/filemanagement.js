@@ -483,7 +483,8 @@ function getFileName() {
 
 function importFile() {
 
-    var params = 'app_name=' + CommonUtilities.getQueryParameter('hostApp');
+    // set format to xml so IE does not ask to open/save file
+    var params = 'app_name=' + CommonUtilities.getQueryParameter('hostApp') + '&format=xml'
     var filename = getFileName();
     if (filename == '') {
         alert("Please specify a file to import.");
