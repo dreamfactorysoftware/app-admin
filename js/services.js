@@ -247,10 +247,13 @@ function showService(service) {
 	if(service) {
 		$('input:text[name=Name]').val(service.name);
 		$('input:text[name=Label]').val(service.label);
-		if(service.is_active) {
+        $('input:text[name=Description]').val(service.description);
+        if(service.is_active) {
 			$('input[name="IsActive"]')[0].checked = true;
+            $('input[name="IsActive"]')[1].checked = false;
 		} else {
-			$('input[name="IsActive"]')[1].checked = true;
+			$('input[name="IsActive"]')[0].checked = false;
+            $('input[name="IsActive"]')[1].checked = true;
 		}
 		
 		$("#serviceType").val(service.type);
@@ -274,6 +277,7 @@ function showService(service) {
 		}
 		$('input:text[name=Name]').val('');
 		$('input:text[name=Label]').val('');
+        $('input:text[name=Description]').val('');
 		
 		$("#serviceType").val('');
 		$("#serviceType").trigger('change');
@@ -287,6 +291,7 @@ function showService(service) {
 		$('#HeaderList').val('');
 		$('#ParamList').val('');
 		$('input[name="IsActive"]')[0].checked = true;
+        $('input[name="IsActive"]')[1].checked = true;
 		//$('#active').buttonset('refresh');
 		$('#save').button({ disabled: false });
 	}
@@ -304,11 +309,12 @@ function getServiceFormData(ws) {
 
 	ws.name = $('input:text[name=Name]').val();
 	ws.label = $('input:text[name=Label]').val();
+    ws.description = $('input:text[name=Description]').val();
 	ws.type = $("#serviceType").val();
 	ws.base_url = $('input:text[name=BaseUrl]').val();
 	ws.headers = $('#HeaderList').val();
 	ws.parameters = $('#ParamList').val();
-	ws.is_active = !$('input[name="IsActive"]')[1].checked;
+	ws.is_active = $('input[name="IsActive"]')[0].checked ? 1 : 0;
     ws.storage_name = $('input:text[name=StorageName]').val();
     ws.storage_type = $("#storageType").val();
    	ws.credentials = $('#Credentials').val();
