@@ -303,12 +303,11 @@ $(document).ready(function() {
      */
     var schemas = new DFRequest({
         app: "admin",
-        service: "DB",
-        resource: "/schema",
+        service: "schema",
         type: DFRequestType.POST,
         success: function(json,request) {
             if(!parseErrors(json,errorHandler)) {
-                showSchemas(json.table);
+                showSchemas(json.resource);
             }
         }
     });
