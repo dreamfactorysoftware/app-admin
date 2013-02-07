@@ -446,5 +446,5 @@ function importPkg() {
         alert("Please select a package file that ends with the extension '.dfpkg'.");
         return;
     }
-    $("#pkgFileInput").form.submit();
+    $("#pkgFileForm").submit();
 }
