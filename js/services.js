@@ -80,7 +80,6 @@ $(document).ready(function() {
                 $("#RemoteFileOptions").hide();
                 $("#WebOptions").show();
                 break;
-            case 'Native':
             default:
                 $("#FileOptions").hide();
                 $("#RemoteFileOptions").hide();

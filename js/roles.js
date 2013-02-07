@@ -266,7 +266,7 @@ function loadComponents(serviceName, serviceType) {
 
     components[serviceName] = [];
 
-    if (serviceType == "Native" || serviceType == "Local SQL DB" || serviceType == "Remote SQL DB") {
+    if (serviceType == "Local SQL DB" || serviceType == "Local SQL DB Schema" || serviceType == "Remote SQL DB" || serviceType == "Remote SQL DB Schema") {
         $.ajax({
             dataType:'json',
             url:'http://' + location.host + '/rest/' + serviceName,
