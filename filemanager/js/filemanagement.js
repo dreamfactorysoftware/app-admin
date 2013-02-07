@@ -233,6 +233,10 @@ function handleFileSelect(evt) {
         target = currentpath;
     }
     var dropFiles = e.dataTransfer.files;
+    if (dropFiles === undefined) {
+        alert("Drag and drop of files is not yet supported by this browser.");
+        return;
+    }
     var skipped = 0;
     for(var i = 0; i < dropFiles.length; i++) {
         // try to skip folders
@@ -274,8 +278,7 @@ function loadFolder(path) {
             buildListingUI(response);
         },
         error:function (response) {
-            var result = JSON.parse(response.responseText);
-            alert(result.error[0].message);
+            alertErr(response);
         }
     });
 }
@@ -321,8 +324,7 @@ function createFile(target, file) {
             loadFolder(target);
         },
         error:function (response) {
-            var result = JSON.parse(response.responseText);
-            alert(result.error[0].message);
+            alertErr(response);
             loadFolder(target);
         }
     });
@@ -344,8 +346,7 @@ function createFolder(target, name) {
             loadFolder(target);
         },
         error:function (response) {
-            var result = JSON.parse(response.responseText);
-            alert(result.error[0].message);
+            alertErr(response);
             loadFolder(target);
         }
     });
@@ -385,8 +386,7 @@ function deleteSelected() {
                     loadFolder(currentpath);
                 },
                 error:function (response) {
-                    var result = JSON.parse(response.responseText);
-                    alert(result.error[0].message);
+                    alertErr(response);
                     loadFolder(currentpath);
                 }
             });
@@ -484,7 +484,7 @@ function getFileName() {
 function importFile() {
 
     // set format to xml so IE does not ask to open/save file
-    var params = 'app_name=' + CommonUtilities.getQueryParameter('hostApp') + '&format=xml'
+    var params = 'app_name=' + CommonUtilities.getQueryParameter('hostApp');
     var filename = getFileName();
     if (filename == '') {
         alert("Please specify a file to import.");
@@ -509,24 +509,57 @@ function importFile() {
                 cache:false,
                 processData: false,
                 success:function (response) {
-                    exitModal();
+                    reloadFolder();
+                    $('#fileModal').modal('toggle');
                 },
                 error:function (response) {
-                    var result = JSON.parse(response.responseText);
-                    alert(result.error[0].message);
+                    alertErr(response);
                 }
             });
             break;
         case 'File':
+            // set format to xml so IE does not ask to open/save file
+            params += '&format=xml';
             $("#fileImportForm").attr("action","/rest/app/" + currentpath + "?" + params);
             $("#fileImportForm").submit();
-            exitModal();
             break;
     }
 }
 
-function exitModal() {
+function checkResults(iframe) {
 
-    reloadFolder();
-    $('#fileModal').modal('toggle');
+    var str = $(iframe).contents().text();
+    if(str && str.length > 0) {
+        reloadFolder();
+        $('#fileModal').modal('toggle');
+    }
 }
+
+function alertErr(response) {
+
+    if (response) {
+        if (response.status) {
+            switch (response.status) {
+                case 404:
+                    alert("File not found, please check the path.");
+                    return;
+                default:
+                    if (response.responseText && response.responseText != '') {
+                        try {
+                            var result = JSON.parse(response.responseText);
+                            if (result) {
+                                if (result.error[0].message && result.error[0].message != '') {
+                                    alert(result.error[0].message);
+                                }
+                            }
+                        } catch(e) {
+                            alert("Server returned error code " + response.status + '.');
+                        }
+                    }
+                    return;
+            }
+        }
+    }
+    alert("Server returned an unknown error.");
+}
+

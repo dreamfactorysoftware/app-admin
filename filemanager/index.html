@@ -11,6 +11,16 @@
     <link rel="stylesheet" href="/lib/web-core/css/font-awesome.min.css" type="text/css"/>
     <link rel="stylesheet" href="css/base.css" type="text/css"/>
 
+    <script src="/lib/web-core/js/jquery.js"></script>
+    <script src="/lib/web-core/js/jquery-ui-1.9.2.custom.min.js"></script>
+
+    <!-- DF Imports -->
+    <script src="/lib/web-core/js/df.js"></script>
+    <script src="/lib/web-core/js/df-err.js"></script>
+    <script src="/lib/web-core/js/bootstrap.min.js"></script>
+
+    <!-- DF FileManager -->
+    <script src="js/filemanagement.js"></script>
 
 </head>
 <body>
@@ -35,7 +45,7 @@
         <form id="fileImportForm" method="POST" enctype="multipart/form-data" target="fileIframe">
             <input id="fileInput" type="file" name="files" size="50"></input>
         </form>
-        <iframe id="fileIframe" style="display: none;" name="fileIframe" src="about:blank"></iframe>
+        <iframe id="fileIframe" style="display: none;" name="fileIframe" src="about:blank" onload="checkResults(this)"></iframe>
         <div id="errorDialog" style="display: none;" title="Oops! An Error Has Occured..." class="cTxtLeft">
             <p class="ui-state-error ui-corner-all cP1">
                 <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
@@ -113,16 +123,5 @@
         <div class="cClear"></div>
     </div>
 </div>
-<script src="/lib/web-core/js/jquery.js"></script>
-<script src="/lib/web-core/js/jquery-ui-1.9.2.custom.min.js"></script>
-
-
-<!-- DF Imports -->
-<script src="/lib/web-core/js/df.js"></script>
-<script src="/lib/web-core/js/df-err.js"></script>
-<script src="/lib/web-core/js/bootstrap.min.js"></script>
-
-<!-- DF FileManager -->
-<script src="js/filemanagement.js"></script>
 </body>
 </html>
