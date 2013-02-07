@@ -10,12 +10,12 @@ function makeClearable() {
 
 function makeSelectable(that) {
     if($(that).prop("checked")) {
-        $("#cell").removeAttr('disabled');
+        $("#phone").removeAttr('disabled');
         $("#tablet").removeAttr('disabled');
         $("#desktop").removeAttr('disabled');
         $("#plugin").removeAttr('disabled');
     } else {
-        $("#cell").prop('checked',false).attr('disabled', 'disabled');
+        $("#phone").prop('checked',false).attr('disabled', 'disabled');
         $("#tablet").prop('checked',false).attr('disabled', 'disabled');
         $("#desktop").prop('checked',false).attr('disabled', 'disabled');
         $("#plugin").prop('checked',false).attr('disabled', 'disabled');
@@ -111,19 +111,17 @@ $(document).ready(function() {
             } else {
                 $("#filemanager").button({ disabled: false });
             }
-            $("#importapp").button({ disabled: true });
-            $("#exportapp").button({ disabled: false });
+            $("#exportpkg").button({ disabled: false });
+            $("#importpkg").button({ disabled: true });
+
             $('#delete').button({ disabled: false });
             $('#new').button({ disabled: false });
 
-
             $("#deviceTarget").prop('checked',app.filter_by_device);
-
-            $("#cell").prop('checked',app.filter_phone);
+            $("#phone").prop('checked',app.filter_phone);
             $("#tablet").prop('checked',app.filter_tablet);
             $("#desktop").prop('checked',app.filter_desktop);
             $("#plugin").prop('checked',app.requires_plugin);
-
             $("#deviceTarget").trigger("onchange");
 
         } else {
@@ -139,15 +137,20 @@ $(document).ready(function() {
             $('input[name="IsActive"]')[1].checked = true;
             $('input[name="IsUrlExternal"]')[1].checked = true;
             $('#save').button({ disabled: false });
-            $("#importapp").button({ disabled: false });
+
             $("#filemanager").button({ disabled: true });
-            $("#exportapp").button({ disabled: true });
+            $("#exportpkg").button({ disabled: true });
+            $("#importpkg").button({ disabled: false });
+
             $('#delete').button({ disabled: true });
             $('#new').button({ disabled: true });
 
-            $("#deviceTarget").prop('checked',false);
+            $("#deviceTarget").prop('checked',true);
+            $("#phone").prop('checked',true);
+            $("#tablet").prop('checked',true);
+            $("#desktop").prop('checked',true);
+            $("#plugin").prop('checked',true);
             $("#deviceTarget").trigger("onchange");
-
         }
 
         selectSchemas(app);
@@ -231,7 +234,7 @@ $(document).ready(function() {
             app.filter_by_device = 0;
         }
 
-        if($("#cell").prop('checked')) {
+        if($("#phone").prop('checked')) {
             app.filter_phone = 1;
         } else {
             app.filter_phone = 0;
@@ -320,12 +323,12 @@ $(document).ready(function() {
 
     $("#deviceTarget").trigger("onchange");
 
-    $("#importapp").button({icons: {primary: "ui-icon-circle-arrow-n"}}).click(function(){
-        $("#uploadFileInput").trigger("click");
+    $("#exportpkg").button({icons: {primary: "ui-icon-circle-arrow-s"}}).click(function(){
+        $("#pkgFileIframe").attr("src","/REST/APP/"+selectApp.name+"/?pkg=true&app_name=admin");
     });
 
-    $("#exportapp").button({icons: {primary: "ui-icon-circle-arrow-s"}}).click(function(){
-        $("#uploadFileIframe").attr("src","/REST/APP/"+selectApp.name+"/?export=true&app_name=admin");
+    $("#importpkg").button({icons: {primary: "ui-icon-circle-arrow-n"}}).click(function(){
+        $("#pkgFileInput").trigger("click");
     });
 
     $("#delete").button({icons: {primary: "ui-icon-trash"}}).click(function(){
@@ -357,7 +360,16 @@ $(document).ready(function() {
     });
 
     $("#filemanager").button({icons: {primary: "ui-icon-folder-collapsed"}}).click(function(){
-        window.location = ('filemanager/index.html?hostApp=admin&path='+selectApp.name+'&returnUrl='+escape(window.location.href.substring(0,window.location.href.indexOf('?'))+'?selectedApp='+selectApp.name));
+
+        var returnUrl = window.location.href;
+        var startIndex = 0;
+        var stopIndex = returnUrl.indexOf('?');
+        if (stopIndex >= 0) {
+            returnUrl = returnUrl.substring(startIndex, stopIndex);
+        }
+        returnUrl = escape(returnUrl);
+        returnUrl += '?selectedApp='+selectApp.name;
+        window.location = 'filemanager/index.html?hostApp=admin&path='+selectApp.name+'&returnUrl=' + returnUrl;
     });
 
     $( "#confirmDeleteAppDialog" ).dialog({
@@ -384,7 +396,7 @@ $(document).ready(function() {
         });
         makeClearable();
     });
-    $("#uploadFileIframe").load(function() {
+    $("#pkgFileIframe").load(function() {
         var that = $(this);
         var str = that.contents().text();
         if(str && str.length > 0) {
@@ -418,12 +430,21 @@ $(document).ready(function() {
                 return apps.length;
             } else {
                 renderApps(container,users);
-                container.append('<i>End Of List</i>');
+                container.append('<i>No apps...</i>');
                 resizeUi();
                 showApp();
                 return 0;
             }
         }
     });
-
 });
+
+function importPkg() {
+
+    var filename = $("#pkgFileInput").val();
+    if(filename.substr(filename.length - 6) != '.dfpkg') {
+        alert("Please select a package file that ends with the extension '.dfpkg'.");
+        return;
+    }
+    $("#pkgFileForm").submit();
+}

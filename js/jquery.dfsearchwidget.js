@@ -7,8 +7,6 @@
 		if(orb) {
 			var orderBy = $('<select/>');
 			orderBy.attr("id","orderBy_"+id);
-			orderBy.addClass("cW35");
-			orderBy.addClass("cLM1");
 			for(var i in orb) {
 				orderBy.append($("<option/>").attr("value",orb[i].value).text(orb[i].label));
 			}
@@ -16,25 +14,24 @@
 				$("#pageCount_"+id).data("currentPage",0);
 				$("#"+id).dfSearchWidget("go");
 			});
-			return orderBy;
+            return orderBy;
 		}
-
+        return null;
 	}
 	
 	function limitGadget(id) {
-		var pageSize = $('<select/>');
+
+        var pageSize = $('<select/>');
 		pageSize.attr("id","pageSize_"+id);
-		pageSize.addClass("cW35");
 		pageSize.append($("<option/>").attr("value","5").text("5"));
 		pageSize.append($("<option/>").attr("value","10").text("10"));
 		pageSize.append($("<option/>").attr("value","20").text("20"));
 		pageSize.append($("<option/>").attr("value","50").text("50"));
-		pageSize.append($("<option/>").attr("selected",true).attr("value","100").text("[Limit to 100]"));
+		pageSize.append($("<option/>").attr("value","100").text("100").attr("selected",true));
 		pageSize.change(function(){
 			$("#"+id).dfSearchWidget("changePageSize");
 		});
-		
-		return pageSize;
+        return pageSize;
 	}
 	
 	
@@ -62,7 +59,14 @@
 			ctrlBtn.attr("id","searchGoBtn_"+id);
 			line2.append(ctrlBtn);
 
-			line2.append(limitGadget(id));
+            var label = $('<strong>Limit:</strong>');
+            label.attr("style", "margin-right:5px;");
+            line2.append(label);
+            line2.append(limitGadget(id));
+
+            var label = $('<strong>Sort By:</strong>');
+            label.attr("style", "margin-left:10px;margin-right:5px;");
+            line2.append(label);
 			line2.append(orderByGadget(id));
 			
 		}

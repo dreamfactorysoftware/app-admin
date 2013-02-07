@@ -86,8 +86,23 @@
 								</div>
 								<div class="cClear"><!--  --></div>
 							</div>
-							
-							
+
+                            <div class="cTM1">
+                                <div class="cLeft cW25 formLabel" align="right">
+                                    <strong>Target&nbsp;Devices:&nbsp;</strong>
+                                </div>
+                                <div class="cLeft cW75">
+                                    <div id="targets">
+                                        <input type="checkbox" id="deviceTarget" value="true" onchange="makeSelectable(this);makeClearable()"/>Enable
+                                        <input type="checkbox" id="phone" style="margin-left:25px" value="true" onchange="makeClearable()"/>Phone
+                                        <input type="checkbox" id="tablet" value="true" onchange="makeClearable()"/>Tablet
+                                        <input type="checkbox" id="desktop" value="true" onchange="makeClearable()"/>Desktop
+                                        <input type="checkbox" id="plugin" value="true" onchange="makeClearable()"/>Plugin&nbsp;Required
+                                    </div>
+                                </div>
+                                <div class="cClear" style="height:10px;"><!--  --></div>
+                            </div>
+
 							<div class="cTM1 cClear">
 								<div class="cLeft cW25 formLabel" align="right">
 									<strong>Schemas:&nbsp;</strong>
@@ -106,23 +121,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
-							
-							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Target&nbsp;Devices:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW75">
-                                    <div id="targets">
-                                        <input type="checkbox" id="deviceTarget" value="true" onchange="makeSelectable(this);makeClearable()"/>Enable
-                                        <input type="checkbox" id="cell" style="margin-left:25px" value="true" onchange="makeClearable()"/>Cell&nbsp;Phone
-                                        <input type="checkbox" id="tablet" value="true" onchange="makeClearable()"/>Tablet
-                                        <input type="checkbox" id="desktop" value="true" onchange="makeClearable()"/>Desktop
-                                        <input type="checkbox" id="plugin" value="true" onchange="makeClearable()"/>Plugin&nbsp;Required
-                                    </div>
-								</div>
-								<div class="cClear" style="height:10px;"><!--  --></div>
+                                <div class="cClear" style="height:10px;"><!--  --></div>
 							</div>
 							
 							<div class="">
@@ -130,9 +129,9 @@
                                     <strong>Content:&nbsp;</strong>
                                 </div>
 								<div class="cLeft cW75">
-                                   <button id="filemanager" class="cLeft" style="margin-right:5px">Open FileManager</button>
-                                   <button id="exportapp" class="cLeft" style="margin-right:5px">Export Application</button>
-                                   <button id="importapp">Import Application</button>
+                                   <button id="filemanager" class="cLeft" style="margin-right:5px">Open File Mgr</button>
+                                   <button id="exportpkg" style="margin-right:5px">Export Package</button>
+                                   <button id="importpkg" style="margin-right:5px">Import Package</button>
                                 </div>
 								<div class="cClear"><!--  --></div>
 							</div>
@@ -152,15 +151,14 @@
 					</div>
 				</div>
 				<div class="cClear"><!--  --></div>
-				
-				<div id="uploadFileHidden" style="display:none;">
-					<form id="uploadFileForm" method="POST" enctype="multipart/form-data" target="uploadFileIframe" action="/REST/APP/">
-						<input type="hidden" name="app_name" value="admin"/>
-                        <input type="hidden" name="import" value="true"/>
-						<input id="uploadFileInput" type="file" name="files" onchange="this.form.submit()"/>
-					</form>
-					<iframe id="uploadFileIframe" name="uploadFileIframe" src="about:blank" width="100%" height="70px"></iframe>
-				</div>
+
+                <div id="pkgFileHidden" style="display:none;">
+                    <form id="pkgFileForm" method="POST" enctype="multipart/form-data" target="pkgFileIframe" action="/REST/APP/">
+                        <input type="hidden" name="app_name" value="admin"/>
+                        <input id="pkgFileInput" type="file" name="files" onchange="importPkg()"/>
+                    </form>
+                    <iframe id="pkgFileIframe" name="pkgFileIframe" src="about:blank" width="100%" height="70px"></iframe>
+                </div>
 				
 				<div id="confirmDeleteAppDialog" title="Please Confirm Delete:" class="cTxtLeft">
 					<p class="cP1">

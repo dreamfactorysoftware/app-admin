@@ -24,7 +24,7 @@ $(document).ready(function() {
 			checkbox.data("id",users[i].id);
 			checkbox.click(action);
 			row.append(checkbox);
-			row.append(users[i].full_name);
+			row.append(users[i].display_name);
 			container.append(row);
 		}
 	}
@@ -220,7 +220,7 @@ $(document).ready(function() {
 					filter: "role_id = '' AND is_sys_admin = 0"
 				};
 			} else {
-				if(!name) name = "full_name";
+				if(!name) name = "display_name";
 				return {
 					filter: name+" LIKE '%"+val+"%'"
 				};
