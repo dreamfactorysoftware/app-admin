@@ -169,20 +169,20 @@ $(document).ready(function() {
                     switch(request.action) {
                         case DFRequestActions.UPDATE:
                             $("#appsList").dfSearchWidget('go');
-                            window.top.Actions.upDateSession();
+                            window.top.Actions.updateSession();
                             break;
                         case DFRequestActions.CREATE:
                             $("#appsList").dfSearchWidget('go');
                             //updateLaunchPad("Do you want to update LaunchPad now with the new Application?");
-                            window.top.Actions.upDateSession();
+                            window.top.Actions.updateSession();
                             break;
                         case DFRequestActions.DELETE:
                             $("#appsList").dfSearchWidget('go');
                             //updateLaunchPad("Do you want to update LaunchPad now without the Application?");
-                            window.top.Actions.upDateSession();
+                            window.top.Actions.updateSession();
                             break;
                         default:
-                            window.top.Actions.upDateSession();
+                            window.top.Actions.updateSession();
                             break;
                     }
                 }
