@@ -244,9 +244,9 @@ function loadServices() {
                     services = response.record;
                     var servicesMenu = $("#serviceSelect");
                     for(var i in services) {
-                        var name = services[i].fields.name;
-                        var label = services[i].fields.label;
-                        var type = services[i].fields.type;
+                        var name = services[i].name;
+                        var label = services[i].label;
+                        var type = services[i].type;
                         $('<option value="'+name+'">'+label+'</option>').appendTo(servicesMenu);
                         loadComponents(name, type);
                     }
@@ -409,11 +409,11 @@ function makeServiceComponentLine(index, service) {
 
     // populate service and component menus and set selections
     for(var i in services) {
-        selected = service.service == services[i].fields.name;
-        $('<option value="' + services[i].fields.name + '" ' + (selected ? "SELECTED":"") + '>' + services[i].fields.label + '</option>').appendTo(srvSelect);
+        selected = service.service == services[i].name;
+        $('<option value="' + services[i].name + '" ' + (selected ? "SELECTED":"") + '>' + services[i].label + '</option>').appendTo(srvSelect);
         if(selected) {
-            for(var j in components[services[i].fields.name]) {
-                var cname = components[services[i].fields.name][j].name;
+            for(var j in components[services[i].name]) {
+                var cname = components[services[i].name][j].name;
                 $('<option value="' + cname + '" '+(service.component == cname ? "SELECTED":"") + '>' + cname +'</option>').appendTo(compSelect);
             }
         }

@@ -176,7 +176,7 @@ function createUser() {
         processData: false,
         success:function (response) {
             if(!parseErrors(response, errorHandler)) {
-                selectUser.id = response.record[0].fields.id;
+                selectUser.id = response.record[0].id;
                 current_users.splice(0, 0, selectUser);
                 $('#usersList').dfSearchWidget("refresh");
             }
@@ -274,7 +274,7 @@ function buildRolesMenu() {
                 rs.html($("<option/>").attr("value","").text("[ No Role Selected ]"));
                 rs.append($("<option/>").attr("value","*").text("System Administrator"));
                 for(var i in response.record) {
-                    rs.append($("<option/>").attr("value",response.record[i].fields.id).text(response.record[i].fields.name));
+                    rs.append($("<option/>").attr("value",response.record[i].id).text(response.record[i].name));
                 }
             }
         },
