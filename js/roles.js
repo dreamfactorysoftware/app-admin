@@ -361,8 +361,8 @@ function makeServiceList(role) {
     $("#SERVICE_ID_LIST").html("");
     nextSrvIndex = 0;
     if(role) {
-        for(var i in role.services ) {
-            $("#SERVICE_ID_LIST").append(makeServiceComponentLine(nextSrvIndex, role.services[i]));
+        for(var i in role.accesses ) {
+            $("#SERVICE_ID_LIST").append(makeServiceComponentLine(nextSrvIndex, role.accesses[i]));
 
             // services menu
             $('#serviceSelect_'+nextSrvIndex).change(serviceChange);
@@ -561,7 +561,7 @@ function getRoleFormData(role) {
 
     role.name = $('#rName').val();
     role.description = $('#rDescription').val();
-    role.services = getServices();
+    role.accesses = getServices();
     role.app_ids = getSelectAppIds();
 }
 
