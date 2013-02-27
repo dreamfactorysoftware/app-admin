@@ -1,197 +1,106 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-		
-		<!-- Standard CSS -->
-		<link rel="stylesheet" href="css/themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
-		<link rel="stylesheet" href="css/layout.css" type="text/css" />
-		
-		<!-- jQuery Imports -->
+<h4>Services<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New Service</a></h4>
+<table style="width:100%" ng-controller="ServiceCtrl">
+    <tr>
+        <td id="item-list">
+            <div id="grid-table" class="well" >
+                <table id="app-list" class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
 
-	</head>
-	<body>
-		<div id="main_content" align="left">
-			<div id="admin_radio"></div>
-			<div id="admin_panel" class="">
-				<div class="cLeft cW3333 cH100" id="">
-					<div class="cTM2" id="serviceList"></div>
-				</div>
-				<div class="cLeft cW50 cH100">
-					<div class="cP1">
-						<div class="cW100 ui-widget ui-corner-all cP1" align="left">
-							<strong>Web Service Editor:</strong> Use these controls below to create, update and delete Web Services in the list
-							to the left.
-							<br/>
-							<br/>
-							<div>
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Name:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW75">
-									<input type="text" class="cW98" name="Name" value="" onkeyup="makeClearable()"/>
-								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
-							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Label:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW75">
-									<input type="text" class="cW98" name="Label" value="" onkeyup="makeClearable()"/>
-								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
-                            <div class="cTM1">
-                                <div class="cLeft cW25 formLabel" align="right">
-                                    <strong>Description:&nbsp;</strong>
-                                </div>
-                                <div class="cLeft cW75">
-                                    <input type="text" class="cW98" name="Description" value="" onkeyup="makeClearable()"/>
-                                </div>
-                                <div class="cClear"><!--  --></div>
+                        <th class="no-border"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr ng-repeat="service in Services.record" id="row_{{service.id}}">
+                        <td ng-click="showDetails()">{{service.name}}</td>
+                        <td class="no-border">
+                            <div class="btn-group">
+                                <a class="btn btn-small btn-inverse" ><i class="icon-edit"></i></a>
+                                <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
-							
-							
-							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Status:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW75">
-									<div id="active">
-										<input type="radio" id="IsActive" name="IsActive" onchange="makeClearable()"/><label for="IsActive">Active</label><input type="radio" id="InActive" name="IsActive" onchange="makeClearable()" checked="checked" /><label for="InActive">Inactive</label>
-									</div>
-								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
-							
-							
-							<div class="cTM1">
-								<div class="cLeft cW25 formLabel" align="right">
-									<strong>Type:&nbsp;</strong>
-								</div>
-								<div class="cLeft cW75">
-									<select class="cW98" onchange="makeClearable()" name="Type" id="serviceType">
-										<option value="">[Please Select A Type]</option>
-										<option value="Local File Storage">Local File Storage</option>
-                                        <option value="Remote File Storage">Remote File Storage</option>
-                                        <option value="Local SQL DB">Local SQL DB</option>
-                                        <option value="Local SQL DB Schema">Local SQL DB Schema</option>
-                                        <option value="Remote SQL DB">Remote SQL DB</option>
-                                        <option value="Remote SQL DB Schema">Remote SQL DB Schema</option>
-										<option value="Remote Web Service">Remote Web Service</option>
-                                        <option value="Local Email Service">Local Email Service</option>
-                                        <option value="Remote Email Service">Remote Email Service</option>
-									</select>
-								</div>
-								<div class="cClear"><!--  --></div>
-							</div>
-							
-							<div id="WebOptions">
-								<div class="cTM1">
-									<div class="cLeft cW25 formLabel" align="right">
-										<strong>Base URL:&nbsp;</strong>
-									</div>
-									<div class="cLeft cW75">
-										<input type="text" class="cW98" name="BaseUrl" value="" onkeyup="makeClearable()"/>
-									</div>
-									<div class="cClear"><!--  --></div>
-								</div>
-								
-								<div class="cTM1">
-									<div class="cLeft cW25 formLabel" align="right">
-										<strong>Header List:&nbsp;</strong>
-									</div>
-									<div class="cLeft cW75">
-										<textarea class="cW98" id="HeaderList" rows="3" onkeyup="makeClearable()"></textarea>
-									</div>
-									<div class="cClear"><!--  --></div>
-								</div>
-								
-								<div class="cTM1">
-									<div class="cLeft cW25 formLabel" align="right">
-										<strong>Parameter List:&nbsp;</strong>
-									</div>
-									<div class="cLeft cW75">
-										<textarea class="cW98" id="ParamList" rows="3" onkeyup="makeClearable()"></textarea>
-									</div>
-									<div class="cClear"><!--  --></div>
-								</div>
-							</div>
-							
-                            <div id="FileOptions">
-                                <div class="cTM1">
-                                    <div class="cLeft cW25 formLabel" align="right">
-                                        <strong>Base Folder Name:&nbsp;</strong>
-                                    </div>
-                                    <div class="cLeft cW75">
-                                        <input type="text" class="cW98" name="StorageName" value="" onkeyup="makeClearable()"/>
-                                    </div>
-                                    <div class="cClear"><!--  --></div>
-                                </div>
-                            </div>
+                        </td>
+                    </tr>
 
-                            <div id="RemoteFileOptions">
-                                <div class="cTM1">
-                                    <div class="cLeft cW25 formLabel" align="right">
-                                        <strong>Storage Type:&nbsp;</strong>
-                                    </div>
-                                    <div class="cLeft cW75">
-                                        <select class="cW98" onchange="makeClearable()" name="StorageType" id="storageType">
-                                            <option value="">[Please Select A Type]</option>
-                                            <option value="Azure Blob">Windows Azure Blob</option>
-                                            <option value="AWS S3">Amazon Web Services S3</option>
-                                        </select>
-                                    </div>
-                                    <div class="cClear"><!--  --></div>
-                                </div>
+                    </tbody>
+                </table>
+            </div>
+        </td>
+        <td>&nbsp;</td>
+        <td id="app-details" class="well">
+            <div>
+                <div class="detail-view"></div>
 
-                                <div class="cTM1">
-                                    <div class="cLeft cW25 formLabel" align="right">
-                                        <strong>Credentials:&nbsp;</strong>
-                                    </div>
-                                    <div class="cLeft cW75">
-                                        <textarea class="cW98" id="Credentials" rows="3" onkeyup="makeClearable()"></textarea>
-                                    </div>
-                                    <div class="cClear"><!--  --></div>
-                                </div>
+                <div class="add_new">
+                    <h5 class="text-info">{{action}} service</h5>
 
-                            </div>
+                    <div id="step1">
+                        <div class="section">
+                            <p>Type</p>
+                            <input type="text" ng-model="service.type" value="Remote Web Service" disabled="disabled"/>
+
+                        </div>
 
 
-							<br/>
-							<br/>
-							<div class="cTM1" align="right">
-								<button id="new">New Service</button>
-								<button id="delete">Delete Service</button>
-								<button id="save"><span id="saveLabel">Save Service</span></button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="cClear"><!--  --></div>
-				<div id="confirmDeleteServiceDialog" title="Please Confirm Delete:" class="cTxtLeft">
-					<p class="cP1">
-						<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-						<span id="confirmMsg">
-							You are about to delete <span id="deleteService"><!--  --></span>. Are you sure you want to delete this service?
-						</span>
-					</p>
-				</div>
-			</div>
-		</div>
-        <script src="/lib/web-core/js/jquery.js"></script>
-        <script src="/lib/web-core/js/jquery-ui-1.9.2.custom.min.js"></script>
+                        <div class="section">
+                            <p>Service Name</p>
+                            <input ng-model="service.name" type="text"/>
+                        </div>
+                        <div class="section">
+                            <p>API Name</p>
+                            <input ng-model="service.api_name" type="text"/>
+                        </div>
+                        <div class="section">
+                            <p>Description</p>
+                            <input ng-model="service.description" type="text"/>
+                        </div>
+                        <div class="section">
+                            <p>Base URL</p>
+                            <input ng-model="service.base_url" type="text"/>
+                        </div>
+                        <div class="section">
+                            <p>Parameters</p>
+                            <input ng-model="service.parameters" type="text"/>
+                        </div>
+                        <div class="section">
+                            <p>Headers</p>
+                            <input ng-model="service.headers" type="text"/>
+                        </div>
+                        <div class="section">
+                            <input ng-checked="service.is_active" type="checkbox" ng-model="service.is_active"/>&nbsp;Active
+                        </div>
+                        <!--<div class="section">-->
+                            <!--<p>Storage Name</p>-->
+                            <!--<input ng-model="service.storage_name" type="text"/>-->
+                        <!--</div>-->
+                        <!--<div class="section">-->
+                            <!--<p>Storage Type</p>-->
+                            <!--<input ng-model="service.storage_type" type="text"/>-->
+                        <!--</div>-->
+                        <!--<div class="section">-->
+                            <!--<p>Credentials</p>-->
+                            <!--<input ng-model="service.credentials" type="text"/>-->
+                        <!--</div>-->
+                        <!--<div class="section">-->
+                            <!--<p>Native Format</p>-->
+                            <!--<input ng-model="service.native_format" type="text"/>-->
+                        <!--</div>-->
+                        <div id="button_holder">
+                            <a id="save_button" ng-click="create()" class="btn btn-primary">
+                                <li class="icon-save"></li>
+                                &nbsp;Save</a>
+                            <a id="update_button" ng-click="save()" class="btn btn-primary">
+                                <li class="icon-save"></li>
+                                &nbsp;Update</a>
+                        </div>
 
+                    </div>
 
-        <!-- DF Imports -->
-        <script src="/lib/web-core/js/df.js"></script>
-        <script src="/lib/web-core/js/df-err.js"></script>
-        <script src="js/jquery.dfsearchwidget.js"></script>
+                </div>
+            </div>
 
-        <!-- Initialize the system and start the application -->
-        <script src="js/services.js"></script>
-        <script src="js/admin.js"></script>
-	</body>
-</html>
+        </td>
+    </tr>
+</table>
+

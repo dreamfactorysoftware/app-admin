@@ -8,11 +8,11 @@ EditorActions = {
     getFile : function(){
         $.ajax({
             url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path'),
-            data:'app_name=filemanager&method=GET',
+            data:'app_name=admin&method=GET',
             cache:false,
             processData: false,
             success:function (response) {
-                EditorActions.loadEditor(response);
+               EditorActions.loadEditor(response);
             },
             error:function (response) {
                 if (response.status == 401) {
@@ -28,13 +28,13 @@ EditorActions = {
     },
     saveFile:function(){
         $.ajax({
-            url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path') + '?&app_name=filemanager',
+            url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path') + '?&app_name=admin',
             data: Editor.getValue(),
             type:'MERGE',
             processData: false,
             cache:false,
             beforeSend: function(xhr) {
-                xhr.setRequestHeader("X-File-Name",EditorActions.getFileName());
+               xhr.setRequestHeader("X-File-Name",EditorActions.getFileName());
             },
             success:function (response) {
                 window.close();
@@ -68,5 +68,5 @@ EditorActions = {
 };
 $(document).ready(function(){
     EditorActions.getFile();
-
+	
 });

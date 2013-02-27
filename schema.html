@@ -1,0 +1,106 @@
+<h4>Tables<a ng-click="showForm()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New Table</a></h4>
+<table style="width:100%" ng-controller="SchemaCtrl">
+    <tr>
+        <td id="item-list">
+            <div id="grid-table" class="well" >
+                <table id="app-list" class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Table Name</th>
+
+                        <th class="no-border"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr ng-repeat="table in schemaData" id="row_{{table.name}}">
+                        <td ng-click="showData()">{{table.name}}</td>
+                        <td class="no-border">
+                            <div class="btn-group">
+                                <a class="btn btn-small btn-inverse" ><i class="icon-edit"></i></a>
+                                <a class="btn btn-small btn-inverse" ng-click="delete()" ><i class="icon-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </td>
+        <td>&nbsp;</td>
+        <td id="app-details" class="well" >
+            <div>
+                <div class="detail-view">
+                    <div id="grid-container">
+                        <div id="schema-main" ng-grid="browseOptions"></div>
+                    </div>
+                    <div id="create-form">
+                        <div class="section">
+                            <b>Create Table</b>
+                        </div>
+                        <div class="section">
+                            Table Name: <input id="table-name" type="text" ng-model="schema.table.name"/>
+                        </div>
+                        <div class="section">
+                            <b>Add Fields</b>
+                        </div>
+                        <div class="section">
+                            Field Name: <input type="text" ng-model="schema.table.field.name"/>
+                        </div>
+                        <div class="section">
+                            Field Type: <select ng-model="schema.table.field.type">
+                            <option value="id">ID / Primary Key</option>
+                            <option value="string">String</option>
+                            <option value="integer">Integer</option>
+                            <option value="text">Text</option>
+                            <option value="boolean">Boolean</option>
+                            <option value="binary">Binary</option>
+                            <option value="blob">Blob</option>
+                            <option value="float">Float</option>
+                            <option value="decimal">Decimal</option>
+                            <option value="datetime">Datetime</option>
+                            <option value="date">Date</option>
+                            <option value="time">Time</option>
+
+
+                        </select>
+                        </div>
+                        <div class="section">
+                            Field Size: <input type="text" ng-model="schema.table.field.size"/>
+                        </div>
+                        <div class="section">
+                            Allow Null: <input type="checkbox" ng-model="schema.table.field.allow_null"/>
+                        </div>
+                        <div><a class="btn btn-primary" ng-click="addField()"><li class="icon-plus-sign-alt"></li>&nbsp;Add Field</a></div>
+
+                        <div id="fields_container"></div>
+                        <table id="field-list" class="table table-hover table-striped">
+
+                            <tbody>
+
+                            <tr ng-repeat="field in newTable.table.field">
+                                <td>{{field.name}}</td>
+                                <td>{{field.type}}</td>
+                                <td>{{field.size}}</td>
+                                <td>{{field.allow_null}}</td>
+                                <td class="no-border">
+                                    <div class="btn-group">
+
+                                        <a class="btn btn-small btn-inverse" ng-click="removeField()" ><i class="icon-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <div><a class="btn btn-primary" ng-click="create()"><li class="icon-save"></li>&nbsp;Create Table</a></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </td>
+    </tr>
+</table>
+

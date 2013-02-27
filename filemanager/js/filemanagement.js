@@ -33,10 +33,6 @@ $(document).ready(function() {
         deleteSelected();
     });
 
-    $("#exit").click(function() {
-        window.location = CommonUtilities.getQueryParameter('returnUrl');
-    });
-
     $("#exitEditor").button({icons:{primary:"ui-icon-close"}}).click(function(){
         $('#editPanel').hide();
         $('#fileControl').hide();
@@ -45,7 +41,7 @@ $(document).ready(function() {
     });
 
     $("#exportzip").click(function() {
-        $("#fileIframe").attr("src","/REST/APP/" + currentpath + "?zip=true&app_name=" + CommonUtilities.getQueryParameter('hostApp'));
+        $("#fileIframe").attr("src","/REST/APP/" + currentpath + "?zip=true&app_name=admin");
     });
 
     $("#importExtract").click(function() {
@@ -68,10 +64,10 @@ function printLocation(path) {
         var builder = '';
         var tmp = path.split('/');
         for(var i in tmp) {
-           if (tmp[i].length > 0) {
-               builder += tmp[i]+'/';
-               text += '/<a href="javascript: loadFolder(\''+builder+'\')">'+tmp[i]+'</a>';
-           }
+            if (tmp[i].length > 0) {
+                builder += tmp[i]+'/';
+                text += '/<a href="javascript: loadFolder(\''+builder+'\')">'+tmp[i]+'</a>';
+            }
         }
     }
     $('#breadcrumbs').html(text);
@@ -107,13 +103,13 @@ function getIcon(file) {
 
 function buildItem(path,icon,name,type,editor,extra) {
 
-	return '<div class="fmObject" data-target="'+path+'" data-type="'+type+'">' +
-		(editor ? editor : '') +
-		'<div class="cLeft fm_icon" align="center"><img src="'+icon+'" border="0"/></div>' +
-		'<div class="cLeft cW30"><span class="fm_label">'+name+'</span></div>' +
-		(extra ? extra : '') +
-		'<div class="cClear"><!-- --></div>' +
-	'</div>';
+    return '<div class="fmObject" data-target="'+path+'" data-type="'+type+'">' +
+        (editor ? editor : '') +
+        '<div class="cLeft fm_icon" align="center"><img src="'+icon+'" border="0"/></div>' +
+        '<div class="cLeft cW30"><span class="fm_label">'+name+'</span></div>' +
+        (extra ? extra : '') +
+        '<div class="cClear"><!-- --></div>' +
+        '</div>';
 }
 
 function allowEdit(mime) {
@@ -127,9 +123,9 @@ function allowEdit(mime) {
 function buildEditor(mime,path) {
 
 
-	if (allowEdit(mime)) {
+    if (allowEdit(mime)) {
         return '<a href="#" class="btn btn-small fmSquareButton cRight editor" data-mime="' + mime + '" data-path="' + path + '"><i class="icon-pencil"></i></a>';
-	}
+    }
     return '';
 }
 
@@ -140,67 +136,66 @@ function buildFolderControl(path) {
 
 function buildListingUI(json) {
 
-	var html = '';
-	if (json.folder) {
-		for (var i in json.folder) {
-			var ctrl = buildFolderControl(json.folder[i].path);
-			html += buildItem(json.folder[i].path, 'gfx/folder-horizontal-open.png', json.folder[i].name, 'folder',ctrl);
-		}
-	}
-	if (json.file) {
-		for(var i in json.file) {
-			var editor = buildEditor(json.file[i].contentType,json.file[i].path);
-			var extra = '<div class="cLeft cW5">&nbsp;</div>';
-			if(json.file[i].lastModified) {
-				extra += '<div class="cLeft cW20 fm_label">'+json.file[i].lastModified+'</div>';
-			}
-			if(json.file[i].contentType) {
-				extra += '<div class="cLeft cW15 fm_label">'+json.file[i].contentType+'</div>';
-			}
-			if(json.file[i].size) {
-				extra += '<div class="cLeft cW10 fm_label">'+json.file[i].size+' bytes</div>';
-			}
-			html += buildItem(json.file[i].path,getIcon(json.file[i]),json.file[i].name,'file', editor, extra);
-		}
-	}
-	$('#listing').html(html);
+    var html = '';
+    if (json.folder) {
+        for (var i in json.folder) {
+            var ctrl = buildFolderControl(json.folder[i].path);
+            html += buildItem(json.folder[i].path, 'gfx/folder-horizontal-open.png', json.folder[i].name, 'folder',ctrl);
+        }
+    }
+    if (json.file) {
+        for(var i in json.file) {
+            var editor = buildEditor(json.file[i].contentType,json.file[i].path);
+            var extra = '<div class="cLeft cW5">&nbsp;</div>';
+            if(json.file[i].lastModified) {
+                extra += '<div class="cLeft cW20 fm_label">'+json.file[i].lastModified+'</div>';
+            }
+            if(json.file[i].contentType) {
+                extra += '<div class="cLeft cW15 fm_label">'+json.file[i].contentType+'</div>';
+            }
+            if(json.file[i].size) {
+                extra += '<div class="cLeft cW10 fm_label">'+json.file[i].size+' bytes</div>';
+            }
+            html += buildItem(json.file[i].path,getIcon(json.file[i]),json.file[i].name,'file', editor, extra);
+        }
+    }
+    $('#listing').html(html);
 
     $('.editor').click(function(){
-            var path = $(this).data('path');
-            var mime = $(this).data('mime');
-            var w = window.open('editor.html?path='+path+'&mime='+mime+'&',path+" "+mime,'width=800,height=400,toolbars=no,statusbar=no,resizable=no');
-            w.focus();
-            return false;
-        });
+        var path = $(this).data('path');
+        var mime = $(this).data('mime');
+        var w = window.open('editor.html?path='+path+'&mime='+mime+'&',path+" "+mime,'width=800,height=400,toolbars=no,statusbar=no,resizable=no');
+        w.focus();
+        return false;
+    });
 
     $('.folder_open').click(function() {
-            loadFolder($(this).data('path'));
-            return false;
-        });
+        loadFolder($(this).data('path'));
+        return false;
+    });
 
     $('.fmObject').click(function(e){
-            var t = $(this);
-            var unselect = t.hasClass('highlighted');
-            if (!e.ctrlKey) {
-                $('.fmObject').each(function(){
-                    $(this).removeClass('highlighted');
-                });
-            }
-            if(t.hasClass('highlighted')) {
-                t.removeClass('highlighted');
-            } else if(!unselect) {
-                t.addClass('ui-corner-all');
-                t.addClass('highlighted');
-            }
-            document.getSelection().removeAllRanges();
-        }).dblclick(function(){
+        var t = $(this);
+        var unselect = t.hasClass('highlighted');
+        if (!e.ctrlKey) {
+            $('.fmObject').each(function(){
+                $(this).removeClass('highlighted');
+            });
+        }
+        if(t.hasClass('highlighted')) {
+            t.removeClass('highlighted');
+        } else if(!unselect) {
+            t.addClass('ui-corner-all');
+            t.addClass('highlighted');
+        }
+        document.getSelection().removeAllRanges();
+    }).dblclick(function(){
             var target = $(this).data('target');
             var type = $(this).data('type');
             if(type == 'folder') {
                 loadFolder(target);
             } else {
-               var app = CommonUtilities.getQueryParameter('hostApp');
-               window.location.href = 'http://' + location.host + '/rest/app/' + target +"?app_name=' + app + '&download=true";
+                window.location.href = 'http://' + location.host + '/rest/app/' + target +"?app_name=admin&download=true";
             }
         });
 
@@ -241,8 +236,8 @@ function handleFileSelect(evt) {
     for(var i = 0; i < dropFiles.length; i++) {
         // try to skip folders
         if (dropFiles[i].size == 0) {
-           skipped++;
-           continue;
+            skipped++;
+            continue;
         }
         createFile(target, dropFiles[i]);
     }
@@ -261,7 +256,7 @@ function loadRootFolder() {
 
 function reloadFolder() {
 
-   loadFolder(currentpath);
+    loadFolder(currentpath);
 }
 
 function loadFolder(path) {
@@ -269,7 +264,7 @@ function loadFolder(path) {
     $.ajax({
         dataType:'json',
         url:'http://' + location.host + '/rest/app/' + path,
-        data:'app_name=' + CommonUtilities.getQueryParameter('hostApp') + '&method=GET',
+        data:'app_name=admin&method=GET',
         cache:false,
         success:function (response) {
             try {document.getSelection().removeAllRanges();} catch(e) {/* silent! */};
@@ -299,7 +294,7 @@ function createFile(target, file) {
         });
         if (exists) {
             if(!confirm("Do you want to overwrite " + file.name + " on upload?")) {
-               return;
+                return;
             }
         }
     }
@@ -316,7 +311,7 @@ function createFile(target, file) {
         },
         dataType:'json',
         type :'POST',
-        url:'http://' + location.host + '/rest/app/' + target + '?app_name=' + CommonUtilities.getQueryParameter('hostApp') + extra,
+        url:'http://' + location.host + '/rest/app/' + target + '?app_name=admin' + extra,
         data: data,
         cache:false,
         processData: false,
@@ -338,7 +333,7 @@ function createFolder(target, name) {
         },
         dataType:'json',
         type :'POST',
-        url:'http://' + location.host + '/rest/app/' + target + '?app_name=' + CommonUtilities.getQueryParameter('hostApp'),
+        url:'http://' + location.host + '/rest/app/' + target + '?app_name=admin',
         data: '',
         cache:false,
         processData: false,
@@ -378,7 +373,7 @@ function deleteSelected() {
             $.ajax({
                 dataType:'json',
                 type : 'POST',
-                url:'http://' + location.host + '/rest/app/' + currentpath + '?app_name=' + CommonUtilities.getQueryParameter('hostApp') + '&method=DELETE&force=true',
+                url:'http://' + location.host + '/rest/app/' + currentpath + '?app_name=admin&method=DELETE&force=true',
                 data: data,
                 cache:false,
                 processData: false,
@@ -409,20 +404,20 @@ function errorHandler(errs,data){
 
 function getSelectedItems() {
 
-	var folders = [];
-	var files = [];
-	$('.highlighted').each(function() {
-		var target = $(this).data('target');
-		if ($(this).data('type') == 'folder') {
-			folders[folders.length] = {path:target};
-		} else {
-			files[files.length] = {path:target};
-		}
-	});
-	return {
-		"folder": folders,
-		"file": files
-	};
+    var folders = [];
+    var files = [];
+    $('.highlighted').each(function() {
+        var target = $(this).data('target');
+        if ($(this).data('type') == 'folder') {
+            folders[folders.length] = {path:target};
+        } else {
+            files[files.length] = {path:target};
+        }
+    });
+    return {
+        "folder": folders,
+        "file": files
+    };
 }
 
 // misc
@@ -484,7 +479,7 @@ function getFileName() {
 function importFile() {
 
     // set format to xml so IE does not ask to open/save file
-    var params = 'app_name=' + CommonUtilities.getQueryParameter('hostApp');
+    var params = 'app_name=admin';
     var filename = getFileName();
     if (filename == '') {
         alert("Please specify a file to import.");

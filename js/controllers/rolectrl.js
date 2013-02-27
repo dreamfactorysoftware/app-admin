@@ -1,0 +1,91 @@
+var RoleCtrl = function ($scope, RolesRelated, User, App) {
+    Scope = $scope;
+    RoleDetails = angular.element("#grid-table").scope();
+    Scope.role = {users:[], apps:[]};
+    Scope.action = "Create new ";
+    $('#update_button').hide();
+    Scope.Roles = RolesRelated.get();
+    Scope.AllUsers = User.get();
+    Scope.Apps = App.get();
+    Scope.save = function () {
+        var id = this.role.id;
+        RolesRelated.update({id:id}, Scope.role, function () {
+        });
+    };
+    Scope.create = function () {
+        RolesRelated.save(Scope.role, function (data) {
+            Scope.Roles.record.push(data);
+        });
+    };
+    Scope.isUserInRole = function(){
+     var inRole = false;
+     if(Scope.role.users.length > 0){
+     if(this.user.role_id == Scope.role.id){
+        inRole = true;
+     }
+     return inRole;
+     }
+    };
+    Scope.isAppInRole = function(){
+        var inGroup =false;
+        if(Scope.role){
+        var id = this.app.id;
+        var assignedApps = Scope.role.apps;
+        assignedApps = $(assignedApps);
+
+        assignedApps.each(function(index, val){
+            if(val.id == id){
+                inGroup = true;
+            }
+        });
+        }
+        return inGroup;
+    };
+    Scope.addAppToRole = function (checked) {
+
+        if(checked == true){
+            Scope.role.apps.push(this.app);
+        }else{
+            Scope.role.apps = removeByAttr(Scope.role.apps, 'id', this.app.id);
+        }
+    };
+    $scope.updateUserToRole = function (checked) {
+
+        if(checked == true){
+           Scope.role.users.push(this.user);
+        }else{
+           Scope.role.users = removeByAttr(Scope.role.users, 'id', this.user.id);
+        }
+
+    };
+    removeByAttr = function(arr, attr, value){
+        var i = arr.length;
+        while(i--){
+            if(arr[i] && arr[i][attr] && (arguments.length > 2 && arr[i][attr] === value )){
+                arr.splice(i,1);
+            }
+        }
+        return arr;
+    };
+    $scope.delete = function () {
+        var id = this.role.id;
+        RolesRelated.delete({ id:id }, function () {
+            $("#row_" + id).fadeOut();
+        });
+        Scope.promptForNew();
+    };
+    $scope.promptForNew = function () {
+        Scope.action = "Create new";
+        Scope.role = {users:[], apps:[]};
+        $('#save_button').show();
+        $('#update_button').hide();
+    };
+    $scope.showDetails = function () {
+        Scope.action = "Edit this ";
+        Scope.role = this.role;
+        Scope.users = this.role.users;
+        $('#save_button').hide();
+        $('#update_button').show();
+    }
+
+};

@@ -1,0 +1,102 @@
+<h4>Users<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New User</a></h4>
+<table style="width:100%" ng-controller="UserCtrl">
+    <tr>
+        <td id="item-list">
+            <div id="grid-table" class="well" >
+                <table id="app-list" class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Display Name</th>
+
+                        <th class="no-border"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr ng-repeat="user in Users.record" id="row_{{user.id}}">
+                        <td ng-click="showDetails()">{{user.display_name}}</td>
+                        <td class="no-border">
+                            <div class="btn-group">
+                                <a class="btn btn-small btn-inverse"><i class="icon-edit"></i></a>
+                                <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </td>
+        <td>&nbsp;</td>
+        <td id="app-details" class="well">
+            <div>
+                <div class="detail-view"></div>
+
+                <form novalidate class="css-form" name="userform">
+                    <div class="add_new">
+                        <h5 class="text-info">{{action}} user</h5>
+
+                        <div id="step1">
+                            <div class="section">
+                                Username : <input ng-model="user.username" type="text" required/>
+                            </div>
+                            <div class="section form-inline">
+                                First Name : <input class="input-small"  ng-model="user.first_name" type="text" required/>
+                                Last Name :  <input class="input-small"  ng-model="user.last_name" type="text" required/>
+                            </div>
+                            <div class="section">
+                                Display Name : <input ng-model="user.display_name"
+                                                      ng-bind="{{user.display_name}}" value="{{user.first_name}}&nbsp{{user.last_name}}" type="text"/>
+                            </div>
+                            <div class="section">
+                                Password : <input id="password" name="password" type="password" ng-required="action=='Create'" ng-model="user.password">
+                            </div>
+                            <div class="section">
+                                Verify Password : <input id="passwordRepeat" name="passwordRepeat" type="password" ng-required="action=='Create'" ng-model="passwordRepeat" ui-validate-equals="user.password">
+                                <span id="passwordError" ng-show='!userform.$pristine && userform.passwordRepeat.$error.equal' style='color: red;'>Please enter matching passwords</span>
+                            </div>
+                            <div class="section">
+                                Email :  <input ng-model="user.email" type="email" required/>
+                            </div>
+                            <div class="section">
+                                Phone : <input ng-model="user.phone" type="tel"/>
+                            </div>
+                            <div class="section">
+                                <input ng-click="toggleRoleSelect($event.target.checked)"  ng-checked="user.is_sys_admin" type="checkbox" ng-model="user.is_sys_admin"/>&nbsp;This is a System Administrator
+                            </div>
+                            <div class="section">
+                                <p>Assign a Role</p>
+
+                                <div>
+                                    <select ng-selected = "user.role_id == role.id" id="role_select" ng-model="user.role_id" ng-options="role.id as role.name for role in Roles.record">
+                                        <option  value="">Unassigned</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <input ng-checked="user.is_active" type="checkbox" ng-model="user.is_active"/>&nbsp;Active
+
+                        </div>
+                        <br/>
+
+                        <div id="button_holder">
+                            <a id="save_button" ng-click="create()" class="btn btn-primary" ng-disabled="userform.$invalid">
+                                <li class="icon-save"></li>
+                                &nbsp;Save</a>
+                            <a id="update_button" ng-click="save()" class="btn btn-primary" ng-disabled="userform.$invalid">
+                                <li class="icon-save"></li>
+                                &nbsp;Update</a>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+            </div>
+
+        </td>
+    </tr>
+</table>
+

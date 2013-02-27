@@ -1,0 +1,129 @@
+<h4>Applications<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New App</a></h4>
+<table style="width:100%" ng-controller="AppCtrl">
+    <tr>
+        <td id="item-list">
+            <div id="grid-table" class="well" >
+                <table id="app-list" class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>App Label</th>
+
+                        <th class="no-border"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
+                        <td ng-click="showDetails()">{{app.name}}</td>
+                        <td class="no-border">
+                            <div class="btn-group">
+                                <a class="btn btn-small btn-inverse" ng-click="showAppPreview()"><i
+                                        class="icon-eye-open"></i></a>
+                                <a class="btn btn-small btn-inverse" ng-click="showFileManager()"><i
+                                        class="icon-folder-open"></i></a>
+                                <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </td>
+        <td>&nbsp;</td>
+        <td id="app-details" class="well">
+
+            <div>
+
+                <div class="add_new">
+                    <h5 class="text-info">{{action}} application </h5>
+                    <div id="file-manager">
+                        <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
+                    </div>
+                    <div id="app-preview">
+                        <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
+                    </div>
+                    <div id="step1">
+                        <div class="section">
+                            <p>Is this hosted locally on this server or externally?</p>
+
+                            <select  name="app_location" ng-model="app.is_url_external">
+                                <option value='0' ng-click="showLocal()">Local</option>
+                                <option ng-click="hideLocal()" value='1'>External</option>
+                            </select>
+                        </div>
+                        <div id="context-root" class=" section local">
+                            <p>Application Path eg: myApp </p>
+
+                            <div class="alert alert-info">
+                                This will be your context root and cannot be changed.
+                            </div>
+                            <input type="text" ng-model="app.api_name">
+                        </div>
+                        <div  class="section external">
+                            <p>Application Name</p>
+                            <input  type="text" ng-model="app.api_name">
+                        </div>
+                        <div class=" section">
+                            <p>Public name for this App </p>
+                            <input  type="text" ng-model="app.name">
+                        </div>
+                        <div class=" section">
+                            <p>Public description for this App </p>
+                            <input name="app_desc" type="text" ng-model="app.description">
+                        </div>
+                        <div class=" section">
+                            <p>Default Path</p>
+
+                            <div class="alert alert-info local">
+                                This is the default file to load when your app is loaded.
+                            </div>
+                            <div class="alert alert-info external">
+                                This is the external link to your app.
+                            </div>
+                            <input name="app_path" type="text" ng-model="app.url">
+
+                            <div class="alert alert-success local">Your URL will be:
+                                http://{{currentServer}}/app/{{app.api_name}}<span>{{app.url}}</span></div>
+                            <div class="alert alert-success external">Your URL will be:
+                                {{app.url}}</div>
+                        </div>
+
+                        <div class="section">
+                            Assign this app to a role(s).
+
+                            <table class="table table-hover table-striped table-bordered">
+
+                                <tr ng-repeat="role in Roles.record" id="row_{{role.id}}">
+                                    <td><input ng-click="addRoleToApp($event.target.checked)" ng-checked="isAppInRole()" type="checkbox"/></td> <td style="width:100%">{{role.name}}</td>
+
+                                </tr>
+
+
+                            </table>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+                    <div id="create_button"><a ng-click="create()" class="btn btn-primary">
+                        <li class="icon-circle-arrow-right"></li>
+                        &nbsp;Create Application</a></div>
+                        <div id="update_button"><a ng-click="save()" class="btn btn-primary">
+                            <li class="icon-save"></li>
+                            &nbsp;Update Application</a></div>
+
+
+                </div>
+            </div>
+
+        </td>
+    </tr>
+</table>
+

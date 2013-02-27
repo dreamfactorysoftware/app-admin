@@ -1,5 +1,5 @@
-<h4>Roles<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New Role</a></h4>
-<table style="width:100%" ng-controller="RoleCtrl">
+<h4>Application Groups<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New Group</a></h4>
+<table style="width:100%" ng-controller="GroupCtrl">
     <tr>
         <td id="item-list">
             <div id="grid-table" class="well" >
@@ -13,8 +13,8 @@
                     </thead>
                     <tbody>
 
-                    <tr ng-repeat="role in Roles.record" id="row_{{role.id}}">
-                        <td ng-click="showDetails()">{{role.name}}</td>
+                    <tr ng-repeat="group in Groups.record" id="row_{{group.id}}">
+                        <td ng-click="showDetails()">{{group.name}}</td>
                         <td class="no-border">
                             <div class="btn-group">
                                 <a class="btn btn-small btn-inverse" ><i class="icon-edit"></i></a>
@@ -33,48 +33,34 @@
                 <div class="detail-view"></div>
 
                 <div class="add_new">
-                    <h5 class="text-info">{{action}} role</h5>
+                    <h5 class="text-info">{{action}} group</h5>
 
                     <div id="step1">
                         <div class="section">
                             <p>Name</p>
-                            <input ng-model="role.name" type="text" required/>
+                            <input ng-model="group.name" type="text"/>
                         </div>
 
                         <div class="section">
                             <p>Description</p>
-                            <input ng-model="role.description" type="text"/>
+                            <input ng-model="group.description" type="text"/>
                         </div>
                         <div class="section">
-                            Users Assigned to this Role.
-
+                            Assign Apps to this group.
+                            <div class="well">
                                 <table  class="table table-hover table-striped table-bordered">
 
-                                    <tr ng-repeat="user in AllUsers.record" id="row_{{user.id}}">
-                                       <td><input name="assigned" ng-click="updateUserToRole($event.target.checked)" ng-checked="isUserInRole()" type="checkbox"/></td> <td style="width:100%">{{user.display_name}}</td>
+                                    <tbody>
 
+                                    <tr ng-repeat="app in Apps.record" id="row_{{app..id}}">
+                                        <td><input ng-click="addAppToGroup($event.target.checked)" name="add_to_group" ng-checked = "isAppInGroup()"type="checkbox"/></td><td>{{app.name}}</td><td style="width:100%">{{app.description}}</td>
                                     </tr>
 
-
+                                    </tbody>
                                 </table>
-
-
+                            </div>
                         </div>
-                        <div class="section">
-                            Apps Assigned to this Role.
 
-                            <table  class="table table-hover table-striped table-bordered">
-
-                                <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
-                                    <td><input value="{{app.id}}" name="assigned_apps" ng-click="addAppToRole($event.target.checked)" ng-checked="isAppInRole()" type="checkbox"/></td> <td style="width:100%">{{app.name}}</td>
-
-                                </tr>
-
-
-                            </table>
-
-
-                        </div>
                         <div id="button_holder">
                             <a id="save_button" ng-click="create()" class="btn btn-primary">
                                 <li class="icon-save"></li>
