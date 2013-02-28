@@ -48,15 +48,15 @@
                         <div class="section">
                             Users Assigned to this Role.
 
-                                <table  class="table table-hover table-striped table-bordered">
+                            <table  class="table table-hover table-striped table-bordered">
 
-                                    <tr ng-repeat="user in AllUsers.record" id="row_{{user.id}}">
-                                       <td><input name="assigned" ng-click="updateUserToRole($event.target.checked)" ng-checked="isUserInRole()" type="checkbox"/></td> <td style="width:100%">{{user.display_name}}</td>
+                                <tr ng-repeat="user in AllUsers.record" id="row_{{user.id}}">
+                                    <td><input name="assigned" ng-click="updateUserToRole($event.target.checked)" ng-checked="isUserInRole()" type="checkbox"/></td> <td style="width:100%">{{user.display_name}}</td>
 
-                                    </tr>
+                                </tr>
 
 
-                                </table>
+                            </table>
 
 
                         </div>
@@ -75,6 +75,53 @@
 
 
                         </div>
+                        <div class="section">
+                            Assign Service Access to this Role<br/><br/>
+
+                            <span class="access">Service :</span> <select ng-change = "loadComponents()"  ng-model="service.service_id"  ng-options="service.id as service.name for service in Services.record">
+                        </select><br/>
+                            <span class="access">Component:</span> <select ng-model="service.component" ng-options="component.name as component.label for component in components">
+
+                        </select><br/>
+                            <span class="access">Access:</span> <select ng-model="service.access" style="width:140px;">
+                            <option value='Full Access' selected>Full Access</option>
+                            <option value='Read and Write' selected>Read and Write</option>
+                            <option value='Read Only' selected>Read Only</option>
+                            <option value='Write Only' selected>Write Only</option>
+                            <option value='No Access' selected>No Access</option>
+                        </select>
+                            <a class="btn btn-small btn-inverse" ng-click="addServiceAccess()" ><i class="icon-add"></i> Add Service Access</a>
+
+                        </div>
+                        <table id="field-list" class="table table-hover table-striped">
+
+                            <tbody>
+
+                            <tr ng-repeat="service_access in role.role_service_accesses">
+                                <td>
+                                    <select ng-init = "loadIndComponents()" ng-change = "loadIndComponents()"  ng-model="service_access.service_id"  ng-options="service.id as service.name for service in Services.record">
+                                    </select>
+                                    <select ng-model="service_access.component" ng-options="component.name as component.label for component in components">
+
+                                    </select>
+                                    <select ng-model="service_access.access" style="width:140px;">
+                                        <option value='Full Access' selected>Full Access</option>
+                                        <option value='Read and Write' selected>Read and Write</option>
+                                        <option value='Read Only' selected>Read Only</option>
+                                        <option value='Write Only' selected>Write Only</option>
+                                        <option value='No Access' selected>No Access</option>
+                                    </select>
+                                </td>
+                                <td class="no-border">
+                                    <div class="btn-group pull-left">
+
+                                        <a class="btn btn-small btn-inverse" ng-click="" ><i class="icon-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
                         <div id="button_holder">
                             <a id="save_button" ng-click="create()" class="btn btn-primary">
                                 <li class="icon-save"></li>
