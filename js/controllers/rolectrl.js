@@ -82,18 +82,43 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         this.components.push({ name:"*", label:"All"});
         this.components = Scope.selectServices[this.service_access.service_id];
     };
+
+    Scope.removeAccess = function(){
+        Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
+    };
     Scope.addServiceAccess = function(){
         Scope.role.role_service_accesses.push(Scope.service);
     }
-    removeByAttr = function(arr, attr, value){
+
+    removeByAttr = function (arr, attr, value) {
         var i = arr.length;
-        while(i--){
-            if(arr[i] && arr[i][attr] && (arguments.length > 2 && arr[i][attr] === value )){
-                arr.splice(i,1);
+        while (i--) {
+            if (arr[i] && arr[i][attr] && (arguments.length > 2 && arr[i][attr] === value )) {
+                arr.splice(i, 1);
             }
         }
         return arr;
     };
+    removeByAttrs = function(arr, attr1, value1, attr2, value2){
+        var i = arr.length;
+        while(i--){
+            if(arr[i] && arr[i][attr1] && (arguments.length > 2 && arr[i][attr1] === value1 )){
+                if(arr[i][attr2] && (arguments.length > 2 && arr[i][attr2] === value2)){
+                    arr.splice(i,1);
+                }
+
+            }
+        }
+        return arr;
+    };
+
+    function lookup( name ) {
+        for(var i = 0, len = arr.length; i < len; i++) {
+            if( arr[ i ].key === name )
+                return true;
+        }
+        return false;
+    }
     $scope.delete = function () {
         var id = this.role.id;
         RolesRelated.delete({ id:id }, function () {
