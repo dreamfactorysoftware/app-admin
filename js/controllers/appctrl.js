@@ -37,7 +37,7 @@ var AppCtrl = function ($scope, AppsRelated, Role) {
             Scope.app.id = data.id;
             //Scope.app = data;
             window.top.Actions.updateSession();
-            //Scope.showAppPreview();
+            Scope.showAppPreview();
         });
 
 
