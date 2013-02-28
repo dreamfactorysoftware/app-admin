@@ -1643,3 +1643,7 @@ html, body, #container{
 
     border-color: #FA787E;
 }
+.limit-list{
+    max-height: 200px;
+    overflow: auto;
+}
