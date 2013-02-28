@@ -1,8 +1,12 @@
-<h4>Applications<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New App</a></h4>
+<h4>Applications<a ng-click="goToImport()" class="btn btn-small pull-right btn-primary">
+    <li class="icon-plus-sign-alt"></li>
+    Import New App</a><a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary">
+    <li class="icon-plus-sign-alt"></li>
+    Create New App</a></h4>
 <table style="width:100%" ng-controller="AppCtrl">
     <tr>
         <td id="item-list">
-            <div id="grid-table" class="well" >
+            <div id="grid-table" class="well">
                 <table id="app-list" class="table table-hover table-striped">
                     <thead>
                     <tr>
@@ -37,6 +41,7 @@
 
                 <div class="add_new">
                     <h5 class="text-info">{{action}} application </h5>
+
                     <div id="file-manager">
                         <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
                     </div>
@@ -47,7 +52,7 @@
                         <div class="section">
                             <p>Is this hosted locally on this server or externally?</p>
 
-                            <select  name="app_location" ng-model="app.is_url_external">
+                            <select name="app_location" ng-model="app.is_url_external">
                                 <option value='0' ng-click="showLocal()">Local</option>
                                 <option ng-click="hideLocal()" value='1'>External</option>
                             </select>
@@ -60,13 +65,13 @@
                             </div>
                             <input type="text" ng-model="app.api_name">
                         </div>
-                        <div  class="section external">
+                        <div class="section external">
                             <p>Application Name</p>
-                            <input  type="text" ng-model="app.api_name">
+                            <input type="text" ng-model="app.api_name">
                         </div>
                         <div class=" section">
                             <p>Public name for this App </p>
-                            <input  type="text" ng-model="app.name">
+                            <input type="text" ng-model="app.name">
                         </div>
                         <div class=" section">
                             <p>Public description for this App </p>
@@ -81,12 +86,13 @@
                             <div class="alert alert-info external">
                                 This is the external link to your app.
                             </div>
-                            <input name="app_path" type="text" ng-model="app.url">
+                            <input placeholder="/index.html" name="app_path" type="text" ng-model="app.url">
 
                             <div class="alert alert-success local">Your URL will be:
                                 http://{{currentServer}}/app/{{app.api_name}}<span>{{app.url}}</span></div>
                             <div class="alert alert-success external">Your URL will be:
-                                {{app.url}}</div>
+                                {{app.url}}
+                            </div>
                         </div>
 
                         <div class="section">
@@ -95,7 +101,9 @@
                             <table class="table table-hover table-striped table-bordered">
 
                                 <tr ng-repeat="role in Roles.record" id="row_{{role.id}}">
-                                    <td><input ng-click="addRoleToApp($event.target.checked)" ng-checked="isAppInRole()" type="checkbox"/></td> <td style="width:100%">{{role.name}}</td>
+                                    <td><input ng-click="addRoleToApp($event.target.checked)" ng-checked="isAppInRole()"
+                                               type="checkbox"/></td>
+                                    <td style="width:100%">{{role.name}}</td>
 
                                 </tr>
 
@@ -109,15 +117,19 @@
                     </div>
 
 
-
-
+                    <div id="alert_container">
+                        <div ng-repeat="alert in alerts" class="alert">
+                            <button onclick="$('.alert').fadeOut();" type="button" class="close">&times;</button>
+                            <strong>{{alert.message}}</strong>
+                        </div>
+                    </div>
 
                     <div id="create_button"><a ng-click="create()" class="btn btn-primary">
                         <li class="icon-circle-arrow-right"></li>
                         &nbsp;Create Application</a></div>
-                        <div id="update_button"><a ng-click="save()" class="btn btn-primary">
-                            <li class="icon-save"></li>
-                            &nbsp;Update Application</a></div>
+                    <div id="update_button"><a ng-click="save()" class="btn btn-primary">
+                        <li class="icon-save"></li>
+                        &nbsp;Update Application</a></div>
 
 
                 </div>

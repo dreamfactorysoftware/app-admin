@@ -1,5 +1,9 @@
-var AppCtrl = function ($scope, AppsRelated, Role) {
+var AppCtrl = function ($scope, AppsRelated, Role, $location) {
+
+    $('#alert_container').empty();
     Scope = $scope;
+    Scope.alerts =[];
+
     Scope.action = "Create";
     setCurrentApp('applications');
     Scope.app = {roles:[]};
@@ -30,6 +34,9 @@ var AppCtrl = function ($scope, AppsRelated, Role) {
 
         });
     };
+    Scope.goToImport = function(){
+        $location.path('/import');
+    }
     Scope.create = function () {
 
         AppsRelated.save(Scope.app, function (data) {
@@ -38,6 +45,14 @@ var AppCtrl = function ($scope, AppsRelated, Role) {
             //Scope.app = data;
             window.top.Actions.updateSession();
             Scope.showAppPreview();
+        },
+        function(response){
+            var errors = response.data.error;
+            errors.forEach(function(){
+                //Scope.alerts.push(val);
+                console.log(this);
+            }, this);
+            //Scope.alerts.push(response.data.error);
         });
 
 
@@ -49,6 +64,9 @@ var AppCtrl = function ($scope, AppsRelated, Role) {
             $("#row_" + id).fadeOut();
         });
     };
+    Scope.postFile = function(target){
+        console.log(target);
+    }
     Scope.showLocal = function(){
         $('.local').show();
         $('.external').hide();
@@ -60,7 +78,7 @@ var AppCtrl = function ($scope, AppsRelated, Role) {
     Scope.showFileManager = function () {
         var name = this.app.name;
         var url =
-            Scope.action = "Edit Files for this";
+        Scope.action = "Edit Files for this";
         $('#step1').hide();
         $('#app-preview').hide();
         $('#create_button').hide();
@@ -75,9 +93,9 @@ var AppCtrl = function ($scope, AppsRelated, Role) {
 
         $("#app-preview").show();
         if(this.app.is_url_external == '0'){
-            path =  'http://' + location.host + '/app/' + this.app.api_name + '/' + this.app.url;
+           path =  'http://' + location.host + '/app/' + this.app.api_name + '/' + this.app.url;
         }else{
-            path = this.app.url;
+           path = this.app.url;
         }
         $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", path ).show();
         //$("#file-manager iframe").css('height', $(window).height() - 200).attr("src", 'http://' + location.host + '/public/admin/filemanager/?path=' + name).show();
@@ -135,4 +153,5 @@ var AppCtrl = function ($scope, AppsRelated, Role) {
         }
         return arr;
     };
+
 };
