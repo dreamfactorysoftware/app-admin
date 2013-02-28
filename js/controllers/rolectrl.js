@@ -87,7 +87,12 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
     };
     Scope.addServiceAccess = function(){
-        Scope.role.role_service_accesses.push(Scope.service);
+        $("#alert-container").empty().hide();
+        if(checkForDuplicates(Scope.role.role_service_accesses, 'service_id', Scope.service.service_id, 'component', Scope.service.component)){
+            $("#alert-container").html("<b>Service access already exits.</b>").show();
+        }else{
+            Scope.role.role_service_accesses.push(Scope.service);
+        }
     }
 
     removeByAttr = function (arr, attr, value) {
@@ -111,14 +116,20 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         }
         return arr;
     };
+    checkForDuplicates = function(arr, attr1, value1, attr2, value2){
+        var i = arr.length;
+        var found=false;
+        while(i--){
+            if(arr[i] && arr[i][attr1] && (arguments.length > 2 && arr[i][attr1] === value1 )){
+                if(arr[i][attr2] && (arguments.length > 2 && arr[i][attr2] === value2)){
+                    found=true;
+                }
 
-    function lookup( name ) {
-        for(var i = 0, len = arr.length; i < len; i++) {
-            if( arr[ i ].key === name )
-                return true;
+            }
         }
-        return false;
-    }
+        return found;
+    };
+
     $scope.delete = function () {
         var id = this.role.id;
         RolesRelated.delete({ id:id }, function () {
@@ -131,6 +142,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.role = {users:[], apps:[]};
         $('#save_button').show();
         $('#update_button').hide();
+        $("#alert-container").emptpy().hide();
     };
     $scope.showDetails = function () {
         Scope.action = "Edit this ";
