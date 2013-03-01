@@ -13,39 +13,8 @@ var AdminApp = angular.module("AdminApp", ["ngResource", "ngGrid"]).
         $routeProvider.when('/group', { controller:GroupCtrl, templateUrl:'groups.html' });
         $routeProvider.when('/schema', { controller:SchemaCtrl, templateUrl:'schema.html' });
         $routeProvider.when('/service', { controller:ServiceCtrl, templateUrl:'services.html' });
-    }).
-    directive('uiValidateEquals', function() {
+        $routeProvider.when('/import', { controller:FileCtrl, templateUrl:'import.html' });
 
-        return {
-            restrict: 'A',
-            require: 'ngModel',
-            link: function(scope, elm, attrs, ctrl) {
-
-                function validateEqual(myValue, otherValue) {
-                    if (myValue === otherValue) {
-                        ctrl.$setValidity('equal', true);
-                        return myValue;
-                    } else {
-                        ctrl.$setValidity('equal', false);
-                        return undefined;
-                    }
-                }
-
-                scope.$watch(attrs.uiValidateEquals, function(otherModelValue) {
-                    validateEqual(ctrl.$viewValue, otherModelValue);
-                });
-
-                ctrl.$parsers.unshift(function(viewValue) {
-                    return validateEqual(viewValue, scope.$eval(attrs.uiValidateEquals));
-                });
-
-                ctrl.$formatters.unshift(function(modelValue) {
-                    return validateEqual(modelValue, scope.$eval(attrs.uiValidateEquals));
-                });
-
-
-            }
-        };
     });
 AdminApp.factory('AppsRelated', function ($resource) {
     return $resource('/rest/system/app/:id/?app_name=admin&fields=*&related=roles', {}, { update:{ method:'PUT' }, query:{
@@ -101,13 +70,22 @@ AdminApp.factory('Group', function ($resource) {
         isArray:false
     } });
 });
+AdminApp.factory('Group', function ($resource) {
+    return $resource('/rest/system/app_group/:id/?app_name=admin&fields=*&related=apps', {}, { update:{ method:'PUT' }, query:{
+        method:'GET',
+        isArray:false
+    } });
+});
 var setCurrentApp = function(currentApp){
-    $('.active').toggleClass('active');
+    $('.active').removeClass('active');
     $("#nav_" + currentApp).addClass("active");
 };
 $(document).ready(function () {
     $('#app-container').css('height', ($(window).height()-44));
+    // $('#grid-table').css('max-height', ($(window).height()-56)).css('height', ($(window).height()-56));
+
     $(window).resize(function () {
         $('#app-container').css('height', ($(window).height()-44));
+        // $('#grid-table').css('max-height', ($(window).height()-56)).css('height', ($(window).height()-56));
     });
 });
