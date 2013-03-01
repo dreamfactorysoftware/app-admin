@@ -139,11 +139,10 @@
 
                     <textarea id="source" rows="20" cols="50"></textarea>
 
-                    <p style="white-space: nowrap">
-                        <button ng-click="validateJSON()" id="button">Validate</button>
-                        <input type="checkbox" value="yes" id="reformat"/><label for="reformat">reformat
-                        JSON</label>
-                    </p>
+                    <div style="white-space: nowrap" class="form-inline">
+                        <button ng-click="validateJSON()" id="button">Validate</button>&nbsp;<input type="checkbox" value="yes" id="reformat"/>
+                        <label for="reformat">Reformat JSON?</label>
+                    </div>
                     <h2>Results</h2>
                     <pre id="result"></pre>
                     <p>
