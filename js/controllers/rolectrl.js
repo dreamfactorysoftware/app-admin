@@ -92,6 +92,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
             $("#alert-container").html("<b>Service access already exits.</b>").show();
         }else{
             Scope.role.role_service_accesses.push(Scope.service);
+            Scope.service = {service_id:null,access:"Full Access", component: "*"};
         }
     }
 
