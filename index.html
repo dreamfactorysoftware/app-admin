@@ -10,12 +10,15 @@
 </head>
 <body id="admin-body">
 
-    <table id="container">
-        <tr>
-            <td id="sidebar" ng-include src="'navigation.html'"></td>
-            <td>&nbsp;&nbsp;</td>
-            <td id="main-content"><div ng-view></div></td></tr>
-    </table>
+<table id="container">
+    <tr>
+        <td id="sidebar" ng-include src="'navigation.html'"></td>
+        <td>&nbsp;&nbsp;</td>
+        <td id="main-content">
+            <div ng-view></div>
+        </td>
+    </tr>
+</table>
 
 <script src="/lib/web-core/js/jquery.js"></script>
 <script src="/lib/web-core/js/angular.js"></script>
@@ -27,8 +30,10 @@
 <script src="js/ng-grid/flex-height.js"></script>
 <script src="js/controllers/schemactrl.js"></script>
 <script src="js/controllers/servicectrl.js"></script>
+<script src="js/controllers/filectrl.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/jsonlint.js"></script>
 <script src="js/app.js"></script>
-
 <script src="js/resource.js"></script>
 
 </body>
