@@ -2,11 +2,12 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];
-    var customRowTemplate = '<div ng-repeat="col in visibleColumns()" class="myCustomClass ngCell {{columnClass($index)}} col{{$index}} {{col.cellClass}}" ng-cell></div><div class="row_edit"></div>';
-    var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" />';
-    var customHeaderTemplate = '<div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
+    var customRowTemplate = '<div ng-repeat="col in visibleColumns()" class="myCustomClass ngCell {{columnClass($index)}} col{{$index}} {{col.cellClass}}" ng-cell></div>';
+    var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
+    var customHeaderTemplate = '<div class="ngHeaderCell">Save</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
+    var buttonTemplate = '<div><a id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></a></div>';
     Scope.columnDefs = [];
-    Scope.browseOptions = {data:'tableData', headerRowTemplate:customHeaderTemplate, canSelectRows:false, displaySelectionCheckbox:false, columnDefs:'columnDefs', rowTemplate:customRowTemplate};
+    Scope.browseOptions = {data:'tableData', headerRowTemplate:customHeaderTemplate, canSelectRows:false, displaySelectionCheckbox:false, columnDefs:'columnDefs'};
 
     Scope.Schemas = Schema.get(function (data) {
         Scope.schemaData = data.resource;
@@ -16,6 +17,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         $(".detail-view").show();
         $("#json_upload").hide();
         $("#create-form").hide();
+        Scope.currentTable = this.table.name;
         Scope.browseOptions = {};
         Scope.tableData = [];
         DB.get({name:this.table.name}, function (data) {
@@ -32,6 +34,10 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     Scope.buildColumns = function () {
         var columns = Object.keys(Scope.tableData[0]);
         var columnDefs = [];
+        var saveColumn = {};
+        saveColumn.field = '';
+        saveColumn.cellTemplate =buttonTemplate;
+        columnDefs.push(saveColumn);
         var column = {};
         columns.forEach(function (name) {
             column.field = name;
@@ -112,7 +118,14 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     Scope.postJSON = function(){
         var json = $('#source').val();
         Schema.save(json, function(data){
-            Scope.schemaData.push(data.table);
+            if(!data.table){
+                Scope.schemaData.push(data);
+            }else{
+                data.table.forEach(function(table){
+                    Scope.schemaData.push(table);
+                })
+            }
+
         });
 
     }
@@ -122,5 +135,15 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         $(".detail-view").show();
         $("#json_upload").hide();
     };
+    Scope.enableSave = function(){
+        $("#save_" + this.row.rowIndex).attr('disabled', false);
+        //console.log(this);
+    };
+    Scope.saveRow = function(){
+        var newRecord = {table:this.row.entity};
+        DB.update({name:Scope.currentTable}, newRecord);
+
+    }
 };
+
 
