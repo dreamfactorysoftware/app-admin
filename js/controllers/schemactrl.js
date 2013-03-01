@@ -5,7 +5,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     var customRowTemplate = '<div ng-repeat="col in visibleColumns()" class="myCustomClass ngCell {{columnClass($index)}} col{{$index}} {{col.cellClass}}" ng-cell></div>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">Save</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
-    var buttonTemplate = '<div><a id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></a></div>';
+    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button></div>';
     Scope.columnDefs = [];
     Scope.browseOptions = {data:'tableData', headerRowTemplate:customHeaderTemplate, canSelectRows:false, displaySelectionCheckbox:false, columnDefs:'columnDefs'};
 
@@ -140,8 +140,12 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         //console.log(this);
     };
     Scope.saveRow = function(){
-        var newRecord = {table:this.row.entity};
-        DB.update({name:Scope.currentTable}, newRecord);
+
+        var index = this.row.rowIndex;
+        var newRecord =this.row.entity;
+        DB.update({name:Scope.currentTable},newRecord , function(){
+            $("#save_" + index).attr('disabled', true);
+        });
 
     }
 };
