@@ -41,6 +41,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         var saveColumn = {};
         saveColumn.field = '';
         saveColumn.cellTemplate =buttonTemplate;
+        saveColumn.width = '40px';
         columnDefs.push(saveColumn);
         var column = {};
         Scope.currentSchema.forEach(function (field) {
@@ -50,15 +51,21 @@ var SchemaCtrl = function ($scope, Schema, DB) {
                 case "boolean":
                     column.editableCellTemplate = booleanTemplate;
                     column.enableFocusedCellEdit = true;
-                    column.minWidth = 100;
+                    column.minWidth = '100px';
+                    column.width = '50px';
                     break;
                 case "id":
-                    column.minWidth = 100;
+                    column.width = '50px';
+                    break;
+                case "string":
+                    column.editableCellTemplate = inputTemplate;
+                    column.enableFocusedCellEdit = true;
+                    column.width = '100px';
                     break;
                 default:
                     column.editableCellTemplate = inputTemplate;
                     column.enableFocusedCellEdit = true;
-                    column.minWidth = 100;
+                    column.width = '100px';
             }
             columnDefs.push(column);
             column = {};
