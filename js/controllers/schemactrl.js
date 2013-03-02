@@ -2,6 +2,8 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];
+    Scope.booleanOptions = [{value:'true', text:'true'},{value:'false', text:'false'}];
+    var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()"><option value=true>True</option><option value=false>False</option></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">Save</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button></div>';
@@ -23,15 +25,16 @@ var SchemaCtrl = function ($scope, Schema, DB) {
             data.table.field.forEach(function(field){
                 Scope.currentSchema.push(field)
             });
+            DB.get({name:Scope.currentTable}, function (data) {
+                if (data.record.length > 0) {
+                    Scope.tableData = data.record;
+                } else {
+                    Scope.tableData = [{"error":"No Data"} ];
+                }
+                Scope.columnDefs = Scope.buildColumns();
+            });
         });
-        DB.get({name:this.table.name}, function (data) {
-            if (data.record.length > 0) {
-                Scope.tableData = data.record;
-            } else {
-                Scope.tableData = [{"error":"No Data"} ];
-            }
-            Scope.columnDefs = Scope.buildColumns();
-        });
+
     };
     Scope.buildColumns = function () {
         var columnDefs = [];
@@ -42,10 +45,20 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         var column = {};
         Scope.currentSchema.forEach(function (field) {
             column.field = field.name;
-            if (field.type != 'id') {
-                column.editableCellTemplate = inputTemplate;
-                column.enableFocusedCellEdit = true;
-                column.minWidth = 100;
+            switch(field.type)
+            {
+                case "boolean":
+                    column.editableCellTemplate = booleanTemplate;
+                    column.enableFocusedCellEdit = true;
+                    column.minWidth = 100;
+                    break;
+                case "id":
+                    column.minWidth = 100;
+                    break;
+                default:
+                    column.editableCellTemplate = inputTemplate;
+                    column.enableFocusedCellEdit = true;
+                    column.minWidth = 100;
             }
             columnDefs.push(column);
             column = {};
