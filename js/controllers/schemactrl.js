@@ -2,13 +2,11 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];
-    var customRowTemplate = '<div ng-repeat="col in visibleColumns()" class="myCustomClass ngCell {{columnClass($index)}} col{{$index}} {{col.cellClass}}" ng-cell></div>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">Save</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button></div>';
     Scope.columnDefs = [];
     Scope.browseOptions = {data:'tableData', headerRowTemplate:customHeaderTemplate, canSelectRows:false, displaySelectionCheckbox:false, columnDefs:'columnDefs'};
-
     Scope.Schemas = Schema.get(function (data) {
         Scope.schemaData = data.resource;
     });
@@ -20,29 +18,31 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         Scope.currentTable = this.table.name;
         Scope.browseOptions = {};
         Scope.tableData = [];
+        Scope.currentSchema = [];
+        Schema.get({name:this.table.name}, function (data) {
+            data.table.field.forEach(function(field){
+                Scope.currentSchema.push(field)
+            });
+        });
         DB.get({name:this.table.name}, function (data) {
             if (data.record.length > 0) {
                 Scope.tableData = data.record;
             } else {
-                Scope.tableData = [
-                    {"error":"No Data"}
-                ];
+                Scope.tableData = [{"error":"No Data"} ];
             }
             Scope.columnDefs = Scope.buildColumns();
         });
     };
     Scope.buildColumns = function () {
-        var columns = Object.keys(Scope.tableData[0]);
         var columnDefs = [];
         var saveColumn = {};
         saveColumn.field = '';
         saveColumn.cellTemplate =buttonTemplate;
         columnDefs.push(saveColumn);
         var column = {};
-        columns.forEach(function (name) {
-            column.field = name;
-            if (name != 'id') {
-                //column.cellTemplate = inputTemplate;
+        Scope.currentSchema.forEach(function (field) {
+            column.field = field.name;
+            if (field.type != 'id') {
                 column.editableCellTemplate = inputTemplate;
                 column.enableFocusedCellEdit = true;
                 column.minWidth = 100;
@@ -50,7 +50,6 @@ var SchemaCtrl = function ($scope, Schema, DB) {
             columnDefs.push(column);
             column = {};
         });
-
         return columnDefs;
     };
     Scope.showForm = function () {
