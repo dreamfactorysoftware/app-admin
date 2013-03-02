@@ -10,11 +10,17 @@ var UserCtrl = function ($scope, User, Role) {
     };
 
     Scope.save = function () {
+        if(this.user.password == ''){
+            delete this.user.password;
+        }
         var id = Scope.user.id;
         User.update({id:id}, Scope.user);
     };
     Scope.create = function () {
         var newRec = this.user;
+        if(this.user.password == ''){
+            delete this.user.password;
+        }
         if(!newRec.display_name){
             newRec.display_name = newRec.first_name + ' ' + newRec.last_name;
         }
