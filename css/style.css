@@ -1650,3 +1650,8 @@ html, body, #container{
 #field-list td{
     padding-bottom:0;
 }
+.ie-width-fix{
+    margin:0;
+    padding:0;
+    line-height: 1;
+}
