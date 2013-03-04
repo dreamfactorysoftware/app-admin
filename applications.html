@@ -1,5 +1,5 @@
 <h4>Applications<a ng-click="goToImport()" class="btn btn-small pull-right btn-primary">
-    <li class="icon-plus-sign-alt"></li>
+    <li class="icon-upload-alt"></li>
     Import New App</a><a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary">
     <li class="icon-plus-sign-alt"></li>
     Create New App</a></h4>
@@ -61,7 +61,7 @@
                             <p>Application Path eg: myApp </p>
 
                             <div class="alert alert-info">
-                                This will be your context root and cannot be changed.
+                                <li class="icon-info-sign"></li>&nbsp;This will be your context root and cannot be changed.
                             </div>
                             <input type="text" ng-model="app.api_name">
                         </div>
@@ -81,14 +81,14 @@
                             <p>Default Path</p>
 
                             <div class="alert alert-info local">
-                                This is the default file to load when your app is loaded.
+                                <li class="icon-info-sign"></li>&nbsp;This is the default file to load when your app is loaded.
                             </div>
                             <div class="alert alert-info external">
-                                This is the external link to your app.
+                                <li class="icon-info-sign"></li>&nbsp;This is the external link to your app.
                             </div>
                             <input placeholder="/index.html" name="app_path" type="text" ng-model="app.url">
 
-                            <div class="alert alert-success local">Your URL will be:
+                            <div class="alert alert-success local"><li class="icon-cloud"></li>&nbsp;Your URL will be:
                                 http://{{currentServer}}/app/{{app.api_name}}<span>{{app.url}}</span></div>
                             <div class="alert alert-success external">Your URL will be:
                                 {{app.url}}
