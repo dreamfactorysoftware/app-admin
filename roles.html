@@ -90,9 +90,10 @@
                             <option value='Write Only' selected>Write Only</option>
                             <option value='No Access' selected>No Access</option>
                         </select><br/>
-                            <div><a class="btn btn-small btn-inverse" ng-click="addServiceAccess()" ><i class="icon-add"></i> Add Service Access</a><span style="display:none;padding-left:10px;" id="alert-container" class="alert alert-error"></span> </div>
+                            <div><a class="btn btn-small btn-inverse" ng-click="addServiceAccess()" ><i class="icon-add"></i> Add Service Access</a> </div>
 
                         </div>
+                        <div style="display:none;padding-left:10px;" id="alert-container" class="alert alert-error"></div>
                         <div class="section limit-list">
                             <table id="field-list" class="table table-hover table-striped">
 
@@ -128,6 +129,7 @@
                             <input ng-checked="role.is_active" type="checkbox" ng-model="role.is_active"/>&nbsp;Active
 
                         </div>
+                        <div style="display:none;padding-left:10px;" id="success-container" class="alert alert-success"></div>
                         <div id="button_holder">
                             <a id="save_button" ng-click="create()" class="btn btn-primary">
                                 <li class="icon-save"></li>

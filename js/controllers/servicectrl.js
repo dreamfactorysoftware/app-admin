@@ -1,80 +1,182 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: jasonsykes
- * Date: 2/7/13
- * Time: 4:23 AM
- * To change this template use File | Settings | File Templates.
- */
-var ServiceCtrl = function ($scope, Service) {
+var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     Scope = $scope;
-    Scope.service = {};
-    Scope.Services = Service.get();
-    Scope.action = "Create";
-    Scope.service.type = "Remote Web Service";
-    Scope.serviceOptions = [{name:"Remote Web Service"},{name:"Remote SQL DB"}];
+    Scope.role = {users:[], apps:[]};
+    Scope.action = "Create new ";
+    Scope.actioned = "Created";
     $('#update_button').hide();
+    $("#alert-container").empty().hide();
+    $("#success-container").empty().hide();
+    Scope.components = [{name:"*", label:"All"}];
+    Scope.component = '*';
+    Scope.AllUsers = User.get();
+    Scope.Apps = App.get();
+    Scope.service = {service_id:null,access:"Full Access", component: "*"};
+    Scope.selectServices = {};
+    Scope.Services = Service.get(function(data){
+        var services = data.record;
+        services.forEach(function(service){
+            if(service.type.contains("SQL")){
+                $http.get('/rest/'+ service.api_name + '/?app_name=admin&fields=*').success(function(data){
+                    service.components = data.resource;
+                    Scope.selectServices[service.id] = data.resource;
+                    var allRecord = {name:'*', label:'All', plural: 'All'};
+                    Scope.selectServices[service.id].unshift(allRecord);
 
-    Scope.save = function () {
-        if(Scope.service.type =="Remote SQL DB"){
-            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
-            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+                });
+            }
+        });
+        if(Scope.Services.record){
+            Scope.Services.record.push({id: null, name: "All"})
         }
-        var id = Scope.service.id;
-        Service.update({id:id}, Scope.service);
+    });
+    Scope.Roles = RolesRelated.get();
+    Scope.save = function () {
+        $("#alert-container").empty().hide();
+        $("#success-container").hide();
+        var id = this.role.id;
+        RolesRelated.update({id:id}, Scope.role, function () {
+            $("#success-container").html('Role successfully ' + Scope.actioned).show();
 
+        }, function(response){
+            $("#alert-container").html(response.data.error[0].message).show();
+        });
     };
     Scope.create = function () {
-        if(Scope.service.type =="Remote SQL DB"){
-            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
-            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
-        }
-        Service.save(Scope.service, function(data){
-            Scope.Services.record.push(data);
+        RolesRelated.save(Scope.role, function (data) {
+            Scope.Roles.record.push(data);
+            $("#success-container").html('Role successfully ' + Scope.actioned).show();
+
+
+        }, function(response){
+            $("#alert-container").html(response.data.error[0].message).show();
         });
     };
-
-    Scope.showFields = function(){
-
-        switch(Scope.service.type)
-        {
-            case "Remote SQL DB":
-                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
-                $(".user, .pwd, .dsn").show();
-                break;
-            case "Remote Web Service":
-                $(".user, .pwd, .dsn .storage_name, .storage_type, .credentials, .native_format").hide();
-                $(".base_url, .parameters, .headers").show();
-                break;
-            default:
-                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+    Scope.isUserInRole = function(){
+        var inRole = false;
+        if(Scope.role.users.length > 0){
+            if(this.user.role_id == Scope.role.id){
+                inRole = true;
+            }
+            return inRole;
         }
     };
+    Scope.isAppInRole = function(){
+        var inGroup =false;
+        if(Scope.role){
+            var id = this.app.id;
+            var assignedApps = Scope.role.apps;
+            assignedApps = $(assignedApps);
 
-    Scope.delete = function () {
-        var id = this.service.id;
-        Service.delete({ id:id }, function () {
+            assignedApps.each(function(index, val){
+                if(val.id == id){
+                    inGroup = true;
+                }
+            });
+        }
+        return inGroup;
+    };
+    Scope.addAppToRole = function (checked) {
+        if(checked == true){
+            Scope.role.apps.push(this.app);
+        }else{
+            Scope.role.apps = removeByAttr(Scope.role.apps, 'id', this.app.id);
+        }
+    };
+    $scope.updateUserToRole = function (checked) {
+        if(checked == true){
+            Scope.role.users.push(this.user);
+        }else{
+            Scope.role.users = removeByAttr(Scope.role.users, 'id', this.user.id);
+        }
+    };
+    Scope.loadComponents = function(){
+        Scope.components = [];
+        Scope.components.push({ name:"*", label:"All"});
+        Scope.components = Scope.selectServices[Scope.service.service_id];
+    };
+    Scope.loadIndComponents = function(){
+        this.components = [];
+        this.components.push({ name:"*", label:"All"});
+        this.components = Scope.selectServices[this.service_access.service_id];
+    };
+
+    Scope.removeAccess = function(){
+        Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
+    };
+    Scope.checkForExisting = function(){
+        $("#alert-container").empty().hide();
+        if(checkForDuplicates(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component)){
+            $("#alert-container").html("<b>You have duplicate access rules for one service/component</b>").show();
+        }
+    };
+    Scope.addServiceAccess = function(){
+        $("#alert-container").empty().hide();
+        if(checkForDuplicates(Scope.role.role_service_accesses, 'service_id', Scope.service.service_id, 'component', Scope.service.component)){
+            $("#alert-container").html("<b>Service access already exits.</b>").show();
+        }else{
+            Scope.role.role_service_accesses.push(Scope.service);
+            Scope.service = {service_id:null,access:"Full Access", component: "*"};
+        }
+    }
+
+    removeByAttr = function (arr, attr, value) {
+        var i = arr.length;
+        while (i--) {
+            if (arr[i] && arr[i][attr] && (arguments.length > 2 && arr[i][attr] === value )) {
+                arr.splice(i, 1);
+            }
+        }
+        return arr;
+    };
+    removeByAttrs = function(arr, attr1, value1, attr2, value2){
+        var i = arr.length;
+        while(i--){
+            if(arr[i] && arr[i][attr1] && (arguments.length > 2 && arr[i][attr1] === value1 )){
+                if(arr[i][attr2] && (arguments.length > 2 && arr[i][attr2] === value2)){
+                    arr.splice(i,1);
+                }
+
+            }
+        }
+        return arr;
+    };
+    checkForDuplicates = function(arr, attr1, value1, attr2, value2){
+        var i = arr.length;
+        var found=false;
+        while(i--){
+            if(arr[i] && arr[i][attr1] && (arguments.length > 2 && arr[i][attr1] === value1 )){
+                if(arr[i][attr2] && (arguments.length > 2 && arr[i][attr2] === value2)){
+                    found=true;
+                }
+
+            }
+        }
+        return found;
+    };
+
+    $scope.delete = function () {
+        var id = this.role.id;
+        RolesRelated.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
         });
+        Scope.promptForNew();
     };
-    Scope.promptForNew = function () {
-        Scope.action = "Create";
-        Scope.service = {};
+    $scope.promptForNew = function () {
+        Scope.action = "Create new";
+        Scope.actioned = "Created";
+        Scope.role = {users:[], apps:[]};
         $('#save_button').show();
         $('#update_button').hide();
+        $("#alert-container").emptpy().hide();
     };
-    Scope.showDetails = function(){
-        Scope.service = this.service;
-        if(Scope.service.type =="Remote SQL DB"){
-            var cString = JSON.parse(Scope.service.credentials);
-            Scope.service.dsn = cString.dsn;
-            Scope.service.user = cString.user;
-            Scope.service.pwd = cString.pwd;
-
-        }
-        Scope.action = "Update";
+    $scope.showDetails = function () {
+        Scope.action = "Edit this ";
+        Scope.actioned = "Updated"
+        Scope.role = this.role;
+        Scope.service.role_id = this.role.id;
+        Scope.users = this.role.users;
         $('#save_button').hide();
         $('#update_button').show();
-        Scope.showFields();
     }
 
 };
