@@ -15,7 +15,7 @@
     font-size:12px;
 }
 #grid-table td{
-width:150px;
+    width:150px;
 }
 
 
@@ -24,7 +24,7 @@ width:150px;
     background-color:#ccc;
     width:300px;
 }
-#file-manager iframe{
+#file-manager iframe, #app-preview iframe{
 
     width:100%;
 }
@@ -39,11 +39,11 @@ width:150px;
 
 }
 #grid-table .no-border{
-width:50px;
+    width:50px;
 
 }
 #grid-table th {
-width:auto;
+    width:auto;
 }
 #app-details{
     vertical-align:top;
@@ -56,7 +56,7 @@ width:auto;
 #grid-table select{
     color:#bbbbbb!important;
     font-size:12px;
-width:100px;
+    width:100px;
     background-color: transparent;
     border: 0 none;
     box-shadow:none;
@@ -1527,8 +1527,8 @@ div.dataTables_wrapper .ui-widget-header {
 
 }
 #main-content{
-   width:100%;
-   margin-left:0px;
+    width:100%;
+    margin-left:0px;
     vertical-align: top;
 }
 #main-content h4{
@@ -1627,9 +1627,10 @@ body {
 
 }
 #schema-main {
-    margin-top:30px;
-    margin-right:10px;
-    height:300px;
+    height: 300px;
+    margin-right: 10px;
+    margin-top: 30px;
+
 }
 html, body, #container{
     height: 100%;
@@ -1638,12 +1639,14 @@ html, body, #container{
     height:378px;
     width:230px!important
 }
-
-.css-form input.ng-invalid.ng-dirty {
-
-    border-color: #FA787E;
+.access{
+    display: inline-block;
+    width: 80px;
 }
 .limit-list{
     max-height: 200px;
     overflow: auto;
+}
+#field-list td{
+    padding-bottom:0;
 }
