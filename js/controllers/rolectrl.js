@@ -16,6 +16,9 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
                 $http.get('/rest/'+ service.api_name + '/?app_name=admin&fields=*').success(function(data){
                     service.components = data.resource;
                     Scope.selectServices[service.id] = data.resource;
+                    var allRecord = {name:'*', label:'All', plural: 'All'};
+                    Scope.selectServices[service.id].unshift(allRecord);
+
                 });
             }
         });
