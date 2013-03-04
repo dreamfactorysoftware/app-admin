@@ -102,7 +102,7 @@
                                     <td>
                                         <select  style="width:140px;" ng-init = "loadIndComponents()" ng-change = "loadIndComponents()"  ng-model="service_access.service_id"  ng-options="service.id as service.name for service in Services.record">
                                         </select>
-                                        <select style="width:140px;" ng-model="service_access.component" ng-options="component.name as component.label for component in components">
+                                        <select style="width:140px;"  ng-model="service_access.component" ng-options="component.name as component.label for component in components">
 
                                         </select>
                                         <select ng-model="service_access.access" style="width:140px;">
@@ -123,6 +123,10 @@
 
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="section">
+                            <input ng-checked="role.is_active" type="checkbox" ng-model="role.is_active"/>&nbsp;Active
+
                         </div>
                         <div id="button_holder">
                             <a id="save_button" ng-click="create()" class="btn btn-primary">
