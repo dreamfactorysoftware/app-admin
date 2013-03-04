@@ -11,43 +11,45 @@ var ServiceCtrl = function ($scope, Service) {
     Scope.Services = Service.get();
     Scope.action = "Create";
     Scope.service.type = "Remote Web Service";
+    Scope.serviceOptions = [{name:"Remote Web Service"},{name:"Remote SQL DB"}];
     $('#update_button').hide();
 
     Scope.save = function () {
-
+        if(Scope.service.type =="Remote SQL DB"){
+            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+        }
         var id = Scope.service.id;
-        Service.update({id:id}, Scope.group);
+        Service.update({id:id}, Scope.service);
 
     };
     Scope.create = function () {
-
+        if(Scope.service.type =="Remote SQL DB"){
+            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+        }
         Service.save(Scope.service, function(data){
             Scope.Services.record.push(data);
         });
     };
-    Scope.isAppInGroup = function(){
-        if(Scope.group){
-            var id = this.app.id;
-            var assignedApps = Scope.group.apps;
-            assignedApps = $(assignedApps);
-            var inGroup =false;
-            assignedApps.each(function(index, val){
-                if(val.id == id){
-                    inGroup = true;
-                }
-            });
 
-        }
-        return inGroup;
-    };
-    Scope.addAppToGroup = function (checked) {
+    Scope.showFields = function(){
 
-        if(checked == true){
-            Scope.group.apps.push(this.app);
-        }else{
-            Scope.group.apps = removeByAttr(Scope.group.apps, 'id', this.app.id);
+        switch(Scope.service.type)
+        {
+            case "Remote SQL DB":
+                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .pwd, .dsn").show();
+                break;
+            case "Remote Web Service":
+                $(".user, .pwd, .dsn .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url, .parameters, .headers").show();
+                break;
+            default:
+                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
         }
     };
+
     Scope.delete = function () {
         var id = this.service.id;
         Service.delete({ id:id }, function () {
@@ -62,17 +64,17 @@ var ServiceCtrl = function ($scope, Service) {
     };
     Scope.showDetails = function(){
         Scope.service = this.service;
+        if(Scope.service.type =="Remote SQL DB"){
+            var cString = JSON.parse(Scope.service.credentials);
+            Scope.service.dsn = cString.dsn;
+            Scope.service.user = cString.user;
+            Scope.service.pwd = cString.pwd;
+
+        }
         Scope.action = "Update";
         $('#save_button').hide();
         $('#update_button').show();
+        Scope.showFields();
     }
-    removeByAttr = function(arr, attr, value){
-        var i = arr.length;
-        while(i--){
-            if(arr[i] && arr[i][attr] && (arguments.length > 2 && arr[i][attr] === value )){
-                arr.splice(i,1);
-            }
-        }
-        return arr;
-    };
+
 };
