@@ -1654,4 +1654,5 @@ html, body, #container{
     margin:0;
     padding:0;
     line-height: 1;
+    height:1px;
 }
