@@ -5,8 +5,8 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     Scope.booleanOptions = [{value:true, text:'true'},{value:false, text:'false'}];
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
-    var customHeaderTemplate = '<div class="ngHeaderCell">Save</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
-    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button></div>';
+    var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
+    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
     Scope.columnDefs = [];
     Scope.browseOptions = {data:'tableData', headerRowTemplate:customHeaderTemplate, canSelectRows:false, displaySelectionCheckbox:false, columnDefs:'columnDefs'};
     Scope.Schemas = Schema.get(function (data) {
@@ -41,7 +41,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         var saveColumn = {};
         saveColumn.field = '';
         saveColumn.cellTemplate =buttonTemplate;
-        saveColumn.width = '40px';
+        saveColumn.width = '70px';
         columnDefs.push(saveColumn);
         var column = {};
         Scope.currentSchema.forEach(function (field) {
@@ -86,10 +86,6 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         Scope.schema.table.field = {};
     };
     Scope.removeField = function () {
-        //Scope.newTable.table.name = Scope.schema.table.name;
-        //Scope.newTable.table.field.push(Scope.schema.table.field);
-        //Scope.schema.table.field = {};
-        // console.log(this);
         Scope.newTable.table.field = removeByAttr(Scope.newTable.table.field, 'name', this.field.name);
 
     };
@@ -165,6 +161,12 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         DB.update({name:Scope.currentTable},newRecord , function(){
             $("#save_" + index).attr('disabled', true);
         });
+
+    }
+    Scope.deleteRow = function(){
+        var id =this.row.entity.id;
+        DB.delete({name:Scope.currentTable},{id:id});
+        Scope.tableData = removeByAttr(Scope.tableData, 'id',id);
 
     }
 };
