@@ -48,14 +48,17 @@ var UserCtrl = function ($scope, User, Role) {
         });
     };
     Scope.showDetails = function(){
+        $("tr.info").removeClass('info');
         Scope.action = "Edit";
         Scope.user = this.user;
         Scope.user.password = '';
+        $('#row_' + Scope.user.id).addClass('info');
         $('#save_button').hide();
         $('#update_button').show();
         $('#passwordError').hide();
         $('#passwordRepeat').val('');
         Scope.userform.$setPristine();
+
     }
     Scope.toggleRoleSelect = function (checked) {
 
