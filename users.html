@@ -53,14 +53,10 @@
                             </div>
                             <div class="section">
                                 Verify Password : <input id="passwordRepeat" name="passwordRepeat" type="password" ng-required="action=='Create'" ng-model="passwordRepeat" ui-validate-equals="user.password">
-                                <span id="passwordError" ng-show='userform.passwordRepeat.$error.equal' style='color: red;'>Please enter matching passwords</span>
+                                <span id="passwordError" ng-show='!userform.$pristine && userform.passwordRepeat.$error.equal' style='color: red;'>Please enter matching passwords</span>
                             </div>
-                            pw: {{userform.password.$viewValue}}<br>
-                            pwRepeat: {{userform.passwordRepeat.$viewValue}}<br>
-                            pw errors: {{userform.password.$error | json}}<br>
-                            pwRepeat errors: {{userform.passwordRepeat.$error | json}}<br>
                             <div class="section">
-                                Email :  <input id="email" ng-model="user.email" type="email" required/>
+                                Email :  <input ng-model="user.email" type="email" required/>
                             </div>
                             <div class="section">
                                 Phone : <input ng-model="user.phone" type="tel"/>
