@@ -120,6 +120,15 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     }
 
     $scope.delete = function () {
+        var which = this.role.name;
+        if (!which || which == '') {
+            which = "the role?";
+        } else {
+            which = "the role '" + which + "'?";
+        }
+        if(!confirm("Are you sure you want to delete " + which)) {
+            return;
+        }
         var id = this.role.id;
         RolesRelated.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
@@ -133,6 +142,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $('#save_button').show();
         $('#update_button').hide();
         $("#alert-container").emptpy().hide();
+        $("tr.info").removeClass('info');
     };
     $scope.showDetails = function () {
         Scope.action = "Edit this ";
@@ -142,6 +152,8 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.users = this.role.users;
         $('#save_button').hide();
         $('#update_button').show();
+        $("tr.info").removeClass('info');
+        $('#row_' + Scope.role.id).addClass('info');
     }
 
 };
