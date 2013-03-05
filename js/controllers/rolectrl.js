@@ -15,18 +15,18 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     Scope.Services = Service.get(function(data){
         var services = data.record;
         services.forEach(function(service){
-            if(service.type.contains("SQL")){
-            $http.get('/rest/'+ service.api_name + '/?app_name=admin&fields=*').success(function(data){
-               service.components = data.resource;
-               Scope.selectServices[service.id] = data.resource;
-               var allRecord = {name:'*', label:'All', plural: 'All'};
-               Scope.selectServices[service.id].unshift(allRecord);
+            if(service.type.indexOf("SQL") != -1){
+                $http.get('/rest/'+ service.api_name + '/?app_name=admin&fields=*').success(function(data){
+                    service.components = data.resource;
+                    Scope.selectServices[service.id] = data.resource;
+                    var allRecord = {name:'*', label:'All', plural: 'All'};
+                    Scope.selectServices[service.id].unshift(allRecord);
 
-            });
+                });
             }
         });
         if(Scope.Services.record){
-        Scope.Services.record.push({id: null, name: "All"})
+            Scope.Services.record.push({id: null, name: "All"})
         }
     });
     Scope.Roles = RolesRelated.get();
@@ -52,26 +52,26 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         });
     };
     Scope.isUserInRole = function(){
-     var inRole = false;
-     if(Scope.role.users.length > 0){
-     if(this.user.role_id == Scope.role.id){
-        inRole = true;
-     }
-     return inRole;
-     }
+        var inRole = false;
+        if(Scope.role.users.length > 0){
+            if(this.user.role_id == Scope.role.id){
+                inRole = true;
+            }
+            return inRole;
+        }
     };
     Scope.isAppInRole = function(){
         var inGroup =false;
         if(Scope.role){
-        var id = this.app.id;
-        var assignedApps = Scope.role.apps;
-        assignedApps = $(assignedApps);
+            var id = this.app.id;
+            var assignedApps = Scope.role.apps;
+            assignedApps = $(assignedApps);
 
-        assignedApps.each(function(index, val){
-            if(val.id == id){
-                inGroup = true;
-            }
-        });
+            assignedApps.each(function(index, val){
+                if(val.id == id){
+                    inGroup = true;
+                }
+            });
         }
         return inGroup;
     };
@@ -84,9 +84,9 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     };
     $scope.updateUserToRole = function (checked) {
         if(checked == true){
-           Scope.role.users.push(this.user);
+            Scope.role.users.push(this.user);
         }else{
-           Scope.role.users = removeByAttr(Scope.role.users, 'id', this.user.id);
+            Scope.role.users = removeByAttr(Scope.role.users, 'id', this.user.id);
         }
     };
     Scope.loadComponents = function(){
@@ -114,21 +114,12 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         if(checkForDuplicates(Scope.role.role_service_accesses, 'service_id', Scope.service.service_id, 'component', Scope.service.component)){
             $("#alert-container").html("<b>Service access already exits.</b>").show();
         }else{
-        Scope.role.role_service_accesses.push(Scope.service);
+            Scope.role.role_service_accesses.push(Scope.service);
             Scope.service = {service_id:null,access:"Full Access", component: "*"};
         }
     }
 
     $scope.delete = function () {
-        var which = this.role.name;
-        if (!which || which == '') {
-            which = "the role?";
-        } else {
-            which = "the role '" + which + "'?";
-        }
-        if(!confirm("Are you sure you want to delete " + which)) {
-            return;
-        }
         var id = this.role.id;
         RolesRelated.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
@@ -142,7 +133,6 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $('#save_button').show();
         $('#update_button').hide();
         $("#alert-container").emptpy().hide();
-        $("tr.info").removeClass('info');
     };
     $scope.showDetails = function () {
         Scope.action = "Edit this ";
@@ -152,8 +142,6 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.users = this.role.users;
         $('#save_button').hide();
         $('#update_button').show();
-        $("tr.info").removeClass('info');
-        $('#row_' + Scope.role.id).addClass('info');
     }
 
 };
