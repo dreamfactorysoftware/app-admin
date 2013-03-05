@@ -14,6 +14,7 @@ var AdminApp = angular.module("AdminApp", ["ngResource", "ngGrid"]).
         $routeProvider.when('/schema', { controller:SchemaCtrl, templateUrl:'schema.html' });
         $routeProvider.when('/service', { controller:ServiceCtrl, templateUrl:'services.html' });
         $routeProvider.when('/import', { controller:FileCtrl, templateUrl:'import.html' });
+        $routeProvider.when('/file', { controller:FileCtrl, templateUrl:'files.html' });
 
     }).
     directive('uiValidateEquals', function() {
@@ -109,6 +110,10 @@ AdminApp.factory('Group', function ($resource) {
 var setCurrentApp = function(currentApp){
     $('.active').removeClass('active');
     $("#nav_" + currentApp).addClass("active");
+};
+var showFileManager = function(){
+    $("#root-file-manager iframe").css('height', $(window).height() - 200).attr("src", 'http://' + location.host + '/public/admin/filemanager/').show();
+
 };
 $(document).ready(function () {
     $('#app-container').css('height', ($(window).height()-44));
