@@ -1,10 +1,20 @@
 var UserCtrl = function ($scope, User, Role) {
+
     Scope = $scope;
     Scope.Users = User.get();
-    Scope.action = "Create";
     Scope.Roles = Role.get();
+    Scope.action = "Create";
     Scope.user = {};
+    Scope.user.is_active = false;
+    Scope.user.is_sys_admin = false;
+    Scope.user.password = 'zxczxc';
+    $('#password').val('123123');
+    $('#passwordRepeat').val('123123');
+    $('#passwordError').hide();
+    $('#email').val('');
+    $('#save_button').show();
     $('#update_button').hide();
+
     Scope.formChanged = function () {
         $('#save_' + this.user.id).removeClass('disabled');
     };
@@ -27,34 +37,45 @@ var UserCtrl = function ($scope, User, Role) {
 
         User.save(newRec, function(data){
             Scope.Users.record.push(data);
+            Scope.promptForNew();
         });
-
-
     };
     Scope.promptForNew = function () {
+        alert("xxx");
         Scope.action = "Create";
         Scope.user = {};
+        Scope.user.is_active = false;
+        Scope.user.is_sys_admin = false;
         Scope.user.password = '';
+        $('#password').val('');
+        $('#passwordRepeat').val('');
+        $('#passwordError').hide();
+        $('#email').val('');
         $('#save_button').show();
         $('#update_button').hide();
-        $('#passwordError').hide();
-        $('#passwordRepeat').val('');
+
         Scope.userform.$setPristine();
     };
     Scope.delete = function () {
+        if(!confirm("Are you sure you want to delete the user '" + this.user.display_name + "'?")) {
+            return;
+        }
         var id = this.user.id;
         User.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
+            Scope.promptForNew();
         });
     };
     Scope.showDetails = function(){
         Scope.action = "Edit";
         Scope.user = this.user;
         Scope.user.password = '';
+        $('#password').val('');
+        $('#passwordRepeat').val('');
+        $('#passwordError').hide();
+        $('#email').val('');
         $('#save_button').hide();
         $('#update_button').show();
-        $('#passwordError').hide();
-        $('#passwordRepeat').val('');
         Scope.userform.$setPristine();
     }
     Scope.toggleRoleSelect = function (checked) {

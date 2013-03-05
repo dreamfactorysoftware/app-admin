@@ -532,29 +532,6 @@ function checkResults(iframe) {
 
 function alertErr(response) {
 
-    if (response) {
-        if (response.status) {
-            switch (response.status) {
-                case 404:
-                    alert("File not found, please check the path.");
-                    return;
-                default:
-                    if (response.responseText && response.responseText != '') {
-                        try {
-                            var result = JSON.parse(response.responseText);
-                            if (result) {
-                                if (result.error[0].message && result.error[0].message != '') {
-                                    alert(result.error[0].message);
-                                }
-                            }
-                        } catch(e) {
-                            alert("Server returned error code " + response.status + '.');
-                        }
-                    }
-                    return;
-            }
-        }
-    }
-    alert("Server returned an unknown error.");
+    alert(getErrorString(response));
 }
 
