@@ -76,9 +76,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
         $('.external').show();
     };
     Scope.showFileManager = function () {
-        var name = this.app.name;
-        var url =
-            Scope.action = "Edit Files for this";
+        Scope.action = "Edit Files for this";
         $('#step1').hide();
         $('#app-preview').hide();
         $('#create_button').hide();
@@ -144,15 +142,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
             Scope.app.roles = removeByAttr(Scope.app.roles, 'id', this.role.id);
         }
     };
-    removeByAttr = function (arr, attr, value) {
-        var i = arr.length;
-        while (i--) {
-            if (arr[i] && arr[i][attr] && (arguments.length > 2 && arr[i][attr] === value )) {
-                arr.splice(i, 1);
-            }
-        }
-        return arr;
-    };
+
     Scope.reload = function(){
         Scope.Apps = AppsRelated.get();
     }

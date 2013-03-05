@@ -16,6 +16,12 @@
         <td id="sidebar" ng-include src="'navigation.html'"></td>
         <td>&nbsp;&nbsp;</td>
         <td id="main-content">
+            <div id="root-file-manager">
+                <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
+            </div>
+            <div id="swagger">
+                <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
+            </div>
             <div ng-view></div>
         </td>
     </tr>
@@ -23,6 +29,7 @@
 
 <script src="/lib/web-core/js/jquery.js"></script>
 <script src="/lib/web-core/js/angular.js"></script>
+<script src="/lib/web-core/js/utils.js"></script>
 <script src="js/ng-grid/ng-grid-1.8.0.js"></script>
 <script src="js/controllers/userctrl.js"></script>
 <script src="js/controllers/groupctrl.js"></script>
