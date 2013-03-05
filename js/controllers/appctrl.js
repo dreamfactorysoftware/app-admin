@@ -6,7 +6,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
 
     Scope.action = "Create";
     setCurrentApp('applications');
-    Scope.app = {roles:[]};
+    Scope.app = {is_url_external:'0',roles:[]};
     $('#update_button').hide();
     $('.external').hide();
     Scope.currentServer = window.location.host;
