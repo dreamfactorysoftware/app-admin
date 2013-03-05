@@ -16,6 +16,12 @@
         <td id="sidebar" ng-include src="'navigation.html'"></td>
         <td>&nbsp;&nbsp;</td>
         <td id="main-content">
+            <div id="root-file-manager">
+                <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
+            </div>
+            <div id="swagger">
+                <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
+            </div>
             <div ng-view></div>
         </td>
     </tr>

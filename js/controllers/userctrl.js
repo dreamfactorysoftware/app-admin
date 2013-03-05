@@ -40,25 +40,35 @@ var UserCtrl = function ($scope, User, Role) {
         $('#passwordError').hide();
         $('#passwordRepeat').val('');
         Scope.userform.$setPristine();
+        $("tr.info").removeClass('info');
     };
     Scope.delete = function () {
+        var which = this.user.display_name;
+        if (!which || which == '') {
+            which = "the user?";
+        } else {
+            which = "the user '" + which + "'?";
+        }
+        if(!confirm("Are you sure you want to delete " + which)) {
+            return;
+        }
         var id = this.user.id;
         User.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
         });
     };
     Scope.showDetails = function(){
-        $("tr.info").removeClass('info');
+
         Scope.action = "Edit";
         Scope.user = this.user;
         Scope.user.password = '';
-        $('#row_' + Scope.user.id).addClass('info');
         $('#save_button').hide();
         $('#update_button').show();
         $('#passwordError').hide();
         $('#passwordRepeat').val('');
         Scope.userform.$setPristine();
-
+        $("tr.info").removeClass('info');
+        $('#row_' + Scope.user.id).addClass('info');
     }
     Scope.toggleRoleSelect = function (checked) {
 

@@ -54,6 +54,15 @@ var ServiceCtrl = function ($scope, Service) {
     };
 
     Scope.delete = function () {
+        var which = this.service.name;
+        if (!which || which == '') {
+            which = "the service?";
+        } else {
+            which = "the service '" + which + "'?";
+        }
+        if(!confirm("Are you sure you want to delete " + which)) {
+            return;
+        }
         var id = this.service.id;
         Service.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
@@ -64,6 +73,7 @@ var ServiceCtrl = function ($scope, Service) {
         Scope.service = {};
         $('#save_button').show();
         $('#update_button').hide();
+        $("tr.info").removeClass('info');
     };
     Scope.showDetails = function(){
         Scope.service = this.service;
@@ -78,6 +88,8 @@ var ServiceCtrl = function ($scope, Service) {
         $('#save_button').hide();
         $('#update_button').show();
         Scope.showFields();
+        $("tr.info").removeClass('info');
+        $('#row_' + Scope.service.id).addClass('info');
     }
 
 };
