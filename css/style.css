@@ -1383,7 +1383,7 @@ form {
 #sidebar {
     float: none;
     margin-left: 10px;
-    margin-top: 20px;
+    margin-top: 1px;
     width: 220px !important;
 }
 #sidebar > a {
@@ -1537,7 +1537,7 @@ div.dataTables_wrapper .ui-widget-header {
     border-right-color:#333333;
     color: #CCCCCC;
     margin-left: 0px;
-    margin-top: 20px;
+    margin-top: 1px;
     padding: 5px 10px 10px;
     box-shadow: 0 6px 6px rgba(0, 0, 0, 0.4);
 }
