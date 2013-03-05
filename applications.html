@@ -11,12 +11,10 @@
                     <thead>
                     <tr>
                         <th>App Label</th>
-
                         <th class="no-border"><a class="btn btn-inverse btn-small pull-right" ng-click="reload()"><i class="icon-refresh"></i></a></th>
                     </tr>
                     </thead>
                     <tbody>
-
                     <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
                         <td ng-click="showDetails()">{{app.name}}</td>
                         <td class="no-border">
@@ -29,7 +27,6 @@
                             </div>
                         </td>
                     </tr>
-
                     </tbody>
                 </table>
             </div>

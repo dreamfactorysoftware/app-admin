@@ -25,7 +25,6 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
         $('#step1').show();
         $('#create_button').show();
         $('#update_button').hide();
-        $("tr.info").removeClass('info');
     };
     Scope.save = function () {
 
@@ -60,15 +59,6 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
     };
 
     Scope.delete = function () {
-        var which = this.app.name;
-        if (!which || which == '') {
-            which = "the application?";
-        } else {
-            which = "the application '" + which + "'?";
-        }
-        if(!confirm("Are you sure you want to delete " + which)) {
-            return;
-        }
         var id = this.app.id;
         AppsRelated.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
@@ -127,8 +117,6 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
         $('#step1').show();
         $('#create_button').hide();
         $('#update_button').show();
-        $("tr.info").removeClass('info');
-        $('#row_' + Scope.app.id).addClass('info');
     }
     Scope.isAppInRole = function () {
         var inGroup = false;

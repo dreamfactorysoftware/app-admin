@@ -34,8 +34,6 @@ var SchemaCtrl = function ($scope, Schema, DB) {
                 Scope.columnDefs = Scope.buildColumns();
             });
         });
-        $("tr.info").removeClass('info');
-        $('#row_' + Scope.currentTable).addClass('info');
 
     };
     Scope.buildColumns = function () {
@@ -77,7 +75,6 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     Scope.showForm = function () {
         $("#grid-container").hide();
         $("#create-form").show();
-        $("tr.info").removeClass('info');
     }
     Scope.newTable = {};
     Scope.newTable.table = {};
@@ -100,15 +97,6 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     };
     Scope.delete = function () {
         var name = this.table.name;
-        which = name;
-        if (!which || which == '') {
-            which = "the table?";
-        } else {
-            which = "the table '" + which + "'?";
-        }
-        if(!confirm("Are you sure you want to delete " + which)) {
-            return;
-        }
         Schema.delete({ name:name }, function () {
             $("#row_" + name).fadeOut();
         });
@@ -147,6 +135,12 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         });
 
     }
+    Scope.promptForNew = function () {
+        Scope.action = "Create";
+        Scope.schema = {};
+        $(".detail-view").show();
+        $("#json_upload").hide();
+    };
     Scope.enableSave = function(){
         $("#save_" + this.row.rowIndex).attr('disabled', false);
         //console.log(this);

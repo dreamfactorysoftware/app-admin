@@ -249,7 +249,6 @@ function handleFileSelect(evt) {
 // API calls
 
 function loadRootFolder() {
-
     var path = CommonUtilities.getQueryParameter('path');
     loadFolder(path + '/');
 }

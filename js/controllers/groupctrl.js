@@ -49,15 +49,6 @@ var GroupCtrl = function ($scope, Group, App) {
         }
     };
     Scope.delete = function () {
-        var which = this.group.name;
-        if (!which || which == '') {
-            which = "the group?";
-        } else {
-            which = "the group '" + which + "'?";
-        }
-        if(!confirm("Are you sure you want to delete " + which)) {
-            return;
-        }
         var id = this.group.id;
         Group.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
@@ -68,15 +59,12 @@ var GroupCtrl = function ($scope, Group, App) {
         Scope.group = {apps:[]};
         $('#save_button').show();
         $('#update_button').hide();
-        $("tr.info").removeClass('info');
     };
     Scope.showDetails = function(){
         Scope.action = "Update";
         Scope.group = this.group;
         $('#save_button').hide();
         $('#update_button').show();
-        $("tr.info").removeClass('info');
-        $('#row_' + Scope.group.id).addClass('info');
     }
-   
+
 };
