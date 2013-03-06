@@ -115,7 +115,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
             $("#alert-container").html("<b>Service access already exits.</b>").show();
         }else{
             Scope.role.role_service_accesses.push(Scope.service);
-            Scope.service = {service_id:null,access:"Full Access", component: "*"};
+
         }
     }
 
@@ -141,15 +141,16 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.role = {users:[], apps:[]};
         $('#save_button').show();
         $('#update_button').hide();
-        $("#alert-container").emptpy().hide();
+        $("#alert-container").empty().hide();
         $("tr.info").removeClass('info');
     };
     $scope.showDetails = function () {
         Scope.action = "Edit this ";
         Scope.actioned = "Updated"
-        Scope.role = this.role;
-        Scope.service.role_id = this.role.id;
-        Scope.users = this.role.users;
+        Scope.currentRole = this.role;
+        Scope.role = angular.copy(Scope.currentRole);
+        Scope.service.role_id = angular.copy(Scope.currentRole.id);
+        Scope.users = angular.copy(Scope.currentRole.users);
         $('#save_button').hide();
         $('#update_button').show();
         $("tr.info").removeClass('info');
