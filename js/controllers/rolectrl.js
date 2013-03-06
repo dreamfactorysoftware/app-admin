@@ -6,27 +6,29 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     $('#update_button').hide();
     $("#alert-container").empty().hide();
     $("#success-container").empty().hide();
-    Scope.components = [{name:"*", label:"All"}];
+    Scope.components = [
+        {name:"*", label:"All"}
+    ];
     Scope.component = '*';
     Scope.AllUsers = User.get();
     Scope.Apps = App.get();
-    Scope.service = {service_id:null,access:"Full Access", component: "*"};
+    Scope.service = {service_id:null, access:"Full Access", component:"*"};
     Scope.selectServices = {};
-    Scope.Services = Service.get(function(data){
+    Scope.Services = Service.get(function (data) {
         var services = data.record;
-        services.forEach(function(service){
-            if(service.type.indexOf("SQL") != -1){
-                $http.get('/rest/'+ service.api_name + '/?app_name=admin&fields=*').success(function(data){
+        services.forEach(function (service) {
+            if (service.type.indexOf("SQL") != -1) {
+                $http.get('/rest/' + service.api_name + '/?app_name=admin&fields=*').success(function (data) {
                     service.components = data.resource;
                     Scope.selectServices[service.id] = data.resource;
-                    var allRecord = {name:'*', label:'All', plural: 'All'};
+                    var allRecord = {name:'*', label:'All', plural:'All'};
                     Scope.selectServices[service.id].unshift(allRecord);
 
                 });
             }
         });
-        if(Scope.Services.record){
-            Scope.Services.record.push({id: null, name: "All"})
+        if (Scope.Services.record) {
+            Scope.Services.record.push({id:null, name:"All"})
         }
     });
     Scope.Roles = RolesRelated.get();
@@ -37,7 +39,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         RolesRelated.update({id:id}, Scope.role, function () {
             $("#success-container").html('Role successfully ' + Scope.actioned).show();
 
-        }, function(response){
+        }, function (response) {
             $("#alert-container").html(response.data.error[0].message).show();
         });
     };
@@ -47,77 +49,80 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
             $("#success-container").html('Role successfully ' + Scope.actioned).show();
 
 
-        }, function(response){
+        }, function (response) {
             $("#alert-container").html(response.data.error[0].message).show();
         });
     };
-    Scope.isUserInRole = function(){
+    Scope.isUserInRole = function () {
         var inRole = false;
-        if(Scope.role.users.length > 0){
-            if(this.user.role_id == Scope.role.id){
+        if (this.users) {
+            if (checkForDuplicate(this.users, 'role_id', this.user.role_id)) {
                 inRole = true;
             }
-            return inRole;
         }
+        return inRole
     };
-    Scope.isAppInRole = function(){
-        var inGroup =false;
-        if(Scope.role){
-            var id = this.app.id;
-            var assignedApps = Scope.role.apps;
-            assignedApps = $(assignedApps);
 
-            assignedApps.each(function(index, val){
-                if(val.id == id){
-                    inGroup = true;
-                }
-            });
+    Scope.isAppInRole = function () {
+        var inRole = false;
+        if (Scope.role.apps) {
+            if (checkForDuplicate(Scope.role.apps, 'id', this.app.id)) {
+                inRole = true;
+            }
         }
-        return inGroup;
+        return inRole
+
     };
     Scope.addAppToRole = function (checked) {
-        if(checked == true){
+        if (checked == true) {
             Scope.role.apps.push(this.app);
-        }else{
+        } else {
             Scope.role.apps = removeByAttr(Scope.role.apps, 'id', this.app.id);
         }
     };
     $scope.updateUserToRole = function (checked) {
-        if(checked == true){
+        if (checked == true) {
             Scope.role.users.push(this.user);
-        }else{
+        } else {
             Scope.role.users = removeByAttr(Scope.role.users, 'id', this.user.id);
         }
     };
-    Scope.loadComponents = function(){
+    Scope.loadComponents = function () {
         Scope.components = [];
         Scope.components.push({ name:"*", label:"All"});
-        Scope.components = Scope.selectServices[Scope.service.service_id];
+        Scope.components = angular.copy(Scope.selectServices[Scope.service.service_id]);
     };
-    Scope.loadIndComponents = function(){
+    Scope.loadIndComponents = function () {
         this.components = [];
         this.components.push({ name:"*", label:"All"});
-        this.components = Scope.selectServices[this.service_access.service_id];
+        this.components = angular.copy(Scope.selectServices[this.service_access.service_id]);
     };
 
-    Scope.removeAccess = function(){
+    Scope.removeAccess = function () {
         Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
     };
-    Scope.checkForExisting = function(){
+    Scope.checkForExisting = function () {
         $("#alert-container").empty().hide();
-        if(checkForDuplicates(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component)){
+        if (checkForDuplicates(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component)) {
             $("#alert-container").html("<b>You have duplicate access rules for one service/component</b>").show();
         }
     };
-    Scope.addServiceAccess = function(){
+    Scope.addServiceAccess = function () {
         $("#alert-container").empty().hide();
-        if(checkForDuplicates(Scope.role.role_service_accesses, 'service_id', Scope.service.service_id, 'component', Scope.service.component)){
+        if (checkForDuplicates(Scope.role.role_service_accesses, 'service_id', Scope.service.service_id, 'component', Scope.service.component)) {
             $("#alert-container").html("<b>Service access already exits.</b>").show();
-        }else{
-            Scope.role.role_service_accesses.push(Scope.service);
+        } else {
+            var newAccess = angular.copy(Scope.service);
+            Scope.role.role_service_accesses.push(newAccess);
 
         }
     }
+    Scope.editServiceAccess = function () {
+        $("#alert-container").empty().hide();
+        var newAccess = this.service_access;
+        Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
+        Scope.role.role_service_accesses.push(newAccess);
+    };
 
     $scope.delete = function () {
         var which = this.role.name;
@@ -126,7 +131,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         } else {
             which = "the role '" + which + "'?";
         }
-        if(!confirm("Are you sure you want to delete " + which)) {
+        if (!confirm("Are you sure you want to delete " + which)) {
             return;
         }
         var id = this.role.id;
