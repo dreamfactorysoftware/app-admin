@@ -1,8 +1,10 @@
-<h4>Roles<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New Role</a></h4>
+<h4>Roles<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary">
+    <li class="icon-plus-sign-alt"></li>
+    Create New Role</a></h4>
 <table style="width:100%" ng-controller="RoleCtrl">
     <tr>
         <td id="item-list">
-            <div id="grid-table" class="well" >
+            <div id="grid-table" class="well">
                 <table id="app-list" class="table table-hover table-striped">
                     <thead>
                     <tr>
@@ -17,7 +19,7 @@
                         <td ng-click="showDetails()">{{role.name}}</td>
                         <td class="no-border">
                             <div class="btn-group">
-                                <a class="btn btn-small btn-inverse" ><i class="icon-edit"></i></a>
+                                <a class="btn btn-small btn-inverse"><i class="icon-edit"></i></a>
                                 <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
                         </td>
@@ -45,42 +47,50 @@
                             <p>Description</p>
                             <input ng-model="role.description" type="text"/>
                         </div>
-                        <div class="section limit-list">
+                        <div class="section">
                             Users Assigned to this Role.
+                            <div class="limit-list">
+                                <table class="table table-hover table-striped table-bordered">
 
-                            <table  class="table table-hover table-striped table-bordered">
+                                    <tr ng-repeat="user in AllUsers.record" id="row_{{user.id}}">
+                                        <td><input name="assigned" ng-click="updateUserToRole($event.target.checked)"
+                                                   ng-checked="isUserInRole()" type="checkbox"/></td>
+                                        <td style="width:100%">{{user.display_name}}</td>
 
-                                <tr ng-repeat="user in AllUsers.record" id="row_{{user.id}}">
-                                    <td><input name="assigned" ng-click="updateUserToRole($event.target.checked)" ng-checked="isUserInRole()" type="checkbox"/></td> <td style="width:100%">{{user.display_name}}</td>
-
-                                </tr>
-
-
-                            </table>
+                                    </tr>
 
 
+                                </table>
+
+                            </div>
                         </div>
-                        <div class="section limit-list">
+                        <div class="section">
                             Apps Assigned to this Role.
+                            <div class="limit-list">
+                                <table class="table table-hover table-striped table-bordered">
 
-                            <table  class="table table-hover table-striped table-bordered">
+                                    <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
+                                        <td><input value="{{app.id}}" name="assigned_apps"
+                                                   ng-click="addAppToRole($event.target.checked)"
+                                                   ng-checked="isAppInRole()" type="checkbox"/></td>
+                                        <td style="width:100%">{{app.name}}</td>
 
-                                <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
-                                    <td><input value="{{app.id}}" name="assigned_apps" ng-click="addAppToRole($event.target.checked)" ng-checked="isAppInRole()" type="checkbox"/></td> <td style="width:100%">{{app.name}}</td>
-
-                                </tr>
+                                    </tr>
 
 
-                            </table>
-
+                                </table>
+                            </div>
 
                         </div>
                         <div class="section">
                             Assign Service Access to this Role<br/><br/>
 
-                            <span class="access">Service :</span> <select ng-change = "loadComponents()"  ng-model="service.service_id"  ng-options="service.id as service.name for service in Services.record">
+                            <span class="access">Service :</span> <select ng-change="loadComponents()"
+                                                                          ng-model="service.service_id"
+                                                                          ng-options="service.id as service.name for service in Services.record">
                         </select><br/>
-                            <span class="access">Component:</span> <select ng-model="service.component" ng-options="component.name as component.label for component in components">
+                            <span class="access">Component:</span> <select ng-model="service.component"
+                                                                           ng-options="component.name as component.label for component in components">
 
                         </select><br/>
                             <span class="access">Access:</span> <select ng-model="service.access" style="width:140px;">
@@ -90,10 +100,13 @@
                             <option value='Write Only' selected>Write Only</option>
                             <option value='No Access' selected>No Access</option>
                         </select><br/>
-                            <div><a class="btn btn-small btn-inverse" ng-click="addServiceAccess()" ><i class="icon-add"></i> Add Service Access</a> </div>
+
+                            <div><a class="btn btn-small btn-inverse" ng-click="addServiceAccess()"><i
+                                    class="icon-add"></i> Add Service Access</a></div>
 
                         </div>
-                        <div style="display:none;padding-left:10px;" id="alert-container" class="alert alert-error"></div>
+                        <div style="display:none;padding-left:10px;" id="alert-container"
+                             class="alert alert-error"></div>
                         <div class="section limit-list">
                             <table id="field-list" class="table table-hover table-striped">
 
@@ -101,12 +114,15 @@
 
                                 <tr ng-repeat="service_access in role.role_service_accesses">
                                     <td>
-                                        <select  style="width:140px;" ng-init = "loadIndComponents()" ng-change = "loadIndComponents()"  ng-model="service_access.service_id"  ng-options="service.id as service.name for service in Services.record">
+                                        <select style="width:140px;" ng-init="loadIndComponents()"
+                                                ng-change="loadIndComponents();editServiceAccess()" ng-model="service_access.service_id"
+                                                ng-options="option.id as option.name for option in Services.record">
                                         </select>
-                                        <select style="width:140px;"  ng-model="service_access.component" ng-options="component.name as component.label for component in components">
+                                        <select style="width:140px;" ng-change="editServiceAccess();" ng-model="service_access.component"
+                                                ng-options="component.name as component.label for component in components">
 
                                         </select>
-                                        <select ng-model="service_access.access" style="width:140px;">
+                                        <select ng-model="service_access.access" style="width:140px;" ng-change="editServiceAccess();">
                                             <option value='Full Access' selected>Full Access</option>
                                             <option value='Read and Write' selected>Read and Write</option>
                                             <option value='Read Only' selected>Read Only</option>
@@ -117,7 +133,8 @@
                                     <td class="no-border">
                                         <div class="btn-group pull-left">
 
-                                            <a class="btn btn-small btn-inverse" ng-click="removeAccess()" ><i class="icon-trash"></i></a>
+                                            <a class="btn btn-small btn-inverse" ng-click="removeAccess()"><i
+                                                    class="icon-trash"></i></a>
                                         </div>
                                     </td>
                                 </tr>
@@ -129,7 +146,8 @@
                             <input ng-checked="role.is_active" type="checkbox" ng-model="role.is_active"/>&nbsp;Active
 
                         </div>
-                        <div style="display:none;padding-left:10px;" id="success-container" class="alert alert-success"></div>
+                        <div style="display:none;padding-left:10px;" id="success-container"
+                             class="alert alert-success"></div>
                         <div id="button_holder">
                             <a id="save_button" ng-click="create()" class="btn btn-primary">
                                 <li class="icon-save"></li>
