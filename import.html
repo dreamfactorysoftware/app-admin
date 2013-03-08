@@ -1,8 +1,20 @@
-<h4>Import App</h4>
+<h4>Import App from Package File</h4>
 <div class="well" style=" height: 80%;padding: 10px;position: absolute;width: 100%;">
-    <h5>Choose a .dfpkg file to upload</h5><br/>
-    <form id="upload-form" name="upload-form"  ng-controller = 'FileCtrl' action="/rest/app/?app_name=admin" method="POST" enctype="multipart/form-data" target="importFileIframe">
-        <input id="zipFileInput"  type="file" name="files"/><button ng-click='uploadPackage()' class="btn btn-primary">Upload</button>
-    </form>
-    <iframe style="display:none" frameBorder="0" id="importFileIframe" name="importFileIframe" src="about:blank" width="100%" height="70px"></iframe>
+    <div class="section">
+        <h5>Choose a local .dfpkg file to upload</h5>
+        <form id="upload-file-form" name="upload-file-form"  ng-controller = 'FileCtrl' action="/rest/app/?app_name=admin" method="POST" enctype="multipart/form-data" target="importFileIframe">
+            <input id="fileInput" type="file" name="files" style="width:300px;"/><button ng-click='uploadPackageFile()' class="btn btn-primary">Upload</button>
+        </form>
+        <iframe style="display:none" frameBorder="0" id="importFileIframe" name="importFileIframe" src="about:blank" width="100%" height="70px"></iframe>
+    </div>
+    <div class="section">
+        <h5><span style="font-weight:bold;">OR</span> enter the URL for a .dfpkg file</h5>
+        <form id="upload-url-form" name="upload-url-form"  ng-controller = 'FileCtrl' action="/rest/app/?app_name=admin" method="POST" target="importUrlIframe">
+            <input id="urlInput" type="text" name="url" style="width:300px;"/><button ng-click='uploadPackageUrl()' class="btn btn-primary">Upload</button><br/>
+            Sample Apps:<br/>
+            <a href="" onclick="$('#urlInput').val('https://github.com/dreamfactorysoftware/app-calendar/raw/master/calendar.dfpkg')">Calendar</a>
+            - A sample application showing how to make RESTful calls to your Document Services Platform (DSP).
+        </form>
+        <iframe style="display:none" frameBorder="0" id="importUrlIframe" name="importUrlIframe" src="about:blank" width="100%" height="70px"></iframe>
+    </div>
 </div>
