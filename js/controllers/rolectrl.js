@@ -36,12 +36,8 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $("#alert-container").empty().hide();
         $("#success-container").hide();
         var id = this.role.id;
-        RolesRelated.update({id:id}, Scope.role, function (data) {
-            data.apps = Scope.apps;
-            data.users = Scope.users;
-            updateByAttr(Scope.Roles.record, 'id', id, data);
-
-
+        RolesRelated.update({id:id}, Scope.role, function () {
+            updateByAttr(Scope.Roles.record, 'id', id, Scope.role);
             $("#success-container").html('Role successfully ' + Scope.actioned).show();
 
         }, function (response) {
@@ -63,27 +59,28 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     Scope.isUserInRole = function () {
 
         var inRole = false;
+        var currentUser = this.user;
         if (Scope.users) {
-            if (checkForDuplicate(Scope.users, 'role_id', this.user.role_id)) {
-                inRole = true;
-            }
+            angular.forEach(Scope.users, function(user){
+                if(angular.equals(user, currentUser)){
+                    inRole = true;
+                }
+            });
         }
-        //console.log(inRole);
         return inRole
     };
 
     Scope.isAppInRole = function () {
         var inRole = false;
-
+        var currentApp = this.app;
         if (Scope.apps) {
-
-            if (checkForDuplicate(Scope.apps, 'id', this.app.id)) {
-                inRole = true;
-            }
+            angular.forEach(Scope.apps, function(app){
+                if(angular.equals(app, currentApp)){
+                    inRole = true;
+                }
+            });
         }
-
         return inRole
-
     };
     Scope.addAppToRole = function (checked) {
         if (checked == true) {
@@ -153,7 +150,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.promptForNew();
     };
     $scope.promptForNew = function () {
-
+        angular.element(":checkbox").attr('checked',false);
         Scope.action = "Create new";
         Scope.actioned = "Created";
         Scope.role = {users:[], apps:[]};
@@ -163,7 +160,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $("tr.info").removeClass('info');
     };
     $scope.showDetails = function () {
-
+        angular.element(":checkbox").attr('checked',false);
         Scope.action = "Edit this ";
         Scope.actioned = "Updated";
         Scope.role = angular.copy(this.role);
