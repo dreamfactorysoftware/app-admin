@@ -31,136 +31,138 @@
         </td>
         <td>&nbsp;</td>
         <td id="app-details" class="well">
-            <div>
-                <div class="detail-view"></div>
+            <form novalidate class="css-form" name="roleform">
+                <div>
+                    <div class="detail-view"></div>
 
-                <div class="add_new">
-                    <h5 class="text-info">{{action}} role</h5>
+                    <div class="add_new">
+                        <h5 class="text-info">{{action}} role</h5>
 
-                    <div id="step1">
-                        <div class="section">
-                            <p>Name</p>
-                            <input ng-model="role.name" type="text" required/>
-                        </div>
-
-                        <div class="section">
-                            <p>Description</p>
-                            <input ng-model="role.description" type="text"/>
-                        </div>
-                        <div class="section">
-                            Users Assigned to this Role.
-                            <div class="limit-list">
-                                <table class="table table-hover table-striped table-bordered">
-
-                                    <tr ng-repeat="user in AllUsers.record" id="row_{{user.id}}">
-                                        <td><input name="assigned" ng-click="updateUserToRole($event.target.checked)"
-                                                   ng-checked="isUserInRole()" type="checkbox"/></td>
-                                        <td style="width:100%">{{user.display_name}}</td>
-
-                                    </tr>
-
-
-                                </table>
-
-                            </div>
-                        </div>
-                        <div class="section">
-                            Apps Assigned to this Role.
-                            <div class="limit-list">
-                                <table class="table table-hover table-striped table-bordered">
-
-                                    <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
-                                        <td><input value="{{app.id}}" name="assigned_apps"
-                                                   ng-click="addAppToRole($event.target.checked)"
-                                                   ng-checked="isAppInRole()" type="checkbox"/></td>
-                                        <td style="width:100%">{{app.name}}</td>
-
-                                    </tr>
-
-
-                                </table>
+                        <div id="step1">
+                            <div class="section">
+                                <p>Name</p>
+                                <input ng-model="role.name" type="text" required/>
                             </div>
 
-                        </div>
-                        <div class="section">
-                            Assign Service Access to this Role<br/><br/>
+                            <div class="section">
+                                <p>Description</p>
+                                <input ng-model="role.description" type="text"/>
+                            </div>
+                            <div class="section">
+                                Users Assigned to this Role.
+                                <div class="limit-list">
+                                    <table class="table table-hover table-striped table-bordered">
 
-                            <span class="access">Service :</span> <select ng-change="loadComponents()"
-                                                                          ng-model="service.service_id"
-                                                                          ng-options="service.id as service.name for service in Services.record">
-                        </select><br/>
-                            <span class="access">Component:</span> <select ng-model="service.component"
-                                                                           ng-options="component.name as component.label for component in components">
+                                        <tr ng-repeat="user in AllUsers.record" id="row_{{user.id}}">
+                                            <td><input  ng-click="updateUserToRole($event.target.checked)"
+                                                        ng-checked="isUserInRole()" type="checkbox"/></td>
+                                            <td style="width:100%">{{user.display_name}}</td>
 
-                        </select><br/>
-                            <span class="access">Access:</span> <select ng-model="service.access" style="width:140px;">
-                            <option value='Full Access' selected>Full Access</option>
-                            <option value='Read and Write' selected>Read and Write</option>
-                            <option value='Read Only' selected>Read Only</option>
-                            <option value='Write Only' selected>Write Only</option>
-                            <option value='No Access' selected>No Access</option>
-                        </select><br/>
+                                        </tr>
 
-                            <div><a class="btn btn-small btn-inverse" ng-click="addServiceAccess()"><i
-                                    class="icon-add"></i> Add Service Access</a></div>
 
-                        </div>
-                        <div style="display:none;padding-left:10px;" id="alert-container"
-                             class="alert alert-error"></div>
-                        <div class="section limit-list">
-                            <table id="field-list" class="table table-hover table-striped">
+                                    </table>
 
-                                <tbody>
+                                </div>
+                            </div>
+                            <div class="section">
+                                Apps Assigned to this Role.
+                                <div class="limit-list">
+                                    <table class="table table-hover table-striped table-bordered">
 
-                                <tr ng-repeat="service_access in role.role_service_accesses">
-                                    <td>
-                                        <select style="width:140px;" ng-init="loadIndComponents()"
-                                                ng-change="loadIndComponents();editServiceAccess()" ng-model="service_access.service_id"
-                                                ng-options="option.id as option.name for option in Services.record">
-                                        </select>
-                                        <select style="width:140px;" ng-change="editServiceAccess();" ng-model="service_access.component"
-                                                ng-options="component.name as component.label for component in components">
+                                        <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
+                                            <td><input
+                                                    ng-click="addAppToRole($event.target.checked)"
+                                                    ng-checked="isAppInRole()" type="checkbox"/></td>
+                                            <td style="width:100%">{{app.name}}</td>
 
-                                        </select>
-                                        <select ng-model="service_access.access" style="width:140px;" ng-change="editServiceAccess();">
-                                            <option value='Full Access' selected>Full Access</option>
-                                            <option value='Read and Write' selected>Read and Write</option>
-                                            <option value='Read Only' selected>Read Only</option>
-                                            <option value='Write Only' selected>Write Only</option>
-                                            <option value='No Access' selected>No Access</option>
-                                        </select>
-                                    </td>
-                                    <td class="no-border">
-                                        <div class="btn-group pull-left">
+                                        </tr>
 
-                                            <a class="btn btn-small btn-inverse" ng-click="removeAccess()"><i
-                                                    class="icon-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
 
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="section">
-                            <input ng-checked="role.is_active" type="checkbox" ng-model="role.is_active"/>&nbsp;Active
+                                    </table>
+                                </div>
 
-                        </div>
-                        <div style="display:none;padding-left:10px;" id="success-container"
-                             class="alert alert-success"></div>
-                        <div id="button_holder">
-                            <a id="save_button" ng-click="create()" class="btn btn-primary">
-                                <li class="icon-save"></li>
-                                &nbsp;Save</a>
-                            <a id="update_button" ng-click="save()" class="btn btn-primary">
-                                <li class="icon-save"></li>
-                                &nbsp;Update</a>
+                            </div>
+                            <div class="section">
+                                Assign Service Access to this Role<br/><br/>
+
+                                <span class="access">Service :</span> <select ng-change="loadComponents()"
+                                                                              ng-model="service.service_id"
+                                                                              ng-options="service.id as service.name for service in Services.record">
+                            </select><br/>
+                                <span class="access">Component:</span> <select ng-model="service.component"
+                                                                               ng-options="component.name as component.label for component in components">
+
+                            </select><br/>
+                                <span class="access">Access:</span> <select ng-model="service.access" style="width:140px;">
+                                <option value='Full Access' selected>Full Access</option>
+                                <option value='Read and Write' selected>Read and Write</option>
+                                <option value='Read Only' selected>Read Only</option>
+                                <option value='Write Only' selected>Write Only</option>
+                                <option value='No Access' selected>No Access</option>
+                            </select><br/>
+
+                                <div><a class="btn btn-small btn-inverse" ng-click="addServiceAccess()"><i
+                                        class="icon-add"></i> Add Service Access</a></div>
+
+                            </div>
+                            <div style="display:none;padding-left:10px;" id="alert-container"
+                                 class="alert alert-error"></div>
+                            <div class="section limit-list">
+                                <table id="field-list" class="table table-hover table-striped">
+
+                                    <tbody>
+
+                                    <tr ng-repeat="service_access in role.role_service_accesses">
+                                        <td>
+                                            <select style="width:140px;" ng-init="loadIndComponents()"
+                                                    ng-change="loadIndComponents();editServiceAccess()" ng-model="service_access.service_id"
+                                                    ng-options="option.id as option.name for option in Services.record">
+                                            </select>
+                                            <select style="width:140px;" ng-change="editServiceAccess();" ng-model="service_access.component"
+                                                    ng-options="component.name as component.label for component in components">
+
+                                            </select>
+                                            <select ng-model="service_access.access" style="width:140px;" ng-change="editServiceAccess();">
+                                                <option value='Full Access' selected>Full Access</option>
+                                                <option value='Read and Write' selected>Read and Write</option>
+                                                <option value='Read Only' selected>Read Only</option>
+                                                <option value='Write Only' selected>Write Only</option>
+                                                <option value='No Access' selected>No Access</option>
+                                            </select>
+                                        </td>
+                                        <td class="no-border">
+                                            <div class="btn-group pull-left">
+
+                                                <a class="btn btn-small btn-inverse" ng-click="removeAccess()"><i
+                                                        class="icon-trash"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="section">
+                                <input ng-checked="role.is_active" type="checkbox" ng-model="role.is_active"/>&nbsp;Active
+
+                            </div>
+                            <div style="display:none;padding-left:10px;" id="success-container"
+                                 class="alert alert-success"></div>
+                            <div id="button_holder">
+                                <a id="save_button" ng-click="create()" class="btn btn-primary">
+                                    <li class="icon-save"></li>
+                                    &nbsp;Save</a>
+                                <a id="update_button" ng-click="save()" class="btn btn-primary">
+                                    <li class="icon-save"></li>
+                                    &nbsp;Update</a>
+                            </div>
+
                         </div>
 
                     </div>
-
                 </div>
-            </div>
+            </form>
 
         </td>
     </tr>

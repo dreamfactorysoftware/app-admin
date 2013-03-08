@@ -36,7 +36,12 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $("#alert-container").empty().hide();
         $("#success-container").hide();
         var id = this.role.id;
-        RolesRelated.update({id:id}, Scope.role, function () {
+        RolesRelated.update({id:id}, Scope.role, function (data) {
+            data.apps = Scope.apps;
+            data.users = Scope.users;
+            updateByAttr(Scope.Roles.record, 'id', id, data);
+
+
             $("#success-container").html('Role successfully ' + Scope.actioned).show();
 
         }, function (response) {
@@ -45,9 +50,11 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     };
     Scope.create = function () {
         RolesRelated.save(Scope.role, function (data) {
+            data.apps = Scope.apps;
+            data.users = Scope.users;
             Scope.Roles.record.push(data);
             $("#success-container").html('Role successfully ' + Scope.actioned).show();
-
+            Scope.promptForNew();
 
         }, function (response) {
             $("#alert-container").html(response.data.error[0].message).show();
@@ -67,11 +74,14 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
 
     Scope.isAppInRole = function () {
         var inRole = false;
-        if (Scope.role.apps) {
-            if (checkForDuplicate(Scope.role.apps, 'id', this.app.id)) {
+
+        if (Scope.apps) {
+
+            if (checkForDuplicate(Scope.apps, 'id', this.app.id)) {
                 inRole = true;
             }
         }
+
         return inRole
 
     };
@@ -143,7 +153,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.promptForNew();
     };
     $scope.promptForNew = function () {
-        $(':checkbox').removeAttr('checked');
+
         Scope.action = "Create new";
         Scope.actioned = "Created";
         Scope.role = {users:[], apps:[]};
@@ -153,13 +163,13 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $("tr.info").removeClass('info');
     };
     $scope.showDetails = function () {
-        $(':checkbox').removeAttr('checked');
+
         Scope.action = "Edit this ";
         Scope.actioned = "Updated";
-        Scope.currentRole = this.role;
-        Scope.role = angular.copy(Scope.currentRole);
-        Scope.service.role_id = angular.copy(Scope.currentRole.id);
-        Scope.users = angular.copy(Scope.currentRole.users);
+        Scope.role = angular.copy(this.role);
+        Scope.service.role_id = angular.copy(Scope.role.id);
+        Scope.users = angular.copy(Scope.role.users);
+        Scope.apps = angular.copy(Scope.role.apps);
         $('#save_button').hide();
         $('#update_button').show();
         $("tr.info").removeClass('info');
