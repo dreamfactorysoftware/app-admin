@@ -54,12 +54,14 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         });
     };
     Scope.isUserInRole = function () {
+
         var inRole = false;
-        if (this.users) {
-            if (checkForDuplicate(this.users, 'role_id', this.user.role_id)) {
+        if (Scope.users) {
+            if (checkForDuplicate(Scope.users, 'role_id', this.user.role_id)) {
                 inRole = true;
             }
         }
+        //console.log(inRole);
         return inRole
     };
 
@@ -150,8 +152,9 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $("tr.info").removeClass('info');
     };
     $scope.showDetails = function () {
+        $(':checkbox').removeAttr('checked');
         Scope.action = "Edit this ";
-        Scope.actioned = "Updated"
+        Scope.actioned = "Updated";
         Scope.currentRole = this.role;
         Scope.role = angular.copy(Scope.currentRole);
         Scope.service.role_id = angular.copy(Scope.currentRole.id);
