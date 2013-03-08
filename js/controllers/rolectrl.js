@@ -160,7 +160,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $("tr.info").removeClass('info');
     };
     $scope.showDetails = function () {
-        angular.element(":checkbox").attr('checked',false);
+        //angular.element(":checkbox").attr('checked',false);
         Scope.action = "Edit this ";
         Scope.actioned = "Updated";
         Scope.role = angular.copy(this.role);
