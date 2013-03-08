@@ -32,6 +32,7 @@ var UserCtrl = function ($scope, User, Role) {
 
     };
     Scope.promptForNew = function () {
+        $(':checkbox').removeAttr('checked');
         Scope.action = "Create";
         Scope.user = {};
         Scope.user.password = '';
@@ -58,9 +59,9 @@ var UserCtrl = function ($scope, User, Role) {
         });
     };
     Scope.showDetails = function(){
-
+        $(':checkbox').removeAttr('checked');
         Scope.action = "Edit";
-        Scope.user = this.user;
+        Scope.user = angular.copy(this.user);
         Scope.user.password = '';
         $('#save_button').hide();
         $('#update_button').show();
