@@ -143,6 +143,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.promptForNew();
     };
     $scope.promptForNew = function () {
+        $(':checkbox').removeAttr('checked');
         Scope.action = "Create new";
         Scope.actioned = "Created";
         Scope.role = {users:[], apps:[]};
