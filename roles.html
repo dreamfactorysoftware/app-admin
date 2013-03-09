@@ -54,8 +54,9 @@
                                     <table class="table table-hover table-striped table-bordered">
 
                                         <tr ng-repeat="user in AllUsers.record" id="row_{{user.id}}">
-                                            <td><input  ng-click="updateUserToRole($event.target.checked)"
-                                                        ng-checked="isUserInRole()" type="checkbox"/></td>
+                                            <td><input ng-model="user.inRole"
+                                                       ng-change="updateUserToRole()"
+                                                       ng-checked="isUserInRole()" type="checkbox"/></td>
                                             <td style="width:100%">{{user.display_name}}</td>
 
                                         </tr>
@@ -71,9 +72,9 @@
                                     <table class="table table-hover table-striped table-bordered">
 
                                         <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
-                                            <td><input
-                                                    ng-click="addAppToRole($event.target.checked)"
-                                                    ng-checked="isAppInRole()" type="checkbox"/></td>
+                                            <td><input ng-model="app.inRole"
+                                                       ng-change="addAppToRole()"
+                                                       ng-checked="isAppInRole()" type="checkbox"/></td>
                                             <td style="width:100%">{{app.name}}</td>
 
                                         </tr>

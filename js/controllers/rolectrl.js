@@ -1,4 +1,4 @@
-var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
+var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http, $timeout) {
     Scope = $scope;
     Scope.role = {users:[], apps:[]};
     Scope.action = "Create new ";
@@ -39,7 +39,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         RolesRelated.update({id:id}, Scope.role, function () {
             updateByAttr(Scope.Roles.record, 'id', id, Scope.role);
             $("#success-container").html('Role successfully ' + Scope.actioned).show();
-
+            Scope.promptForNew();
         }, function (response) {
             $("#alert-container").html(response.data.error[0].message).show();
         });
@@ -56,44 +56,45 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
             $("#alert-container").html(response.data.error[0].message).show();
         });
     };
-    Scope.isUserInRole = function () {
 
-        var inRole = false;
+    Scope.isUserInRole = function () {
         var currentUser = this.user;
-        if (Scope.users) {
-            angular.forEach(Scope.users, function(user){
-                if(angular.equals(user, currentUser)){
+        var inRole=false;
+        if (Scope.role.users) {
+            angular.forEach(Scope.role.users, function(user){
+                if(angular.equals(user.id, currentUser.id)){
                     inRole = true;
                 }
             });
         }
-        return inRole
+        return inRole;
     };
 
     Scope.isAppInRole = function () {
-        var inRole = false;
+
         var currentApp = this.app;
-        if (Scope.apps) {
-            angular.forEach(Scope.apps, function(app){
-                if(angular.equals(app, currentApp)){
+        var inRole=false;
+        if (Scope.role.apps) {
+            angular.forEach(Scope.role.apps, function(app){
+                if(angular.equals(app.id, currentApp.id)){
                     inRole = true;
                 }
             });
         }
-        return inRole
+        return inRole;
     };
-    Scope.addAppToRole = function (checked) {
-        if (checked == true) {
-            Scope.role.apps.push(this.app);
-        } else {
+    Scope.addAppToRole = function () {
+        if (checkForDuplicate(Scope.role.apps, 'id', this.app.id)) {
             Scope.role.apps = removeByAttr(Scope.role.apps, 'id', this.app.id);
+        } else {
+            Scope.role.apps.push(this.app);
         }
     };
-    $scope.updateUserToRole = function (checked) {
-        if (checked == true) {
-            Scope.role.users.push(this.user);
-        } else {
+    $scope.updateUserToRole = function () {
+        if (checkForDuplicate(Scope.role.users, 'id', this.user.id)) {
             Scope.role.users = removeByAttr(Scope.role.users, 'id', this.user.id);
+        } else {
+            Scope.role.users.push(this.user);
         }
     };
     Scope.loadComponents = function () {
