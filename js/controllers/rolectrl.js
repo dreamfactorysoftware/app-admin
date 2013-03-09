@@ -46,8 +46,6 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http, $timeo
     };
     Scope.create = function () {
         RolesRelated.save(Scope.role, function (data) {
-            data.apps = Scope.apps;
-            data.users = Scope.users;
             Scope.Roles.record.push(data);
             $("#success-container").html('Role successfully ' + Scope.actioned).show();
             Scope.promptForNew();

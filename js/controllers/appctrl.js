@@ -41,8 +41,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
     Scope.create = function () {
 
         AppsRelated.save(Scope.app, function (data) {
-                Scope.Apps.record.push(Scope.app);
-                Scope.app.id = data.id;
+                Scope.Apps.record.push(data);
+                //Scope.app.id = data.id;
                 //Scope.app = data;
                 window.top.Actions.updateSession();
                 Scope.showAppPreview();
