@@ -113,7 +113,7 @@ var setCurrentApp = function(currentApp){
     $("#nav_" + currentApp).addClass("active");
 };
 var showFileManager = function(){
-    $("#root-file-manager iframe").css('height', $(window).height() - 200).attr("src", 'http://' + location.host + '/public/admin/filemanager/').show();
+    $("#root-file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/').show();
 
 };
 $(document).ready(function () {

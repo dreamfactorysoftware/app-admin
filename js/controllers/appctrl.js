@@ -9,7 +9,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
     Scope.app = {is_url_external:'0',roles:[]};
     $('#update_button').hide();
     $('.external').hide();
-    Scope.currentServer = window.location.host;
+
     Scope.Apps = AppsRelated.get();
     Scope.Roles = Role.get();
 
@@ -93,7 +93,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
         $('#create_button').hide();
         $('#update_button').hide();
         $("#file-manager").show();
-        $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", 'http://' + location.host + '/public/admin/filemanager/?path=/app/' + this.app.api_name + '/&allowroot=false').show();
+        $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=' + this.app.api_name).show();
     };
     Scope.showAppPreview = function () {
         var path = "";
@@ -102,11 +102,12 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
 
         $("#app-preview").show();
         if(this.app.is_url_external == '0'){
-            path =  'http://' + location.host + '/app/' + this.app.api_name + '/' + this.app.url;
+            path =  CurrentServer + '/app/' + this.app.api_name + '/' + this.app.url;
         }else{
             path = this.app.url;
         }
         $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", path ).show();
+        //$("#file-manager iframe").css('height', $(window).height() - 200).attr("src", 'http://' + location.host + '/public/admin/filemanager/?path=' + name).show();
         $('#create_button').hide();
         $('#update_button').hide();
         $('#file-manager').hide();

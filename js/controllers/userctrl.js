@@ -59,7 +59,6 @@ var UserCtrl = function ($scope, User, Role) {
         });
     };
     Scope.showDetails = function(){
-        $(':checkbox').removeAttr('checked');
         Scope.action = "Edit";
         Scope.user = angular.copy(this.user);
         Scope.user.password = '';

@@ -28,7 +28,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         DB.get({name:Scope.currentTable}, function (data) {
             if (data.record.length > 0) {
                 Scope.tableData = data.record;
-
+                Scope.tableData.unshift({});
             } else {
                 Scope.tableData = [
                     {"error":"No Data"}
@@ -158,9 +158,17 @@ var SchemaCtrl = function ($scope, Schema, DB) {
 
         var index = this.row.rowIndex;
         var newRecord = this.row.entity;
-        DB.update({name:Scope.currentTable}, newRecord, function () {
-            $("#save_" + index).attr('disabled', true);
-        });
+        if (!newRecord.id){
+            DB.save({name:Scope.currentTable}, newRecord, function () {
+                $("#save_" + index).attr('disabled', true);
+            });
+        }else{
+            DB.update({name:Scope.currentTable}, newRecord, function () {
+                $("#save_" + index).attr('disabled', true);
+            });
+        }
+
+
 
     }
     Scope.deleteRow = function () {

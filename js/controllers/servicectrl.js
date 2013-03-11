@@ -5,7 +5,7 @@
  * Time: 4:23 AM
  * To change this template use File | Settings | File Templates.
  */
-var ServiceCtrl = function ($scope, Service) {
+var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope = $scope;
     Scope.service = {};
     Scope.Services = Service.get();
@@ -40,6 +40,10 @@ var ServiceCtrl = function ($scope, Service) {
 
         switch(Scope.service.type)
         {
+            case "Local SQL DB":
+                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.user, .pwd, .dsn").hide();
+                // $(".user, .pwd, .dsn").show();
+                break;
             case "Remote SQL DB":
                 $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".user, .pwd, .dsn").show();
@@ -52,7 +56,11 @@ var ServiceCtrl = function ($scope, Service) {
                 $(".base_url, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
         }
     };
-
+    Scope.showSwagger = function(){
+        $rootScope.loadSwagger(this.service.api_name)
+        Scope.action = "Explore ";
+        $('#step1').hide();
+    };
     Scope.delete = function () {
         var which = this.service.name;
         if (!which || which == '') {
@@ -64,19 +72,25 @@ var ServiceCtrl = function ($scope, Service) {
             return;
         }
         var id = this.service.id;
+        var api_name = this.service.api_name;
+
         Service.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
         });
     };
     Scope.promptForNew = function () {
         Scope.action = "Create";
+        $('#step1').show();
         Scope.service = {};
+        $("#swagger, #swagger iframe").hide();
         $('#save_button').show();
         $('#update_button').hide();
         $("tr.info").removeClass('info');
     };
     Scope.showDetails = function(){
-        Scope.service = this.service;
+        $('#step1').show();
+        $("#swagger, #swagger iframe").hide();
+        Scope.service = angular.copy(this.service);
         if(Scope.service.type =="Remote SQL DB"){
             var cString = JSON.parse(Scope.service.credentials);
             Scope.service.dsn = cString.dsn;
