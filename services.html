@@ -38,8 +38,7 @@
                     <div id="step1">
                         <div class="section">
                             <p>Type</p>
-                            <input type="text" ng-model="service.type" value="Remote Web Service" disabled="disabled"/>
-
+                            <select ng-init="showFields()" ng-change="showFields()" ng-model = "service.type" ng-options="option.name as option.name for option in serviceOptions"></select>
                         </div>
 
 
@@ -55,37 +54,49 @@
                             <p>Description</p>
                             <input ng-model="service.description" type="text"/>
                         </div>
-                        <div class="section">
+                        <div class="section base_url">
                             <p>Base URL</p>
                             <input ng-model="service.base_url" type="text"/>
                         </div>
-                        <div class="section">
+                        <div class="section parameters">
                             <p>Parameters</p>
                             <input ng-model="service.parameters" type="text"/>
                         </div>
-                        <div class="section">
+                        <div class="section dsn">
+                            <p>Connection String</p>
+                            <input ng-model="service.dsn" type="text"/>
+                        </div>
+                        <div class="section user">
+                            <p>Username</p>
+                            <input ng-model="service.user" type="text"/>
+                        </div>
+                        <div class="section pwd">
+                            <p>Password</p>
+                            <input ng-model="service.pwd" type="password"/>
+                        </div>
+                        <div class="section headers">
                             <p>Headers</p>
                             <input ng-model="service.headers" type="text"/>
                         </div>
                         <div class="section">
                             <input ng-checked="service.is_active" type="checkbox" ng-model="service.is_active"/>&nbsp;Active
                         </div>
-                        <!--<div class="section">-->
-                            <!--<p>Storage Name</p>-->
-                            <!--<input ng-model="service.storage_name" type="text"/>-->
-                        <!--</div>-->
-                        <!--<div class="section">-->
-                            <!--<p>Storage Type</p>-->
-                            <!--<input ng-model="service.storage_type" type="text"/>-->
-                        <!--</div>-->
-                        <!--<div class="section">-->
-                            <!--<p>Credentials</p>-->
-                            <!--<input ng-model="service.credentials" type="text"/>-->
-                        <!--</div>-->
-                        <!--<div class="section">-->
-                            <!--<p>Native Format</p>-->
-                            <!--<input ng-model="service.native_format" type="text"/>-->
-                        <!--</div>-->
+                        <div class="section storage_name">
+                            <p>Storage Name</p>
+                            <input ng-model="service.storage_name" type="text"/>
+                        </div>
+                        <div class="section storage_type">
+                            <p>Storage Type</p>
+                            <input ng-model="service.storage_type" type="text"/>
+                        </div>
+                        <div class="section credentials">
+                            <p>Credentials</p>
+                            <input ng-model="service.credentials" type="text"/>
+                        </div>
+                        <div class="section native_format">
+                            <p>Native Format</p>
+                            <input ng-model="service.native_format" type="text"/>
+                        </div>
                         <div id="button_holder">
                             <a id="save_button" ng-click="create()" class="btn btn-primary">
                                 <li class="icon-save"></li>

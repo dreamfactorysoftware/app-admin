@@ -2,7 +2,10 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];
-    Scope.booleanOptions = [{value:true, text:'true'},{value:false, text:'false'}];
+    Scope.booleanOptions = [
+        {value:true, text:'true'},
+        {value:false, text:'false'}
+    ];
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
@@ -21,19 +24,20 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         Scope.browseOptions = {};
         Scope.tableData = [];
         Scope.currentSchema = [];
-        Schema.get({name:this.table.name}, function (data) {
-            data.table.field.forEach(function(field){
-                Scope.currentSchema.push(field)
-            });
-            DB.get({name:Scope.currentTable}, function (data) {
-                if (data.record.length > 0) {
-                    Scope.tableData = data.record;
-                } else {
-                    Scope.tableData = [{"error":"No Data"} ];
-                }
-                Scope.columnDefs = Scope.buildColumns();
-            });
+
+        DB.get({name:Scope.currentTable}, function (data) {
+            if (data.record.length > 0) {
+                Scope.tableData = data.record;
+
+            } else {
+                Scope.tableData = [
+                    {"error":"No Data"}
+                ];
+            }
+            Scope.currentSchema = data.meta.schema.table.field;
+            Scope.columnDefs = Scope.buildColumns();
         });
+
         $("tr.info").removeClass('info');
         $('#row_' + Scope.currentTable).addClass('info');
 
@@ -42,14 +46,13 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         var columnDefs = [];
         var saveColumn = {};
         saveColumn.field = '';
-        saveColumn.cellTemplate =buttonTemplate;
+        saveColumn.cellTemplate = buttonTemplate;
         saveColumn.width = '70px';
         columnDefs.push(saveColumn);
         var column = {};
         Scope.currentSchema.forEach(function (field) {
             column.field = field.name;
-            switch(field.type)
-            {
+            switch (field.type) {
                 case "boolean":
                     column.editableCellTemplate = booleanTemplate;
                     column.enableFocusedCellEdit = true;
@@ -106,7 +109,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         } else {
             which = "the table '" + which + "'?";
         }
-        if(!confirm("Are you sure you want to delete " + which)) {
+        if (!confirm("Are you sure you want to delete " + which)) {
             return;
         }
         Schema.delete({ name:name }, function () {
@@ -129,17 +132,17 @@ var SchemaCtrl = function ($scope, Schema, DB) {
             document.getElementById("result").className = "fail";
         }
     };
-    Scope.showJSON = function(){
+    Scope.showJSON = function () {
         $(".detail-view").hide();
         $("#json_upload").show();
     }
-    Scope.postJSON = function(){
+    Scope.postJSON = function () {
         var json = $('#source').val();
-        Schema.save(json, function(data){
-            if(!data.table){
+        Schema.save(json, function (data) {
+            if (!data.table) {
                 Scope.schemaData.push(data);
-            }else{
-                data.table.forEach(function(table){
+            } else {
+                data.table.forEach(function (table) {
                     Scope.schemaData.push(table);
                 })
             }
@@ -147,23 +150,23 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         });
 
     }
-    Scope.enableSave = function(){
+    Scope.enableSave = function () {
         $("#save_" + this.row.rowIndex).attr('disabled', false);
         //console.log(this);
     };
-    Scope.saveRow = function(){
+    Scope.saveRow = function () {
 
         var index = this.row.rowIndex;
-        var newRecord =this.row.entity;
-        DB.update({name:Scope.currentTable},newRecord , function(){
+        var newRecord = this.row.entity;
+        DB.update({name:Scope.currentTable}, newRecord, function () {
             $("#save_" + index).attr('disabled', true);
         });
 
     }
-    Scope.deleteRow = function(){
-        var id =this.row.entity.id;
-        DB.delete({name:Scope.currentTable},{id:id});
-        Scope.tableData = removeByAttr(Scope.tableData, 'id',id);
+    Scope.deleteRow = function () {
+        var id = this.row.entity.id;
+        DB.delete({name:Scope.currentTable}, {id:id});
+        Scope.tableData = removeByAttr(Scope.tableData, 'id', id);
 
     }
 };

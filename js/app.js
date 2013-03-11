@@ -91,7 +91,7 @@ AdminApp.factory('Schema', function ($resource) {
     } });
 });
 AdminApp.factory('DB', function ($resource) {
-    return $resource('/rest/db/:name/?app_name=admin&fields=*', {}, { update:{ method:'PUT' }, query:{
+    return $resource('/rest/db/:name/?app_name=admin&fields=*&include_schema=true', {}, { update:{ method:'PUT' }, query:{
         method:'GET',
         isArray:false
     } });
