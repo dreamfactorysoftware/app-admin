@@ -5,7 +5,7 @@
  * Time: 4:23 AM
  * To change this template use File | Settings | File Templates.
  */
-var ServiceCtrl = function ($scope, Service) {
+var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope = $scope;
     Scope.service = {};
     Scope.Services = Service.get();
@@ -57,7 +57,7 @@ var ServiceCtrl = function ($scope, Service) {
         }
     };
     Scope.showSwagger = function(){
-        Scope.loadSwagger(this.service.api_name)
+        $rootScope.loadSwagger(this.service.api_name)
         Scope.action = "Explore ";
         $('#step1').hide();
     };
@@ -90,7 +90,7 @@ var ServiceCtrl = function ($scope, Service) {
     Scope.showDetails = function(){
         $('#step1').show();
         $("#swagger, #swagger iframe").hide();
-        Scope.service = this.service;
+        Scope.service = angular.copy(this.service);
         if(Scope.service.type =="Remote SQL DB"){
             var cString = JSON.parse(Scope.service.credentials);
             Scope.service.dsn = cString.dsn;

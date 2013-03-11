@@ -1,7 +1,7 @@
-var SwaggerCtrl = function ($scope, $timeout) {
-    Scope = $scope;
+var SwaggerCtrl = function ($rootScope, $timeout) {
 
-    Scope.loadSwagger = function(hash){
+
+    $rootScope.loadSwagger = function(hash){
         $("#swagger iframe").attr('src', '');
         var appendURL = "";
         if(hash){
@@ -20,6 +20,6 @@ var SwaggerCtrl = function ($scope, $timeout) {
         });
     }
     if(!Scope.action){
-        Scope.loadSwagger();
+        $rootScope.loadSwagger();
     }
 }
