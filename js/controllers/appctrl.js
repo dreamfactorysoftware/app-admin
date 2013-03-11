@@ -31,7 +31,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
 
         var id = Scope.app.id;
         AppsRelated.update({id:id}, Scope.app, function () {
-            $('#save_' + id).addClass('disabled');
+            window.top.Actions.updateSession();
 
         });
     };
@@ -72,6 +72,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
         var id = this.app.id;
         AppsRelated.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
+            window.top.Actions.updateSession();
         });
     };
     Scope.postFile = function(target){
