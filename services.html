@@ -14,11 +14,11 @@
                     <tbody>
 
                     <tr ng-repeat="service in Services.record" id="row_{{service.id}}">
-                        <td ng-click="showDetails()">{{service.name}}</td>
+                        <td ng-click='showSwagger()'>{{service.name}}</td>
                         <td class="no-border">
-                            <div class="btn-group">
-                                <a class="btn btn-small btn-inverse" ><i class="icon-edit"></i></a>
-                                <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
+                            <div class="btn-group pull-right">
+                                <a ng-click="showDetails()" class="btn btn-small btn-inverse" ><i class="icon-edit"></i></a>
+                                <a ng-hide="service.is_system" class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -34,7 +34,8 @@
 
                 <div class="add_new">
                     <h5 class="text-info">{{action}} service</h5>
-
+                    <div ng-include src="'swagger.html'">
+                    </div>
                     <div id="step1">
                         <div class="section">
                             <p>Type</p>
