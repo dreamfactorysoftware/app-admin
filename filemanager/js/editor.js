@@ -7,7 +7,7 @@
 EditorActions = {
     getFile : function(){
         $.ajax({
-            url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path'),
+            url:'http://' + location.host + '/rest' + EditorActions.getQueryParameter('path'),
             data:'app_name=admin&method=GET',
             cache:false,
             processData: false,
@@ -17,6 +17,8 @@ EditorActions = {
             error:function (response) {
                 if (response.status == 401) {
                     $("#loginDialog").modal('toggle');
+                } else {
+                    alertErr(response);
                 }
             }
         });
@@ -28,7 +30,7 @@ EditorActions = {
     },
     saveFile:function(){
         $.ajax({
-            url:'http://' + location.host + '/rest/app/' + EditorActions.getQueryParameter('path') + '?&app_name=admin',
+            url:'http://' + location.host + '/rest' + EditorActions.getQueryParameter('path') + '?&app_name=admin',
             data: Editor.getValue(),
             type:'MERGE',
             processData: false,
@@ -42,6 +44,8 @@ EditorActions = {
             error:function (response) {
                 if (response.status == 401) {
                     $("#loginDialog").modal('toggle');
+                } else {
+                    alertErr(response);
                 }
             }
         });
