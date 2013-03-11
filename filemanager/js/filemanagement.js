@@ -41,7 +41,7 @@ $(document).ready(function() {
     });
 
     $("#exportzip").click(function() {
-        $("#fileIframe").attr("src","/REST/APP/" + currentpath + "?zip=true&app_name=admin");
+        $("#fileIframe").attr("src","/rest" + currentpath + "?zip=true&app_name=admin");
     });
 
     $("#importExtract").click(function() {
@@ -60,11 +60,18 @@ $(document).ready(function() {
 function printLocation(path) {
 
     var text = '';
+    var allowroot = CommonUtilities.getQueryParameter('allowroot')
     if (path && path != '') {
-        var builder = '';
+        var builder = '/';
         var tmp = path.split('/');
         for(var i in tmp) {
             if (tmp[i].length > 0) {
+                if (builder == '/' && tmp[i] == 'app') {
+                    if (allowroot == 'false') {
+                        builder += tmp[i]+'/';
+                        continue;
+                    }
+                }
                 builder += tmp[i]+'/';
                 text += '/<a href="javascript: loadFolder(\''+builder+'\')">'+tmp[i]+'</a>';
             }
@@ -139,13 +146,13 @@ function buildListingUI(json) {
     var html = '';
     if (json.folder) {
         for (var i in json.folder) {
-            var ctrl = buildFolderControl(json.folder[i].path);
-            html += buildItem(json.folder[i].path, 'gfx/folder-horizontal-open.png', json.folder[i].name, 'folder',ctrl);
+            var ctrl = buildFolderControl('/app/' + json.folder[i].path);
+            html += buildItem('/app/' + json.folder[i].path, 'gfx/folder-horizontal-open.png', json.folder[i].name, 'folder',ctrl);
         }
     }
     if (json.file) {
         for(var i in json.file) {
-            var editor = buildEditor(json.file[i].contentType,json.file[i].path);
+            var editor = buildEditor(json.file[i].contentType,'/app/' + json.file[i].path);
             var extra = '<div class="cLeft cW5">&nbsp;</div>';
             if(json.file[i].lastModified) {
                 extra += '<div class="cLeft cW20 fm_label">'+json.file[i].lastModified+'</div>';
@@ -156,7 +163,7 @@ function buildListingUI(json) {
             if(json.file[i].size) {
                 extra += '<div class="cLeft cW10 fm_label">'+json.file[i].size+' bytes</div>';
             }
-            html += buildItem(json.file[i].path,getIcon(json.file[i]),json.file[i].name,'file', editor, extra);
+            html += buildItem('/app/' + json.file[i].path,getIcon(json.file[i]),json.file[i].name,'file', editor, extra);
         }
     }
     $('#listing').html(html);
@@ -195,7 +202,7 @@ function buildListingUI(json) {
             if(type == 'folder') {
                 loadFolder(target);
             } else {
-                window.location.href = 'http://' + location.host + '/rest/app/' + target +"?app_name=admin&download=true";
+                window.location.href = 'http://' + location.host + '/rest' + target +"?app_name=admin&download=true";
             }
         });
 
@@ -251,7 +258,7 @@ function handleFileSelect(evt) {
 function loadRootFolder() {
 
     var path = CommonUtilities.getQueryParameter('path');
-    loadFolder(path + '/');
+    loadFolder(path);
 }
 
 function reloadFolder() {
@@ -263,7 +270,7 @@ function loadFolder(path) {
 
     $.ajax({
         dataType:'json',
-        url:'http://' + location.host + '/rest/app/' + path,
+        url:'http://' + location.host + '/rest' + path,
         data:'app_name=admin&method=GET',
         cache:false,
         success:function (response) {
@@ -311,7 +318,7 @@ function createFile(target, file) {
         },
         dataType:'json',
         type :'POST',
-        url:'http://' + location.host + '/rest/app/' + target + '?app_name=admin' + extra,
+        url:'http://' + location.host + '/rest' + target + '?app_name=admin' + extra,
         data: data,
         cache:false,
         processData: false,
@@ -333,7 +340,7 @@ function createFolder(target, name) {
         },
         dataType:'json',
         type :'POST',
-        url:'http://' + location.host + '/rest/app/' + target + '?app_name=admin',
+        url:'http://' + location.host + '/rest' + target + '?app_name=admin',
         data: '',
         cache:false,
         processData: false,
@@ -373,7 +380,7 @@ function deleteSelected() {
             $.ajax({
                 dataType:'json',
                 type : 'POST',
-                url:'http://' + location.host + '/rest/app/' + currentpath + '?app_name=admin&method=DELETE&force=true',
+                url:'http://' + location.host + '/rest' + currentpath + '?app_name=admin&method=DELETE&force=true',
                 data: data,
                 cache:false,
                 processData: false,
@@ -408,6 +415,8 @@ function getSelectedItems() {
     var files = [];
     $('.highlighted').each(function() {
         var target = $(this).data('target');
+        // remove /app/
+        target = target.substring(5);
         if ($(this).data('type') == 'folder') {
             folders[folders.length] = {path:target};
         } else {
@@ -499,7 +508,7 @@ function importFile() {
             $.ajax({
                 dataType:'json',
                 type :'POST',
-                url:'http://' + location.host + "/rest/app/" + currentpath + "?" + params,
+                url:'http://' + location.host + "/rest" + currentpath + "?" + params,
                 data: '',
                 cache:false,
                 processData: false,
@@ -515,7 +524,7 @@ function importFile() {
         case 'File':
             // set format to xml so IE does not ask to open/save file
             params += '&format=xml';
-            $("#fileImportForm").attr("action","/rest/app/" + currentpath + "?" + params);
+            $("#fileImportForm").attr("action","/rest" + currentpath + "?" + params);
             $("#fileImportForm").submit();
             break;
     }
