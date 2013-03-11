@@ -10,7 +10,7 @@ var SwaggerCtrl = function ($rootScope, $timeout) {
         $("#swagger").css('height', $(window).height()).css('width', '100%').show();
 
         $timeout(function(){
-            $("#swagger iframe").css('height', $(window).height()).css('width', '100%').attr("src", 'http://' + location.host + '/public/admin/swagger/' + appendURL).show();
+            $("#swagger iframe").css('height', $(window).height()).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
 
         },1000);
 
