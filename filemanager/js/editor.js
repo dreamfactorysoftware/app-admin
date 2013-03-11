@@ -16,7 +16,7 @@ EditorActions = {
             },
             error:function (response) {
                 if (response.status == 401) {
-                    $("#loginDialog").modal('toggle');
+                    window.opener.window.top.Actions.doSignInDialog();
                 } else {
                     alertErr(response);
                 }
@@ -43,7 +43,7 @@ EditorActions = {
             },
             error:function (response) {
                 if (response.status == 401) {
-                    $("#loginDialog").modal('toggle');
+                    window.opener.window.top.Actions.doSignInDialog();
                 } else {
                     alertErr(response);
                 }
