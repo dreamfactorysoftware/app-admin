@@ -86,8 +86,8 @@
                             <div class="alert alert-info external">
                                 <li class="icon-info-sign"></li>&nbsp;This is the external link to your app.
                             </div>
-                            <input placeholder="/index.html" name="app_path" type="text" ng-model="app.url">
-
+                            <input class="local" placeholder="/index.html" name="app_path" type="text" ng-model="app.url">
+                            <input class="external" placeholder="http://www.myserver.com/" name="app_path" type="text" ng-model="app.url">
                             <div class="alert alert-success local"><li class="icon-cloud"></li>&nbsp;Your URL will be:
                                 http://{{currentServer}}/app/{{app.api_name}}<span>{{app.url}}</span></div>
                             <div class="alert alert-success external">Your URL will be:
