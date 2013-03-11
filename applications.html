@@ -1,8 +1,3 @@
-<h4>Applications<a ng-click="goToImport()" class="btn btn-small pull-right btn-primary">
-    <li class="icon-upload-alt"></li>
-    Import New App</a><a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary">
-    <li class="icon-plus-sign-alt"></li>
-    Create New App</a></h4>
 <table style="width:100%" ng-controller="AppCtrl">
     <tr>
         <td id="item-list">
@@ -12,7 +7,8 @@
                     <tr>
                         <th>App Label</th>
 
-                        <th class="no-border"><a class="btn btn-inverse btn-small pull-right" ng-click="reload()"><i class="icon-refresh"></i></a></th>
+                        <th class="no-border"><a class="btn btn-inverse btn-small pull-right" ng-click="reload()"><i
+                                class="icon-refresh"></i></a></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -23,7 +19,8 @@
                             <div class="btn-group pull-right">
                                 <a class="btn btn-small btn-inverse" ng-click="showAppPreview()"><i
                                         class="icon-eye-open"></i></a>
-                                <a ng-show="app.is_url_external == 0" class="btn btn-small btn-inverse" ng-click="showFileManager()"><i
+                                <a ng-show="app.is_url_external == 0" class="btn btn-small btn-inverse"
+                                   ng-click="showFileManager()"><i
                                         class="icon-folder-open"></i></a>
                                 <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
@@ -36,7 +33,18 @@
         </td>
         <td>&nbsp;</td>
         <td id="app-details" class="well">
-
+            <div class="navbar">
+                <div class="navbar-inner"><div class="brand">Applications</div>
+                    <div class="btn-group pull-right">
+                        <a ng-click="goToImport()" class="btn btn-small">
+                            <li class="icon-upload-alt"></li>
+                            Import New App
+                        </a><a ng-click="promptForNew()" class="btn btn-small">
+                        <li class="icon-plus-sign-alt"></li>
+                        Create New App</a>
+                    </div>
+                </div>
+            </div>
             <div>
 
                 <div class="add_new">
@@ -61,7 +69,8 @@
                             <p>Application Path eg: myApp </p>
 
                             <div class="alert alert-info">
-                                <li class="icon-info-sign"></li>&nbsp;This will be your context root and cannot be changed.
+                                <li class="icon-info-sign"></li>
+                                &nbsp;This will be your context root and cannot be changed.
                             </div>
                             <input type="text" ng-model="app.api_name">
                         </div>
@@ -81,14 +90,21 @@
                             <p>Default Path</p>
 
                             <div class="alert alert-info local">
-                                <li class="icon-info-sign"></li>&nbsp;This is the default file to load when your app is loaded.
+                                <li class="icon-info-sign"></li>
+                                &nbsp;This is the default file to load when your app is loaded.
                             </div>
                             <div class="alert alert-info external">
-                                <li class="icon-info-sign"></li>&nbsp;This is the external link to your app.
+                                <li class="icon-info-sign"></li>
+                                &nbsp;This is the external link to your app.
                             </div>
-                            <input class="local" placeholder="/index.html" name="app_path" type="text" ng-model="app.url">
-                            <input class="external" placeholder="http://www.myserver.com/" name="app_path" type="text" ng-model="app.url">
-                            <div class="alert alert-success local"><li class="icon-cloud"></li>&nbsp;Your URL will be:
+                            <input class="local" placeholder="/index.html" name="app_path" type="text"
+                                   ng-model="app.url">
+                            <input class="external" placeholder="http://www.myserver.com/" name="app_path" type="text"
+                                   ng-model="app.url">
+
+                            <div class="alert alert-success local">
+                                <li class="icon-cloud"></li>
+                                &nbsp;Your URL will be:
                                 http://{{currentServer}}/app/{{app.api_name}}<span>{{app.url}}</span></div>
                             <div class="alert alert-success external">Your URL will be:
                                 {{app.url}}
