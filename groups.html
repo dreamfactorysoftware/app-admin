@@ -1,4 +1,3 @@
-<h4>Application Groups<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary"><li class="icon-plus-sign-alt"></li> Create New Group</a></h4>
 <table style="width:100%" ng-controller="GroupCtrl">
     <tr>
         <td id="item-list">
@@ -31,7 +30,15 @@
         <td id="app-details" class="well">
             <div>
                 <div class="detail-view"></div>
-
+                <div class="navbar">
+                    <div class="navbar-inner"><div class="brand">Application Groups</div>
+                        <div class="btn-group pull-right">
+                            <a ng-click="promptForNew()" class="btn btn-small">
+                                <li class="icon-plus-sign-alt"></li>
+                                Create New Group</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="add_new">
                     <h5 class="text-info">{{action}} group</h5>
 

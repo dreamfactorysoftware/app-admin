@@ -1,6 +1,3 @@
-<h4>Roles<a ng-click="promptForNew()" class="btn btn-small pull-right btn-primary">
-    <li class="icon-plus-sign-alt"></li>
-    Create New Role</a></h4>
 <table style="width:100%" ng-controller="RoleCtrl">
     <tr>
         <td id="item-list">
@@ -31,6 +28,15 @@
         </td>
         <td>&nbsp;</td>
         <td id="app-details" class="well">
+            <div class="navbar">
+                <div class="navbar-inner"><div class="brand">Roles</div>
+                    <div class="btn-group pull-right">
+                        <a ng-click="promptForNew()" class="btn btn-small">
+                            <li class="icon-plus-sign-alt"></li>
+                            Create New Role</a>
+                    </div>
+                </div>
+            </div>
             <form novalidate class="css-form" name="roleform">
                 <div>
                     <div class="detail-view"></div>

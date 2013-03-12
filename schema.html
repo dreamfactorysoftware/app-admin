@@ -1,7 +1,3 @@
-<h4>Tables<a ng-click="showJSON()" class="btn btn-small pull-right btn-primary">
-    <li class="icon-plus-sign-alt"></li> Import JSON Schema</a><a ng-click="showForm()" class="btn btn-small pull-right btn-primary">
-    <li class="icon-plus-sign-alt"></li>
-    Create New Table</a></h4>
 <table style="width:100%" ng-controller="SchemaCtrl">
     <tr>
         <td id="item-list">
@@ -32,6 +28,18 @@
         </td>
         <td>&nbsp;</td>
         <td id="app-details" class="well">
+            <div class="navbar">
+                <div class="navbar-inner"><div class="brand">Tables</div>
+                    <div class="btn-group pull-right">
+                        <a ng-click="showJSON()" class="btn btn-small">
+                            <li class="icon-upload-alt"></li>
+                            Import JSON Schema
+                        </a><a ng-click="showForm()" class="btn btn-small">
+                        <li class="icon-plus-sign-alt"></li>
+                        Create New Table</a>
+                    </div>
+                </div>
+            </div>
             <div>
                 <div class="detail-view">
                     <div id="grid-container">
