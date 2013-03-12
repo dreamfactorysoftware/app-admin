@@ -1,6 +1,5 @@
 var SwaggerCtrl = function ($rootScope, $timeout) {
 
-
     $rootScope.loadSwagger = function(hash){
         $("#swagger iframe").attr('src', '');
         var appendURL = "";
