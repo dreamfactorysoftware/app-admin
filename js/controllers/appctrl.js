@@ -3,7 +3,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
     $('#alert_container').empty();
     Scope = $scope;
     Scope.alerts =[];
-
+    Scope.currentServer = CurrentServer;
     Scope.action = "Create";
     setCurrentApp('applications');
     Scope.app = {is_url_external:'0',roles:[]};
