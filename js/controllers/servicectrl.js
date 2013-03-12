@@ -34,17 +34,27 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.Services = Service.get();
     Scope.action = "Create";
     Scope.service.type = "Remote Web Service";
+    Scope.remoteOptions = [
+        {name:"Amazon S3", value:"aws s3"},
+        {name:"Windows Azure Storage", value:"azure blob"}
+    ];
+    Scope.service.storage_type="aws s3";
     Scope.serviceOptions = [
         {name:"Remote Web Service"},
         {name:"Local SQL DB"},
         {name:"Remote SQL DB"},
         {name:"Local SQL DB Schema"},
         {name:"Remote SQL DB Schema"},
-        {name:"Native Service"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
-        {name:"Local Email Service"},
-        {name:"Remote Email Service"}
+        {name:"Local Email Service"}
+    ];
+    Scope.serviceCreateOptions = [
+        {name:"Remote Web Service"},
+        {name:"Remote SQL DB"},
+        {name:"Remote SQL DB Schema"},
+        {name:"Local File Storage"},
+        {name:"Remote File Storage"}
     ];
     $('#update_button').hide();
 
@@ -87,9 +97,21 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".user, .pwd, .dsn").show();
                 break;
+            case "Remote SQL DB Schema":
+                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .pwd, .dsn").show();
+                break;
             case "Remote Web Service":
                 $(".user, .pwd, .dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".base_url, .parameters, .headers").show();
+                break;
+            case "Local File Storage":
+                $(".user, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".storage_name").show();
+                break;
+            case "Remote File Storage":
+                $(".user, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".storage_name, .storage_type").show();
                 break;
             default:
                 $(".base_url, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
