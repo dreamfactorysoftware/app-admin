@@ -93,7 +93,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
         $('#create_button').hide();
         $('#update_button').hide();
         $("#file-manager").show();
-        $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=' + this.app.api_name).show();
+        $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", 'http://' + location.host + '/public/admin/filemanager/?path=/app/' + this.app.api_name + '/&allowroot=false').show();
     };
     Scope.showAppPreview = function () {
         var path = "";
@@ -107,7 +107,6 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
             path = this.app.url;
         }
         $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", path ).show();
-        //$("#file-manager iframe").css('height', $(window).height() - 200).attr("src", 'http://' + location.host + '/public/admin/filemanager/?path=' + name).show();
         $('#create_button').hide();
         $('#update_button').hide();
         $('#file-manager').hide();
