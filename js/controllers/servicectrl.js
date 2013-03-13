@@ -155,11 +155,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $("#swagger, #swagger iframe").hide();
         Scope.service = angular.copy(this.service);
         if (Scope.service.type == "Remote SQL DB") {
-            var cString = JSON.parse(Scope.service.credentials);
-            Scope.service.dsn = cString.dsn;
-            Scope.service.user = cString.user;
-            Scope.service.pwd = cString.pwd;
-
+            if(Scope.service.credentials){
+                var cString = JSON.parse(Scope.service.credentials);
+                Scope.service.dsn = cString.dsn;
+                Scope.service.user = cString.user;
+                Scope.service.pwd = cString.pwd;
+            }
         }
         Scope.action = "Update";
         $('#save_button').hide();
