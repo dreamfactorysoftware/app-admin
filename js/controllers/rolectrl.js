@@ -1,6 +1,6 @@
-var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http, $timeout) {
+var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     Scope = $scope;
-    Scope.role = {users:[], apps:[]};
+    Scope.role = {users:[], apps:[], role_service_accesses:[]};
     Scope.action = "Create new ";
     Scope.actioned = "Created";
     $('#update_button').hide();
@@ -152,7 +152,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http, $timeo
         angular.element(":checkbox").attr('checked',false);
         Scope.action = "Create new";
         Scope.actioned = "Created";
-        Scope.role = {users:[], apps:[]};
+        Scope.role = {users:[], apps:[], role_service_accesses:[]};
         $('#save_button').show();
         $('#update_button').hide();
         $("#alert-container").empty().hide();
