@@ -24,7 +24,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.azure = {};
         Scope.service.is_active=true;
     };
-    $("#swagger, #swagger iframe").hide();
+
 
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     //var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
@@ -306,4 +306,5 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     angular.element(document).ready(function () {
         Scope.promptForNew();
     });
+    $("#swagger, #swagger iframe").hide();
 };
