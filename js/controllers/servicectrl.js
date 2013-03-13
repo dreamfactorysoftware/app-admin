@@ -18,11 +18,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $('#update_button').hide();
         $("tr.info").removeClass('info');
         Scope.service.type = "Remote Web Service";
+        Scope.showFields();
         Scope.service.storage_type = "aws s3";
         Scope.aws = {};
         Scope.azure = {};
     };
-
+    $("#swagger, #swagger iframe").hide();
 
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     //var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
