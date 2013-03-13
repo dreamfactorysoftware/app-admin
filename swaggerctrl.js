@@ -1,5 +1,5 @@
 var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
-
+    $("#swagger, #swagger iframe").css('display', 'none');
     $rootScope.loadSwagger = function (hash) {
         $("#swagger iframe").attr('src', '');
         var appendURL = "";
