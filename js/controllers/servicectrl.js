@@ -7,9 +7,20 @@
  */
 var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope = $scope;
+    Scope.promptForNew = function () {
+        Scope.action = "Create";
+        $('#step1').show();
+        Scope.service = {};
+        Scope.tableData = [];
+        Scope.headerData =[];
+        $("#swagger, #swagger iframe").hide();
+        $('#save_button').show();
+        $('#update_button').hide();
+        $("tr.info").removeClass('info');
+        Scope.service.type = "Remote Web Service";
+    };
 
-    Scope.tableData = [];
-    Scope.headerData = [];
+
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     //var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
@@ -33,7 +44,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.service = {};
     Scope.Services = Service.get();
     Scope.action = "Create";
-    Scope.service.type = "Remote Web Service";
+
     Scope.remoteOptions = [
         {name:"Amazon S3", value:"aws s3"},
         {name:"Windows Azure Storage", value:"azure blob"}
@@ -142,17 +153,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             $("#row_" + id).fadeOut();
         });
     };
-    Scope.promptForNew = function () {
-        Scope.action = "Create";
-        $('#step1').show();
-        Scope.service = {};
-        Scope.tableData = [];
-        Scope.headerData =[];
-        $("#swagger, #swagger iframe").hide();
-        $('#save_button').show();
-        $('#update_button').hide();
-        $("tr.info").removeClass('info');
-    };
+
     Scope.showDetails = function () {
         $('#step1').show();
         $("#swagger, #swagger iframe").hide();
@@ -259,5 +260,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             $("#header-update").click();
         }
     });
-
+    angular.element(document).ready(function(){
+        Scope.promptForNew();
+    });
 };
