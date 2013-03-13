@@ -74,10 +74,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
     Scope.save = function () {
         if (Scope.service.type == "Remote SQL DB") {
-            if (Scope.service.credentials) {
-                Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
-                Scope.service.credentials = JSON.stringify(Scope.service.credentials);
-            }
+            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+
         }
         if (Scope.service.type == "Remote File Storage") {
             switch (Scope.service.storage_type) {
@@ -88,7 +87,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
                     break;
             }
-
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
@@ -184,7 +183,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.service = angular.copy(this.service);
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {
-                var cString = JSON.parse(Scope.service.credentials);
+                var cString = Scope.service.credentials;
                 Scope.service.dsn = cString.dsn;
                 Scope.service.user = cString.user;
                 Scope.service.pwd = cString.pwd;
