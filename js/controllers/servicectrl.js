@@ -22,6 +22,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.service.storage_type = "aws s3";
         Scope.aws = {};
         Scope.azure = {};
+        Scope.service.is_active=true;
     };
     $("#swagger, #swagger iframe").hide();
 

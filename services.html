@@ -130,7 +130,7 @@
                             <input ng-model="service.native_format" type="text"/>
                         </div>
                         <div class="section">
-                            <input ng-disabled = "service.is_system" ng-checked="service.is_active" type="checkbox" ng-model="service.is_active"/>&nbsp;Active
+                            <input ng-checked="service.is_active" type="checkbox" ng-model="service.is_active"/>&nbsp;Active
                         </div>
                         <div id="button_holder">
                             <a id="save_button" ng-click="create()" class="btn btn-primary">
