@@ -19,6 +19,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $("tr.info").removeClass('info');
         Scope.service.type = "Remote Web Service";
         Scope.service.storage_type = "aws s3";
+        Scope.aws = {};
+        Scope.azure = {};
     };
 
 
@@ -115,7 +117,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
                     break;
             }
-
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
         Service.save(Scope.service, function (data) {
             Scope.Services.record.push(data);
@@ -186,6 +188,24 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 Scope.service.dsn = cString.dsn;
                 Scope.service.user = cString.user;
                 Scope.service.pwd = cString.pwd;
+            }
+        }
+        if (Scope.service.type == "Remote File Storage") {
+            Scope.aws = {};
+            Scope.azure = {};
+            if (Scope.service.credentials) {
+                var fString = Scope.service.credentials;
+                switch (Scope.service.storage_type) {
+                    case "aws s3":
+                        Scope.aws.access_key = fString.access_key;
+                        Scope.aws.secret_key = fString.secret_key;
+                        Scope.aws.bucket_name = fString.bucket_name;
+                        break;
+                    case "azure blob":
+                        Scope.azure.account_name = fString.account_name;
+                        Scope.azure.account_key = fString.account_key;
+                        break;
+                }
             }
         }
         Scope.action = "Update";
