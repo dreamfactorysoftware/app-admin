@@ -1,4 +1,4 @@
-var SwaggerCtrl = function ($rootScope, $timeout) {
+var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
     $rootScope.loadSwagger = function (hash) {
         $("#swagger iframe").attr('src', '');
@@ -18,5 +18,7 @@ var SwaggerCtrl = function ($rootScope, $timeout) {
             $("#swagger iframe").css('height', $(window).height()).css('width', '100%');
         });
     }
-    $("#swagger").show();
+    if(!$scope.action){
+        $("#swagger").show();
+    }
 };
