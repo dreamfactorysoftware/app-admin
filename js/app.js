@@ -118,10 +118,9 @@ var showFileManager = function(){
 };
 $(document).ready(function () {
     $('#app-container').css('height', ($(window).height()-44));
-    // $('#grid-table').css('max-height', ($(window).height()-56)).css('height', ($(window).height()-56));
 
     $(window).resize(function () {
         $('#app-container').css('height', ($(window).height()-44));
-        // $('#grid-table').css('max-height', ($(window).height()-56)).css('height', ($(window).height()-56));
+        $('#grid-table').css('max-height', ($(window).height()-15)).css('height', ($(window).height()-15));
     });
 });
