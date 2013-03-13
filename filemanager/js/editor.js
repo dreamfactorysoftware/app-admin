@@ -7,7 +7,7 @@
 EditorActions = {
     getFile : function(){
         $.ajax({
-            url:'http://' + location.host + '/rest' + EditorActions.getQueryParameter('path'),
+            url:CurrentServer + '/rest' + EditorActions.getQueryParameter('path'),
             data:'app_name=admin&method=GET',
             cache:false,
             processData: false,
@@ -30,7 +30,7 @@ EditorActions = {
     },
     saveFile:function(){
         $.ajax({
-            url:'http://' + location.host + '/rest' + EditorActions.getQueryParameter('path') + '?&app_name=admin',
+            url:CurrentServer + '/rest' + EditorActions.getQueryParameter('path') + '?&app_name=admin',
             data: Editor.getValue(),
             type:'MERGE',
             processData: false,

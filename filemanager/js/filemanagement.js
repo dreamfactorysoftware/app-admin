@@ -202,7 +202,7 @@ function buildListingUI(json) {
             if(type == 'folder') {
                 loadFolder(target);
             } else {
-                window.location.href = 'http://' + location.host + '/rest' + target +"?app_name=admin&download=true";
+                window.location.href = CurrentServer + '/rest' + target +"?app_name=admin&download=true";
             }
         });
 
@@ -270,7 +270,7 @@ function loadFolder(path) {
 
     $.ajax({
         dataType:'json',
-        url:'http://' + location.host + '/rest' + path,
+        url:CurrentServer + '/rest' + path,
         data:'app_name=admin&method=GET',
         cache:false,
         success:function (response) {
@@ -318,7 +318,7 @@ function createFile(target, file) {
         },
         dataType:'json',
         type :'POST',
-        url:'http://' + location.host + '/rest' + target + '?app_name=admin' + extra,
+        url:CurrentServer + '/rest' + target + '?app_name=admin' + extra,
         data: data,
         cache:false,
         processData: false,
@@ -340,7 +340,7 @@ function createFolder(target, name) {
         },
         dataType:'json',
         type :'POST',
-        url:'http://' + location.host + '/rest' + target + '?app_name=admin',
+        url:CurrentServer + '/rest' + target + '?app_name=admin',
         data: '',
         cache:false,
         processData: false,
@@ -380,7 +380,7 @@ function deleteSelected() {
             $.ajax({
                 dataType:'json',
                 type : 'POST',
-                url:'http://' + location.host + '/rest' + currentpath + '?app_name=admin&method=DELETE&force=true',
+                url:CurrentServer + '/rest' + currentpath + '?app_name=admin&method=DELETE&force=true',
                 data: data,
                 cache:false,
                 processData: false,
@@ -508,7 +508,7 @@ function importFile() {
             $.ajax({
                 dataType:'json',
                 type :'POST',
-                url:'http://' + location.host + "/rest" + currentpath + "?" + params,
+                url:CurrentServer + "/rest" + currentpath + "?" + params,
                 data: '',
                 cache:false,
                 processData: false,
