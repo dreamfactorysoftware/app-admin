@@ -102,6 +102,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
     };
     Scope.create = function () {
+        Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {
