@@ -12,12 +12,13 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $('#step1').show();
         Scope.service = {};
         Scope.tableData = [];
-        Scope.headerData =[];
+        Scope.headerData = [];
         $("#swagger, #swagger iframe").hide();
         $('#save_button').show();
         $('#update_button').hide();
         $("tr.info").removeClass('info');
         Scope.service.type = "Remote Web Service";
+        Scope.service.storage_type = "aws s3";
     };
 
 
@@ -49,7 +50,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Amazon S3", value:"aws s3"},
         {name:"Windows Azure Storage", value:"azure blob"}
     ];
-    Scope.service.storage_type="aws s3";
+    Scope.service.storage_type = "aws s3";
     Scope.serviceOptions = [
         {name:"Remote Web Service"},
         {name:"Local SQL DB"},
@@ -71,10 +72,21 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
     Scope.save = function () {
         if (Scope.service.type == "Remote SQL DB") {
-            if(Scope.service.credentials){
+            if (Scope.service.credentials) {
                 Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
                 Scope.service.credentials = JSON.stringify(Scope.service.credentials);
             }
+        }
+        if (Scope.service.type == "Remote File Storage") {
+            switch (Scope.service.storage_type) {
+                case "aws s3":
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    break;
+                case "azure blob":
+                    Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
+                    break;
+            }
+
         }
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
@@ -89,9 +101,19 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.create = function () {
         Scope.service.headers = Scope.headerData;
         if (Scope.service.type == "Remote SQL DB") {
-            if(Scope.service.credentials){
+            if (Scope.service.credentials) {
                 Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
                 Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+            }
+        }
+        if (Scope.service.type == "Remote File Storage") {
+            switch (Scope.service.storage_type) {
+                case "aws s3":
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    break;
+                case "azure blob":
+                    Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
+                    break;
             }
 
         }
@@ -159,7 +181,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $("#swagger, #swagger iframe").hide();
         Scope.service = angular.copy(this.service);
         if (Scope.service.type == "Remote SQL DB") {
-            if(Scope.service.credentials){
+            if (Scope.service.credentials) {
                 var cString = JSON.parse(Scope.service.credentials);
                 Scope.service.dsn = cString.dsn;
                 Scope.service.user = cString.user;
@@ -260,7 +282,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             $("#header-update").click();
         }
     });
-    angular.element(document).ready(function(){
+    angular.element(document).ready(function () {
         Scope.promptForNew();
     });
 };

@@ -1665,3 +1665,9 @@ html, body, #container{
     line-height: 1;
     height:1px;
 }
+.sub-section{
+    background-color: #DDDDDD;
+    border: 1px solid #BBBBBB;
+    margin-left: 15px;
+    padding: 5px;
+}
