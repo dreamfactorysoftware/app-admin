@@ -60,9 +60,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
     Scope.save = function () {
         if (Scope.service.type == "Remote SQL DB") {
-            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
-            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
-
+            if(Scope.service.credentials){
+                Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
+                Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+            }
         }
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
@@ -77,8 +78,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.create = function () {
         Scope.service.headers = Scope.headerData;
         if (Scope.service.type == "Remote SQL DB") {
-            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
-            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+            if(Scope.service.credentials){
+                Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
+                Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+            }
 
         }
         Service.save(Scope.service, function (data) {
