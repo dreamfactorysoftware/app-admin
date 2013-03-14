@@ -1,4 +1,4 @@
-var AppCtrl = function ($scope, AppsRelated, Role, $location) {
+var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
 
     $('#alert_container').empty();
     Scope = $scope;
@@ -26,12 +26,18 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
         $('#create_button').show();
         $('#update_button').hide();
         $("tr.info").removeClass('info');
+        $(window).scrollTop(0);
     };
     Scope.save = function () {
 
         var id = Scope.app.id;
         AppsRelated.update({id:id}, Scope.app, function () {
+            Scope.promptForNew();
             window.top.Actions.updateSession();
+            $timeout(function(){
+                window.top.Actions.showStatus("Updated Successfully");
+            },1000);
+
 
         });
     };
@@ -45,6 +51,9 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
                 //Scope.app.id = data.id;
                 //Scope.app = data;
                 window.top.Actions.updateSession();
+                $timeout(function(){
+                    window.top.Actions.showStatus("Created Successfully");
+                },1000);
                 Scope.showAppPreview();
             },
             function(response){
@@ -73,6 +82,10 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
         AppsRelated.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
             window.top.Actions.updateSession();
+            $timeout(function(){
+                window.top.Actions.showStatus("Deleted Successfully");
+            },1000);
+            Scope.promptForNew();
         });
     };
     Scope.postFile = function(target){
@@ -158,5 +171,5 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location) {
     Scope.reload = function(){
         Scope.Apps = AppsRelated.get();
     }
-
+    $(window).resize();
 };
