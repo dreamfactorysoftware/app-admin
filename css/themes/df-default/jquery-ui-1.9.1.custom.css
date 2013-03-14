@@ -170,6 +170,11 @@ body {
 	top: -5px;
 }
 
+.fmToolbarPlus3 {
+    position: relative;
+    top: 3px;
+}
+
 .editor {
 	
 }

@@ -22,14 +22,34 @@ $(document).ready(function() {
     });
 
     $("#mkdir").click(function() {
+        if ($(this).hasClass("disabled")) {
+            return false;
+        }
         var name = prompt("Enter name for new folder");
         if(name) {
             createFolder(currentpath, name);
         }
     });
 
+    $("#importfile").click(function() {
+        if ($(this).hasClass("disabled")) {
+            return false;
+        }
+        $('#fileModal').modal('toggle');
+    });
+
+    $("#exportzip").click(function() {
+        if ($(this).hasClass("disabled")) {
+            return false;
+        }
+        $("#fileIframe").attr("src","/rest" + currentpath + "?zip=true&app_name=admin");
+    });
+
     $("#rm").click(function() {
 
+        if ($(this).hasClass("disabled")) {
+            return false;
+        }
         deleteSelected();
     });
 
@@ -40,16 +60,16 @@ $(document).ready(function() {
         $('#dndPanel').show();
     });
 
-    $("#exportzip").click(function() {
-        $("#fileIframe").attr("src","/rest" + currentpath + "?zip=true&app_name=admin");
-    });
-
     $("#importExtract").click(function() {
         if ($(this).prop("checked")) {
             $("#importReplace").removeAttr("disabled");
         } else {
             $("#importReplace").attr("disabled", "disabled");
         }
+    });
+
+    $("#home").click(function() {
+        loadRootFolder();
     });
 
     loadRootFolder();
@@ -59,25 +79,31 @@ $(document).ready(function() {
 
 function printLocation(path) {
 
-    var text = '';
-    var allowroot = CommonUtilities.getQueryParameter('allowroot')
+
+    var display = '';
     if (path && path != '') {
         var builder = '/';
+        display = '/';
+        var allowroot = CommonUtilities.getQueryParameter('allowroot');
         var tmp = path.split('/');
         for(var i in tmp) {
             if (tmp[i].length > 0) {
-                if (builder == '/' && tmp[i] == 'app') {
+                if (builder == '/') {
                     if (allowroot == 'false') {
                         builder += tmp[i]+'/';
                         continue;
                     }
                 }
                 builder += tmp[i]+'/';
-                text += '/<a href="javascript: loadFolder(\''+builder+'\')">'+tmp[i]+'</a>';
+                display += '<a href="javascript: loadFolder(\''+builder+'\')">'+tmp[i]+'</a>/';
             }
         }
     }
-    $('#breadcrumbs').html(text);
+    // remove trailing slashes
+    if (display != '/') {
+        display = display.replace(/\/+$/, "");
+    }
+    $('#breadcrumbs').html(display);
 }
 
 function getIcon(file) {
@@ -141,18 +167,36 @@ function buildFolderControl(path) {
     return '<a href="#" class="btn btn-small fmSquareButton cRight folder_open" data-path="' + path + '"><i class="icon-folder-open"></i></a>';
 }
 
-function buildListingUI(json) {
+function buildListingUI(json, svc) {
 
     var html = '';
     if (json.folder) {
         for (var i in json.folder) {
-            var ctrl = buildFolderControl('/app/' + json.folder[i].path);
-            html += buildItem('/app/' + json.folder[i].path, 'gfx/folder-horizontal-open.png', json.folder[i].name, 'folder',ctrl);
+            var name = json.folder[i].name;
+            if (name != '.') {
+                var path = json.folder[i].path;
+                if (svc != '') {
+                    path = svc + '/' + path;
+                }
+                path = '/' + path;
+                var ctrl = buildFolderControl(path);
+                if (currentpath == '/') {
+                    var icon = 'gfx/service.png';
+                } else {
+                    var icon = 'gfx/folder-horizontal-open.png';
+                }
+                html += buildItem(path, icon, name, 'folder',ctrl);
+            }
         }
     }
     if (json.file) {
         for(var i in json.file) {
-            var editor = buildEditor(json.file[i].contentType,'/app/' + json.file[i].path);
+            var path = json.file[i].path;
+            if (svc != '') {
+                path = svc + '/' + path;
+            }
+            path = '/' + path;
+            var editor = buildEditor(json.file[i].contentType, path);
             var extra = '<div class="cLeft cW5">&nbsp;</div>';
             if(json.file[i].lastModified) {
                 extra += '<div class="cLeft cW20 fm_label">'+json.file[i].lastModified+'</div>';
@@ -163,7 +207,7 @@ function buildListingUI(json) {
             if(json.file[i].size) {
                 extra += '<div class="cLeft cW10 fm_label">'+json.file[i].size+' bytes</div>';
             }
-            html += buildItem('/app/' + json.file[i].path,getIcon(json.file[i]),json.file[i].name,'file', editor, extra);
+            html += buildItem(path,getIcon(json.file[i]),json.file[i].name,'file', editor, extra);
         }
     }
     $('#listing').html(html);
@@ -196,6 +240,7 @@ function buildListingUI(json) {
             t.addClass('highlighted');
         }
         document.getSelection().removeAllRanges();
+        updateButtons();
     }).dblclick(function(){
             var target = $(this).data('target');
             var type = $(this).data('type');
@@ -207,6 +252,24 @@ function buildListingUI(json) {
         });
 
     $('.fmObject').bind('dragover',handleDragOver).bind('drop',handleFileSelect);
+}
+
+function updateButtons() {
+
+    if (currentpath == '/' || currentpath == '/app/') {
+        $('#mkdir').addClass("disabled");
+        $('#importfile').addClass("disabled");
+        $('#exportzip').addClass("disabled");
+    } else {
+        $('#mkdir').removeClass("disabled");
+        $('#importfile').removeClass("disabled");
+        $('#exportzip').removeClass("disabled");
+    }
+    if (currentpath == '/'  || currentpath == '/app/' || countSelectedItems() == 0) {
+        $('#rm').addClass("disabled");
+    } else {
+        $('#rm').removeClass("disabled");
+    }
 }
 
 // drag and drop
@@ -233,6 +296,10 @@ function handleFileSelect(evt) {
     var type = $(e.currentTarget).data('type');
     if(target == '') {
         target = currentpath;
+    }
+    if (target == '/' || target == '/app/') {
+        alert("This location is not writable.");
+        return;
     }
     var dropFiles = e.dataTransfer.files;
     if (dropFiles === undefined) {
@@ -268,21 +335,48 @@ function reloadFolder() {
 
 function loadFolder(path) {
 
-    $.ajax({
-        dataType:'json',
-        url:CurrentServer + '/rest' + path,
-        data:'app_name=admin&method=GET',
-        cache:false,
-        success:function (response) {
-            try {document.getSelection().removeAllRanges();} catch(e) {/* silent! */};
-            currentpath = path;
-            printLocation(path);
-            buildListingUI(response);
-        },
-        error:function (response) {
-            alertErr(response);
-        }
-    });
+    if (path == '/') {
+        $.ajax({
+            dataType:'json',
+            url:CurrentServer + '/rest/system/service',
+            data:"app_name=admin&method=GET&fields=api_name&filter=" + escape("type='Local File Storage' or type='Remote File Storage'"),
+            cache:false,
+            success:function (response) {
+                try {document.getSelection().removeAllRanges();} catch(e) {/* silent! */};
+                currentpath = path;
+                printLocation(path);
+                var json = {"folder":[],"file":[]};
+                if (response.record) {
+                    for (var i in response.record) {
+                        json.folder.push({"name":response.record[i].api_name, "path":response.record[i].api_name + '/'});
+                    }
+                }
+                buildListingUI(json, '');
+                updateButtons();
+            },
+            error:function (response) {
+                alertErr(response);
+            }
+        });
+    } else {
+        $.ajax({
+            dataType:'json',
+            url:CurrentServer + '/rest' + path,
+            data:'app_name=admin&method=GET',
+            cache:false,
+            success:function (response) {
+                try {document.getSelection().removeAllRanges();} catch(e) {/* silent! */};
+                currentpath = path;
+                printLocation(path);
+                var tmp = path.split('/');
+                buildListingUI(response, tmp[1]);
+                updateButtons();
+            },
+            error:function (response) {
+                alertErr(response);
+            }
+        });
+    }
 }
 
 function createFile(target, file) {
@@ -415,8 +509,9 @@ function getSelectedItems() {
     var files = [];
     $('.highlighted').each(function() {
         var target = $(this).data('target');
-        // remove /app/
-        target = target.substring(5);
+        // remove /app/, /doc/, etc.
+        var tmp = target.split('/');
+        target = target.substring(2 + tmp[1].length);
         if ($(this).data('type') == 'folder') {
             folders[folders.length] = {path:target};
         } else {
@@ -427,6 +522,21 @@ function getSelectedItems() {
         "folder": folders,
         "file": files
     };
+}
+
+function countSelectedItems() {
+
+    var total = 0;
+    var sel = getSelectedItems();
+    var folders = sel.folder;
+    var files = sel.file;
+    if (folders) {
+        total += folders.length;
+    }
+    if (files) {
+        total += files.length;
+    }
+    return total;
 }
 
 // misc
