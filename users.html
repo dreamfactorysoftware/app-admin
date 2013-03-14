@@ -76,8 +76,8 @@
                                 <p>Assign a Role</p>
 
                                 <div>
-                                    <select ng-selected = "user.role_id == role.id" id="role_select" ng-model="user.role_id" ng-options="role.id as role.name for role in Roles.record">
-                                        <option  value="">Unassigned</option>
+                                    <select ng-disabled="user.is_sys_admin" ng-model="user.role_id">
+                                        <option ng-selected = "user.role_id == role.id" ng-repeat="role in Roles.record" value="{{role.id}}">{{role.name}}</option>
                                     </select>
 
                                 </div>
