@@ -124,7 +124,8 @@
                                         <td>
                                             <select style="width:140px;" ng-init="loadIndComponents()"
                                                     ng-change="loadIndComponents();editServiceAccess()" ng-model="service_access.service_id"
-                                                    ng-options="option.id as option.name for option in Services.record">
+                                                    >
+                                                <option ng-selected="service_access.service_id == service.id" ng-repeat="service in Services.record" value="{{service.id}}">{{service.name}}</option>
                                             </select>
                                             <select style="width:140px;" ng-change="editServiceAccess();" ng-model="service_access.component"
                                                     ng-options="component.name as component.label for component in components">
