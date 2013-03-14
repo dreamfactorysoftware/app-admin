@@ -14,7 +14,10 @@ var UserCtrl = function ($scope, User, Role) {
             delete this.user.password;
         }
         var id = Scope.user.id;
-        User.update({id:id}, Scope.user);
+        User.update({id:id}, Scope.user, function(){
+            Scope.promptForNew();
+            window.top.Actions.showStatus("Updated Successfully");
+        });
     };
     Scope.create = function () {
         var newRec = this.user;
@@ -26,7 +29,9 @@ var UserCtrl = function ($scope, User, Role) {
         }
 
         User.save(newRec, function(data){
+            Scope.promptForNew();
             Scope.Users.record.push(data);
+            window.top.Actions.showStatus("Created Successfully");
         });
 
 
@@ -42,6 +47,7 @@ var UserCtrl = function ($scope, User, Role) {
         $('#passwordRepeat').val('');
         Scope.userform.$setPristine();
         $("tr.info").removeClass('info');
+        $(window).scrollTop(0);
     };
     Scope.delete = function () {
         var which = this.user.display_name;
@@ -55,7 +61,9 @@ var UserCtrl = function ($scope, User, Role) {
         }
         var id = this.user.id;
         User.delete({ id:id }, function () {
+            Scope.promptForNew();
             $("#row_" + id).fadeOut();
+            window.top.Actions.showStatus("Deleted Successfully");
         });
     };
     Scope.showDetails = function(){
