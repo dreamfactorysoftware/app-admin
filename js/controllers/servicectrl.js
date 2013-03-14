@@ -23,6 +23,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.aws = {};
         Scope.azure = {};
         Scope.service.is_active=true;
+        $(window).scrollTop(0);
     };
 
 
@@ -96,6 +97,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         var id = Scope.service.id;
         Service.update({id:id}, Scope.service, function (data) {
             updateByAttr(Scope.Services.record, 'id', id, data)
+            Scope.promptForNew();
+            window.top.Actions.showStatus("Updated Successfully");
         }, function (data) {
             alert(data.error[0].message);
         });
@@ -122,6 +125,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
         Service.save(Scope.service, function (data) {
+            Scope.promptForNew();
+            window.top.Actions.showStatus("Created Successfully");
             Scope.Services.record.push(data);
         });
     };
@@ -176,6 +181,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         var api_name = this.service.api_name;
 
         Service.delete({ id:id }, function () {
+            Scope.promptForNew();
+            window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + id).fadeOut();
         });
     };

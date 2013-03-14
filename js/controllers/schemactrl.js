@@ -81,6 +81,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         $("#grid-container").hide();
         $("#create-form").show();
         $("tr.info").removeClass('info');
+        $(window).scrollTop(0);
     }
     Scope.newTable = {};
     Scope.newTable.table = {};
@@ -98,6 +99,8 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     Scope.create = function () {
         Schema.save(Scope.newTable, function (data) {
             //Scope.schemaData.push(data.table);
+            Scope.showForm();
+            window.top.Actions.showStatus("Created Successfully");
             Scope.schemaData.push(Scope.newTable.table);
         });
     };
@@ -113,6 +116,8 @@ var SchemaCtrl = function ($scope, Schema, DB) {
             return;
         }
         Schema.delete({ name:name }, function () {
+            Scope.showForm();
+            window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + name).fadeOut();
         });
     };

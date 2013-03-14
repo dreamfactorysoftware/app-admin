@@ -38,8 +38,8 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         var id = this.role.id;
         RolesRelated.update({id:id}, Scope.role, function () {
             updateByAttr(Scope.Roles.record, 'id', id, Scope.role);
-            $("#success-container").html('Role successfully ' + Scope.actioned).show();
             Scope.promptForNew();
+            window.top.Actions.showStatus("Updated Successfully");
         }, function (response) {
             $("#alert-container").html(response.data.error[0].message).show();
         });
@@ -47,7 +47,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     Scope.create = function () {
         RolesRelated.save(Scope.role, function (data) {
             Scope.Roles.record.push(data);
-            $("#success-container").html('Role successfully ' + Scope.actioned).show();
+            window.top.Actions.showStatus("Created Successfully");
             Scope.promptForNew();
 
         }, function (response) {
@@ -144,6 +144,8 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         }
         var id = this.role.id;
         RolesRelated.delete({ id:id }, function () {
+            Scope.promptForNew();
+            window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + id).fadeOut();
         });
         Scope.promptForNew();
@@ -157,6 +159,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $('#update_button').hide();
         $("#alert-container").empty().hide();
         $("tr.info").removeClass('info');
+        $(window).scrollTop(0);
     };
     $scope.showDetails = function () {
         //angular.element(":checkbox").attr('checked',false);
