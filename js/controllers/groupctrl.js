@@ -15,14 +15,19 @@ var GroupCtrl = function ($scope, Group, App) {
 
     Scope.save = function () {
 
-            var id = Scope.group.id;
-            Group.update({id:id}, Scope.group);
+        var id = Scope.group.id;
+        Group.update({id:id}, Scope.group, function(){
+            Scope.promptForNew();
+            window.top.Actions.showStatus("Updated Successfully");
+        });
 
     };
     Scope.create = function () {
 
         Group.save(Scope.group, function(data){
             Scope.Groups.record.push(data);
+            Scope.promptForNew();
+            window.top.Actions.showStatus("Created Successfully");
         });
     };
     Scope.isAppInGroup = function(){
@@ -60,6 +65,8 @@ var GroupCtrl = function ($scope, Group, App) {
         }
         var id = this.group.id;
         Group.delete({ id:id }, function () {
+            Scope.promptForNew();
+            window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + id).fadeOut();
         });
     };
@@ -69,6 +76,7 @@ var GroupCtrl = function ($scope, Group, App) {
         $('#save_button').show();
         $('#update_button').hide();
         $("tr.info").removeClass('info');
+        $(window).scrollTop(0);
     };
     Scope.showDetails = function(){
         Scope.action = "Update";
@@ -78,5 +86,5 @@ var GroupCtrl = function ($scope, Group, App) {
         $("tr.info").removeClass('info');
         $('#row_' + Scope.group.id).addClass('info');
     }
-   
+
 };
