@@ -15,6 +15,7 @@ var UserCtrl = function ($scope, User, Role) {
         }
         var id = Scope.user.id;
         User.update({id:id}, Scope.user, function(){
+            updateByAttr(Scope.Users.record, 'id', id, Scope.user);
             Scope.promptForNew();
             window.top.Actions.showStatus("Updated Successfully");
         });
