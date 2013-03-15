@@ -107,7 +107,15 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     };
 
     Scope.removeAccess = function () {
-        Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
+        var rows = Scope.role.role_service_accesses;
+        var row = this.service_access;
+        angular.forEach(rows, function(access, index){
+            if(access.service_id === row.service_id && access.component == row.component){
+                // console.log(index);
+                rows.splice(index, 1);
+            }
+        })
+        //Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
     };
 
     Scope.addServiceAccess = function () {
