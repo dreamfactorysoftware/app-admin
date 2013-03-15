@@ -18,7 +18,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     };
     Scope.promptForNew = function () {
         Scope.action = "Create";
-        Scope.app = {roles:[]};
+        Scope.app = {is_url_external:'0',roles:[]};
         $('#context-root').show();
         $('#file-manager').hide();
         $('#app-preview').hide();
