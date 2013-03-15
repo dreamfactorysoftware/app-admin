@@ -32,6 +32,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
 
         var id = Scope.app.id;
         AppsRelated.update({id:id}, Scope.app, function () {
+            updateByAttr(Scope.Apps.record, 'id', id, Scope.app);
             Scope.promptForNew();
             window.top.Actions.updateSession();
             $timeout(function(){
