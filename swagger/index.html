@@ -31,10 +31,12 @@ DreamFactory LIVE API Documentation , built with Swagger.
     $(function () {
         window.swaggerUi = new SwaggerUi({
             discoveryUrl:location.protocol + "//" + location.host + "/rest/",
-            apiKey:"swagger",
+            apiKeyName:"swagger_app_name",
+            apiKey:"admin",
             dom_id:"swagger-ui-container",
-            supportHeaderParams: false,
-            supportedSubmitMethods: ['get', 'post', 'put'],
+            supportHeaderParams: true,
+            headers: { "X-Application-Name": "admin" },
+            supportedSubmitMethods: ['get', 'post', 'put', 'merge', 'delete'],
             onComplete: function(swaggerApi, swaggerUi){
                 if(console) {
                     console.log("Loaded SwaggerUI")
@@ -54,6 +56,7 @@ DreamFactory LIVE API Documentation , built with Swagger.
 
         window.swaggerUi.load();
     });
+
 
 </script>
 </body>
