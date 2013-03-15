@@ -597,7 +597,6 @@ function getFileName() {
 
 function importFile() {
 
-    // set format to xml so IE does not ask to open/save file
     var params = 'app_name=admin';
     var filename = getFileName();
     if (filename == '') {
@@ -632,8 +631,6 @@ function importFile() {
             });
             break;
         case 'File':
-            // set format to xml so IE does not ask to open/save file
-            params += '&format=xml';
             $("#fileImportForm").attr("action","/rest" + currentpath + "?" + params);
             $("#fileImportForm").submit();
             break;
@@ -644,7 +641,13 @@ function checkResults(iframe) {
 
     var str = $(iframe).contents().text();
     if(str && str.length > 0) {
-        reloadFolder();
-        $('#fileModal').modal('toggle');
+        if (isErrorString(str)) {
+            var response = {};
+            response.responseText = str;
+            alertErr(response);
+        } else {
+            reloadFolder();
+            $('#fileModal').modal('toggle');
+        }
     }
 }
