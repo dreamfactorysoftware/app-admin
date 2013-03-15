@@ -24,7 +24,6 @@ var FileCtrl = function ($scope, $location, $timeout) {
 function checkResults(iframe) {
 
     var str = $(iframe).contents().text();
-    console.log("checkResults=" + str);
     if(str && str.length > 0) {
         if (isErrorString(str)) {
             var response = {};
