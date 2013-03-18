@@ -73,11 +73,14 @@
                                 </div>
                             </div>
                             <div class="section">
-                                Apps Assigned to this Role.
+                                Apps Assigned to this Role.&nbsp;&nbsp;&nbsp;<a><i class="icon-star"></i></a> = Set this app to auto load when users of this role log in.
                                 <div class="limit-list">
                                     <table class="table table-hover table-striped table-bordered">
 
                                         <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
+                                            <td><a style="color:#b3b3b3" ng-click="makeDefault()" ng-show="app.id != role.default_app_id"><i class="icon-star"></i></a>
+                                                <a ng-click="clearDefault()" ng-show="app.id == role.default_app_id"><i class="icon-star"></i></a>
+                                            </td>
                                             <td><input ng-model="app.inRole"
                                                        ng-change="addAppToRole()"
                                                        ng-checked="isAppInRole()" type="checkbox"/></td>

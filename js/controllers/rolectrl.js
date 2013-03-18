@@ -199,5 +199,10 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         $("tr.info").removeClass('info');
         $('#row_' + Scope.role.id).addClass('info');
     }
-
+    $scope.makeDefault = function(){
+        Scope.role.default_app_id = this.app.id;
+    };
+    $scope.clearDefault = function(){
+        Scope.role.default_app_id = null;
+    };
 };
