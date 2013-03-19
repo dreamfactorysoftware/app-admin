@@ -1,88 +1,97 @@
 <table style="width:100%" ng-controller="GroupCtrl">
-    <tr>
-        <td id="item-list">
-            <div id="grid-table" class="well" >
-                <table id="app-list" class="table table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
+	<tr>
+		<td id="item-list">
+			<div id="grid-table" class="well">
+				<table id="app-list" class="table table-hover table-striped">
+					<thead>
+						<tr>
+							<th>Name</th>
 
-                        <th class="no-border"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
+							<th class="no-border"></th>
+						</tr>
+					</thead>
+					<tbody>
 
-                    <tr ng-repeat="group in Groups.record" id="row_{{group.id}}">
-                        <td ng-click="showDetails()">{{group.name}}</td>
-                        <td class="no-border">
-                            <div class="btn-group">
-                                <a class="btn btn-small btn-inverse" ><i class="icon-edit"></i></a>
-                                <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
-                            </div>
-                        </td>
-                    </tr>
+						<tr ng-repeat="group in Groups.record" id="row_{{group.id}}">
+							<td ng-click="showDetails()">{{group.name}}</td>
+							<td class="no-border">
+								<div class="btn-group">
+									<a class="btn btn-small btn-inverse"><i class="icon-edit"></i></a> <a class="btn btn-small btn-inverse"
+																										  ng-click="delete()"><i
+									class="icon-trash"></i></a>
+								</div>
+							</td>
+						</tr>
 
-                    </tbody>
-                </table>
-            </div>
-        </td>
-        <td>&nbsp;</td>
-        <td id="app-details" class="well">
-            <div>
-                <div class="detail-view"></div>
-                <div class="navbar">
-                    <div class="navbar-inner"><div class="brand">Application Groups</div>
-                        <div class="btn-group pull-right">
-                            <a ng-click="promptForNew()" class="btn btn-small">
-                                <li class="icon-plus-sign-alt"></li>
-                                Create New Group</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="add_new">
-                    <h5 class="text-info">{{action}} group</h5>
+					</tbody>
+				</table>
+			</div>
+		</td>
 
-                    <div id="step1">
-                        <div class="section">
-                            <p>Name</p>
-                            <input ng-model="group.name" type="text"/>
-                        </div>
+		<td>&nbsp;</td>
 
-                        <div class="section">
-                            <p>Description</p>
-                            <input ng-model="group.description" type="text"/>
-                        </div>
-                        <div class="section">
-                            Assign Apps to this group.
-                            <div class="well">
-                                <table  class="table table-hover table-striped table-bordered">
+		<td id="app-details" class="well item-details">
+			<div>
+				<div class="detail-view"></div>
+				<div class="navbar">
+					<div class="navbar-inner">
+						<div class="brand">Application Groups</div>
+						<div class="btn-group pull-right">
+							<a ng-click="promptForNew()" class="btn btn-small"><i class="icon-plus-sign-alt"></i> New Group</a>
+						</div>
+					</div>
+				</div>
+				<div class="add_new">
+					<h5 class="text-info">{{action}} a Group</h5>
 
-                                    <tbody>
+					<div id="step1">
+						<div class="section">
+							<p>Name</p>
 
-                                    <tr ng-repeat="app in Apps.record" id="row_{{app..id}}">
-                                        <td><input ng-click="addAppToGroup($event.target.checked)" name="add_to_group" ng-checked = "isAppInGroup()"type="checkbox"/></td><td>{{app.name}}</td><td style="width:100%">{{app.description}}</td>
-                                    </tr>
+							<input ng-model="group.name" type="text" />
+						</div>
 
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+						<div class="section">
+							<p>Description</p>
 
-                        <div id="button_holder">
-                            <a id="save_button" ng-click="create()" class="btn btn-primary">
-                                <li class="icon-save"></li>
-                                &nbsp;Save</a>
-                            <a id="update_button" ng-click="save()" class="btn btn-primary">
-                                <li class="icon-save"></li>
-                                &nbsp;Update</a>
-                        </div>
+							<input ng-model="group.description" type="text" />
+						</div>
+						<div class="section">
+							Assign Apps to this group.
+							<div class="well">
+								<table class="table table-hover table-striped table-bordered">
 
-                    </div>
+									<tbody>
 
-                </div>
-            </div>
+										<tr ng-repeat="app in Apps.record" id="row_{{app..id}}">
+											<td>
+												<input ng-click="addAppToGroup($event.target.checked)" name="add_to_group" ng-checked="isAppInGroup()"
+													   type="checkbox" />
+											</td>
+											<td>{{app.name}}</td>
+											<td style="width:100%">{{app.description}}</td>
+										</tr>
 
-        </td>
-    </tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div id="button_holder">
+							<a id="save_button" ng-click="create()" class="btn btn-primary">
+								<li class="icon-save"></li>
+								&nbsp;Save</a> <a id="update_button" ng-click="save()" class="btn btn-primary">
+							<li class="icon-save"></li>
+							&nbsp;Update</a>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</td>
+
+	</tr>
 </table>
 
