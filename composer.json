@@ -1,1 +1,24 @@
-{"name":"dreamfactory/app-admin","description":"DreamFactory Web-Core Library","authors":[{"name":"Jason Sykes","email":"jasonsykes@dreamfactory.com"}],"minimum-stability":"dev"}
+{
+	"name":              "dreamfactory/app-admin",
+	"description":       "DreamFactory Services Platform(tm) Core Web Library",
+	"version":           "1.0.0-RC1",
+	"type":              "library",
+	"keywords":          ["dreamfactory", "dsp", "cloud", "admin", "app"],
+	"homepage":          "http://dreamfactorybeta.com/",
+	"license":           ["GPL-3.0", "proprietary"],
+	"support":           {
+		"email":  "developer-support@dreamfactory.com",
+		"issues": "https://bitbucket.org/dreamfactory/app-admin/issues",
+		"forum":  "https://bitbucket.org/dreamfactory/app-admin/forum",
+		"wiki":   "https://bitbucket.org/dreamfactory/app-admin/wiki",
+		"source": "https://bitbucket.org/dreamfactory/app-admin/src"
+	},
+	"authors":           [
+		{
+			"name":  "Jason Sykes",
+			"email": "jasonsykes@dreamfactory.com",
+			"role":  "Lead Engineer, Client"
+		}
+	],
+	"minimum-stability": "dev"
+}
