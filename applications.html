@@ -72,7 +72,7 @@
                                 <li class="icon-info-sign"></li>
                                 &nbsp;This will be your context root and cannot be changed.
                             </div>
-                            <input type="text" ng-model="app.api_name">
+                            <input ng-disabled="action=='Update'" type="text" ng-model="app.api_name">
                         </div>
                         <div class="section external">
                             <p>Application Name</p>
