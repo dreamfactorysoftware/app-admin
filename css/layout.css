@@ -1,0 +1,137 @@
+/* Common layout commands */
+div {margin: 0;padding: 0;}
+
+.cHidden {display:none;visibility:hidden;} /* hide element */
+
+.cLeft {float: left;}
+.cRight {float: right;}
+.cClear {clear: both;}
+.cAlignLeft {text-align: left;}
+.cAlignRight {text-align: right;}
+.cAlignCenter {text-align: center;}
+.cAlignJustify {text-align: justify;}
+.cTxtLeft {text-align: left;}
+.cTxtRight {text-align: right;}
+.cTxtCenter {text-align: center;}
+.cTxtJustify {text-align: justify;}
+.cCenter {margin: 0 auto;}
+.cInlined {display: inline;}
+
+/* Common Widths As Percentages */
+
+.cW1 {width: 1%;}
+.cW2 {width: 2%;}
+.cW5 {width: 5%;}
+.cW10 {width: 10%;}
+.cW15 {width: 15%;}
+.cW20 {width: 20%;}
+.cW25 {width: 25%;}
+.cW30 {width: 30%;}
+.cW33 {width: 33%;}
+.cW3333 {width: 33.333%;}
+.cW35 {width: 35%;}
+.cW40 {width: 40%;}
+.cW45 {width: 45%;}
+.cW50 {width: 50%;}
+.cW66 {width: 66%;}
+.cW6666 {width: 66.666%;}
+.cW75 {width: 75%;}
+.cW80 {width: 80%;}
+.cW83 {width: 83%;}
+.cW85 {width: 85%;}
+.cW88 {width: 88%;}
+.cW90 {width: 90%;}
+.cW95 {width: 95%;}
+.cW98 {width: 98%;}
+.cW100 {width: 100%;}
+
+/* Common Heights As Percentages */
+.cH1 {height: 1%;}
+.cH2 {height: 2%;}
+.cH5 {height: 5%;}
+.cH10 {height: 10%;}
+.cH20 {height: 20%;}
+.cH30 {height: 30%;}
+.cH35 {height: 35%;}
+.cH45 {height: 45%;}
+.cH50 {height: 50%;}
+.cH88 {height: 88%;}
+.cH90 {height: 90%;}
+.cH95 {height: 95%;}
+.cH96 {height: 96%;}
+.cH97 {height: 97%;}
+.cH98 {height: 98%;}
+.cH100 {height: 100%;}
+
+/* Common Margins As Percentages */
+.cM1 {margin: 1%;}
+.cM2 {margin: 2%;}
+.cM5 {margin: 5%;}
+.cTM1 {margin-top: 1%;}
+.cTM2 {margin-top: 2%;}
+.cLM1 {margin-left: 1%;}
+.cLM15 {margin-left: 15%;}
+.cLM25 {margin-left: 25%;}
+.cRM1 {margin-right: 1%;}
+.cBM1 {margin-bottom: 1%;}
+.cLM1 {margin-left: 1%;}
+.cLM20 {margin-left: 20%;}
+.cLM25 {margin-left: 25%;}
+
+/* Common Padding As Percentages */
+.cP1 {padding: 1%;}
+.cP2 {padding: 2%;}
+.cP5 {padding: 5%;}
+
+.IconError {
+    background-image: url('../favicon.ico') !important;
+}
+#app-loader, #app-container, #app-loader html{
+    height:100%;
+
+}
+.app-loader{
+    border:0px;
+    width:100%;
+    height:100%;
+}
+html, body{
+    height:100%;
+
+
+
+
+}
+#error-container{
+    position:absolute;
+    display:none;
+}
+.df-logo{
+    margin-right:20px;
+    margin-top:2px;
+}
+.df-logo img{
+    height:38px;
+}
+#app-list-container{
+    margin:20px;
+}
+#app-list-container .well{
+    background-color:orange;
+    color:white;
+    border:1px solid #999;
+    margin-bottom:0px;
+}
+#app-list-container h4{
+    color:#777;
+}
+#app-list-container .media-body{
+    color:#aaa;
+}
+.no_group a{
+    padding-left:0px!important;
+
+}
+.is_grouped{
+    margin-left:15px;
+}

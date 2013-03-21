@@ -1,0 +1,27 @@
+{
+	"name":              "dreamfactory/app-admin",
+	"description":       "DreamFactory Services Platform(tm) Administration Application",
+	"authors":           [
+		{
+			"name":  "Jason Sykes",
+			"email": "jasonsykes@dreamfactory.com",
+			"role":  "Lead Engineer, Client"
+		}
+	],
+	"version":           "1.0.0-RC1",
+	"type":              "dreamfactory-platform",
+	"keywords":          ["dreamfactory", "dsp", "cloud", "dsp-admin", "dsp-app", "dsp-lib", "dsp-fuelcell"],
+	"homepage":          "http://dreamfactorybeta.com/",
+	"license":           ["GPL-3.0", "proprietary"],
+	"support":           {
+		"email":  "developer-support@dreamfactory.com",
+		"issues": "https://bitbucket.org/dreamfactory/app-admin/issues",
+		"forum":  "https://bitbucket.org/dreamfactory/app-admin/forum",
+		"wiki":   "https://bitbucket.org/dreamfactory/app-admin/wiki",
+		"source": "https://bitbucket.org/dreamfactory/app-admin/src"
+	},
+	"minimum-stability": "dev",
+	"require":           {
+		"dreamfactory/lib-platform-installer": "v1.0.0-RC1"
+	}
+}

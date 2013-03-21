@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="AdminApp" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+	<!--[if IE 7]>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">    <![endif]-->
+	<link rel="stylesheet" href="js/ng-grid/ng-grid.css" type="text/css" />
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+<body id="admin-body">
+
+<table id="container">
+	<tr>
+		<td class="ie-width-fix"><img src="img/trans.png" style="height:1px;width:225px" /></td>
+		<td class="ie-width-fix" colspan="2"></td>
+	</tr>
+	<tr>
+		<td id="sidebar" ng-include src="'navigation.html'"></td>
+		<td>&nbsp;&nbsp;</td>
+		<td id="main-content">
+			<div ng-view></div>
+		</td>
+	</tr>
+</table>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.3/angular.min.js"></script>
+<script src="/public/web-core/js/utils.js"></script>
+<script src="js/ng-grid/ng-grid-1.8.0.js"></script>
+<script src="js/controllers/userctrl.js"></script>
+<script src="js/controllers/groupctrl.js"></script>
+<script src="js/controllers/rolectrl.js"></script>
+<script src="js/controllers/appctrl.js"></script>
+<script defer="defer" src="js/ng-grid/flex-height.js"></script>
+<script defer="defer" src="js/controllers/schemactrl.js"></script>
+<script src="js/controllers/servicectrl.js"></script>
+<script src="js/controllers/filectrl.js"></script>
+<script defer="defer" src="js/controllers/swaggerctrl.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/jsonlint.js"></script>
+<script src="js/app.js"></script>
+<script src="js/resource.js"></script>
+
+</body>
+</html>

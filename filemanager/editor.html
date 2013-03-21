@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/lib/web-core/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/lib/web-core/css/font-awesome.min.css" type="text/css"/>
+    <!-- Standard CSS -->
+    <style type="text/css" media="screen">
+        #editor {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 40px;
+            left: 0;
+        }
+    </style>
+    <script src="/lib/web-core/js/utils.js"></script>
+</head>
+<body>
+<div id="editor"></div>
+
+<div id="errorDialog" title="Oops! An Error Has Occured..." class="cTxtLeft">
+    <p class="ui-state-error ui-corner-all cP1">
+        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+        <span id="errorMsg"><!--  --></span>
+    </p>
+</div>
+<div style="bottom:10px;position:absolute;width:100%;">
+<div align="center">
+
+<a id="save" class="btn" href="#">
+    <i class="icon-save"></i> Save</a>
+<a id="close" class="btn" href="#">
+    <i class="icon-remove"></i> Cancel</a>
+</div>
+    </div>
+</body>
+
+
+<!-- DF Imports -->
+
+<script src="/lib/web-core/js/df.js"></script>
+<script src="/lib/web-core/js/utils.js"></script>
+<script src="/lib/web-core/js/jquery.js"></script>
+<script src="/lib/web-core/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/ace/ace.js"></script>
+<script src="/lib/web-core/js/bootstrap.min.js"></script>
+
+</html>
