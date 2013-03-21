@@ -9,7 +9,7 @@
 		}
 	],
 	"version":           "1.0.0-RC1",
-	"type":              "composer-installer",
+	"type":              "dreamfactory-platform",
 	"keywords":          ["dreamfactory", "dsp", "cloud", "dsp-admin", "dsp-app", "dsp-lib", "dsp-fuelcell"],
 	"homepage":          "http://dreamfactorybeta.com/",
 	"license":           ["GPL-3.0", "proprietary"],
