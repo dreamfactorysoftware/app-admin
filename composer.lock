@@ -1,0 +1,59 @@
+{
+    "hash": "ff0e15b0f6874f840bf0833bfbf2b336",
+    "packages": [
+        {
+            "name": "dreamfactory/lib-platform-installer",
+            "version": "v1.0.0-RC1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dreamfactorysoftware/lib-platform-installer.git",
+                "reference": "v1.0.0-RC1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/lib-platform-installer/zipball/v1.0.0-RC1",
+                "reference": "v1.0.0-RC1",
+                "shasum": ""
+            },
+            "type": "composer-installer",
+            "extra": {
+                "class": "DreamFactory\\Platform\\Utility\\PlatformInstaller"
+            },
+            "autoload": {
+                "psr-0": {
+                    "DreamFactory\\Platform\\Utility": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0",
+                "proprietary"
+            ],
+            "description": "DreamFactory Services Platform(tm) Package Installer",
+            "homepage": "http://dreamfactorybeta.com/",
+            "keywords": [
+                "cloud",
+                "dreamfactory",
+                "dsp",
+                "utility"
+            ],
+            "time": "2013-03-21 03:24:35"
+        }
+    ],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "dreamfactory/lib-platform-installer": 5
+    },
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
+}
