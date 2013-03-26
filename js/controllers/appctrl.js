@@ -139,7 +139,6 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
             Scope.showLocal();
         }
         $('#button_holder').hide();
-        $('#context-root').hide();
         $('#file-manager').hide();
         $('#app-preview').hide();
         $('#step1').show();
