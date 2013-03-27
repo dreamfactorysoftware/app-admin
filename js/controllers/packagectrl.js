@@ -5,9 +5,9 @@
  * Time: 7:51 PM
  * To change this template use File | Settings | File Templates.
  */
-var PackageCtrl = function ($scope, App, Service, $http) {
+var PackageCtrl = function ($scope, AppsRelatedToService, Service, $http) {
     Scope = $scope;
-    $scope.Apps = App.get();
+    $scope.Apps = AppsRelatedToService.get();
     Scope.schemaData = {};
     Scope.Services = Service.get(function (data) {
         angular.forEach(data.record, function (service) {
@@ -45,16 +45,16 @@ var PackageCtrl = function ($scope, App, Service, $http) {
         var currentComponent = this.component;
         if (checked == true) {
             if (Scope.app.app_service_relations.length < 1) {
-                var packagedService = {"service_id": this.service.id, "api_name": this.service.api_name, component: [this.component]};
+                var packagedService = {"service_id": this.service.id, "api_name": this.service.api_name, component: [this.component.name]};
                 Scope.app.app_service_relations.push(packagedService);
             } else {
                 angular.forEach(Scope.app.app_service_relations, function (service) {
                     if (currentService.id == service.service_id) {
-                        service.component.push(currentComponent)
+                        service.component.push(currentComponent.name)
                         return;
                     } else {
                         console.log('im adding');
-                        var packagedService = {"service_id": currentService.id, "api_name": currentService.api_name, "component": [currentComponent]};
+                        var packagedService = {"service_id": currentService.id, "api_name": currentService.api_name, "component": [currentComponent.name]};
                         Scope.app.app_service_relations.push(packagedService);
                     }
 
@@ -73,10 +73,13 @@ var PackageCtrl = function ($scope, App, Service, $http) {
             Scope.app.app_service_relations = removeByAttr(Scope.app.app_service_relations, 'service_id', this.service.id);
         }
     };
+    Scope.isComponentMapped = function(){
+        //
+    }
     Scope.export = function(){
         var id = Scope.app.id;
-        App.update({id:id}, Scope.app, function () {
-            App.get()
+        AppsRelatedToService.update({id:id}, Scope.app, function () {
+            $('#download_frame').attr('src', CurrentServer + '/rest/system/app/' + id + '/?app_name=admin&pkg=true&include_services=true&include_files=true&include_schema=true');
         });
     }
 }

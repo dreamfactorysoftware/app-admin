@@ -40,7 +40,7 @@
 
                         <div ng-repeat="component in service.components"><input
                                 ng-click="addServiceToAppWithComponents($event.target.checked)"
-                                type="checkbox"/>&nbsp;&nbsp;{{component.name}}
+                                type="checkbox" ng-checked = "isComponentMapped()"/>&nbsp;&nbsp;{{component.name}}
                         </div>
                     </div>
 
@@ -56,20 +56,21 @@
 
                 </div>
                 <br/>
-                <input type="checkbox" ng-model="include_files"/>&nbsp;&nbsp;Include this apps files in package.
+                <input type="checkbox" ng-model="include_files"/>&nbsp;&nbsp;Include this application's files in this package.
                 <br/><br/>
                 <button ng-click="export()" class="btn btn-info">Export App</button>
             </div>
             <div id="splash">
                 <div class="alert alert-info"><i class="icon icon-gift"></i> Creating a DreamFactory Package File</div>
-                <P>To create a packag file for your app, follow these instructions:</P>
+                <P>To create a package file for your app, follow these instructions:</P>
                 <ol>
                     <li>Select the app from the list just to the left</li>
-                    <li>Choose which services you'd like to export along with the app</li>
+                    <li>Choose the database schema you'd like to export.</li>
+                    <li>Choose which services you'd like to export.</li>
                     <li>Press Export to be prompted to save your new .dfpkg file.</li>
                 </ol>
             </div>
-
+            <iframe id="download_frame" style="display:none" frameBorder="0"></iframe>
 
         </td>
     </tr>
