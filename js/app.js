@@ -16,6 +16,7 @@ var AdminApp = angular.module("AdminApp", ["ngResource", "ngGrid"]).
         $routeProvider.when('/import', { controller:FileCtrl, templateUrl:'import.html' });
         $routeProvider.when('/file', { controller:FileCtrl, templateUrl:'files.html' });
         $routeProvider.when('/api', { controller:SwaggerCtrl, templateUrl:'swagger.html' });
+        $routeProvider.when('/package', { controller:PackageCtrl, templateUrl:'package.html' });
 
     }).
     directive('uiValidateEquals', function() {

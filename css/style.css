@@ -853,7 +853,6 @@ a:hover {
     background-color: #EFEFEF;
     background-image: -moz-linear-gradient(center top, #FDFDFD 0%, #EAEAEA 100%);
     border-bottom:    1px solid #CDCDCD;
-    height:           36px;
 }
 
 .widget-title .nav-tabs {

@@ -1,0 +1,77 @@
+<table style="width:100%" ng-controller="PackageCtrl">
+    <tr>
+        <td id="item-list">
+            <div id="grid-table" class="well">
+                <table id="app-list" class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>App Label</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr ng-repeat="app in Apps.record" id="row_{{app.id}}">
+                        <td ng-click="showDetails()">{{app.name}}</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </td>
+        <td>&nbsp;</td>
+        <td id="app-details" class="well">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="brand">Package Applications</div>
+
+                </div>
+            </div>
+            <div id="package-form" style="display:none">
+
+                <div class="section">
+                    <h5>Database Schema(s)</h5>
+
+
+                    <div class="form-inline" ng-show="service.type.indexOf('SQL DB Schema') != -1"
+                         ng-repeat="service in Services.record">
+                        <h6>{{service.name}}</h6>
+
+                        <div ng-repeat="component in service.components"><input
+                                ng-click="addServiceToAppWithComponents($event.target.checked)"
+                                type="checkbox"/>&nbsp;&nbsp;{{component.name}}
+                        </div>
+                    </div>
+
+                    <br/>
+                    <h5>Services</h5>
+
+                    <div class="form-inline" ng-show="service.type.indexOf('SQL DB Schema') == -1 && !service.is_system"
+                         ng-repeat="service in Services.record">
+                        <h6><input ng-click="addServiceToApp($event.target.checked)"
+                                   type="checkbox"/>&nbsp;&nbsp;{{service.name}}</h6>
+                    </div>
+
+
+                </div>
+                <br/>
+                <input type="checkbox" ng-model="include_files"/>&nbsp;&nbsp;Include this apps files in package.
+                <br/><br/>
+                <button ng-click="export()" class="btn btn-info">Export App</button>
+            </div>
+            <div id="splash">
+                <div class="alert alert-info"><i class="icon icon-gift"></i> Creating a DreamFactory Package File</div>
+                <P>To create a packag file for your app, follow these instructions:</P>
+                <ol>
+                    <li>Select the app from the list just to the left</li>
+                    <li>Choose which services you'd like to export along with the app</li>
+                    <li>Press Export to be prompted to save your new .dfpkg file.</li>
+                </ol>
+            </div>
+
+
+        </td>
+    </tr>
+</table>
+
