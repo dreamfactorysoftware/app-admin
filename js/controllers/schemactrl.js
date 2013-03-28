@@ -34,7 +34,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
                     {"error":"No Data"}
                 ];
             }
-            Scope.currentSchema = data.meta.schema.table.field;
+            Scope.currentSchema = data.meta.schema.field;
             Scope.columnDefs = Scope.buildColumns();
         });
 
