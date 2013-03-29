@@ -78,8 +78,18 @@ var PackageCtrl = function ($scope, AppsRelatedToService, Service, $http) {
     }
     Scope.export = function(){
         var id = Scope.app.id;
+        var exportLink = CurrentServer + '/rest/system/app/' + id + '/?app_name=admin&pkg=true';
+        if(Scope.include_files){
+            exportLink = exportLink + '&include_files=true';
+        }
+        if($('.include-schema:checkbox:checked').length > 0){
+            exportLink = exportLink + "&include_schema=true";
+        }
+        if($('.include-service:checkbox:checked').length > 0){
+            exportLink = exportLink + "&include_services=true";
+        }
         AppsRelatedToService.update({id:id}, Scope.app, function () {
-            $('#download_frame').attr('src', CurrentServer + '/rest/system/app/' + id + '/?app_name=admin&pkg=true&include_services=true&include_files=true&include_schema=true');
+            $('#download_frame').attr('src', exportLink);
         });
     }
 }

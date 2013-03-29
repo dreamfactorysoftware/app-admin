@@ -40,7 +40,7 @@
 
                         <div ng-repeat="component in service.components"><input
                                 ng-click="addServiceToAppWithComponents($event.target.checked)"
-                                type="checkbox" ng-checked = "isComponentMapped()"/>&nbsp;&nbsp;{{component.name}}
+                                type="checkbox" class="include-schema" ng-checked = "isComponentMapped()"/>&nbsp;&nbsp;{{component.name}}
                         </div>
                     </div>
 
@@ -49,7 +49,7 @@
 
                     <div class="form-inline" ng-show="service.type.indexOf('SQL DB Schema') == -1 && !service.is_system"
                          ng-repeat="service in Services.record">
-                        <h6><input ng-click="addServiceToApp($event.target.checked)"
+                        <h6><input class="include-service" ng-click="addServiceToApp($event.target.checked)"
                                    type="checkbox"/>&nbsp;&nbsp;{{service.name}}</h6>
                     </div>
 
