@@ -55,6 +55,12 @@ AdminApp.factory('AppsRelated', function ($resource) {
         isArray:false
     } });
 });
+AdminApp.factory('AppsRelatedToService', function ($resource) {
+    return $resource('/rest/system/app/:id/?app_name=admin&fields=*&related=app_service_relations', {}, { update:{ method:'PUT' }, query:{
+        method:'GET',
+        isArray:false
+    } });
+});
 AdminApp.factory('App', function ($resource) {
     return $resource('/rest/system/app/:id/?app_name=admin&fields=*', {}, { update:{ method:'PUT' }, query:{
         method:'GET',
