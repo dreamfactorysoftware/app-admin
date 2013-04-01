@@ -17,7 +17,9 @@ EditorActions = {
             error:function (response) {
                 if (response.status == 401) {
                     window.opener.window.top.Actions.doSignInDialog();
-                } else {
+                } else if(response.status == 200){
+                    EditorActions.loadEditor(response.responseText);
+                }else{
                     alertErr(response);
                 }
             }
