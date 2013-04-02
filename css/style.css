@@ -2039,3 +2039,6 @@ h5.text-info {
 
 .item-details {
 }
+.ngCell div{
+    height:100%;
+}
