@@ -1999,20 +1999,20 @@ div {
 	right:              0;
 	top:                44px;
 	background-color:   white;
-	-webkit-box-shadow: inset 0px 3px 3px 0px rgba(0, 0, 0, .5);
-	box-shadow:         inset 0px 3px 3px 0px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: inset 0 3px 3px 0 rgba(0, 0, 0, .5);
+	box-shadow:         inset 0 3px 3px 0 rgba(0, 0, 0, .5);
 }
 
 .app-loader {
-	border: 0px;
+	border: 0;
 	width:  100%;
 	height: 100%;
 }
 
 html, body {
 
-	margin:   0px;
-	padding:  0px;
+	margin:   0;
+	padding:  0;
 	overflow: hidden;
 }
 
@@ -2031,15 +2031,15 @@ html, body {
 }
 
 #app-list-container {
-	margin:             0px;
+	margin:             0;
 	bottom:             0;
 	left:               0;
 	position:           absolute;
 	right:              0;
 	top:                42px;
 	background:         none repeat scroll 0 0 white;
-	-webkit-box-shadow: inset 0px 3px 3px 0px rgba(0, 0, 0, .5);
-	box-shadow:         inset 0px 3px 3px 0px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: inset 0 3px 3px 0 rgba(0, 0, 0, .5);
+	box-shadow:         inset 0 3px 3px 0 rgba(0, 0, 0, .5);
 	overflow-y:         auto;
 	overflow-x:         hidden;
 
@@ -2061,8 +2061,8 @@ html, body {
 	border:             1px solid #999;
 	margin-bottom:      3px;
 	margin-left:        20px;
-	-webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, .3);
-	box-shadow:         0px 1px 1px 1px rgba(0, 0, 0, .3);
+	-webkit-box-shadow: 0 1px 1px 1px rgba(0, 0, 0, .3);
+	box-shadow:         0 1px 1px 1px rgba(0, 0, 0, .3);
 }
 
 #app-list-container h4 {
@@ -2074,7 +2074,7 @@ html, body {
 }
 
 .no_group a {
-	padding-left: 0px !important;
+	padding-left: 0 !important;
 
 }
 
@@ -2100,9 +2100,9 @@ body {
 	background-image:  linear-gradient(top, #3F3F3F 0%, #222222 100%);
 	background-image:  -ms-linear-gradient(rgb(63, 63, 63) 0%, rgb(34, 34, 34) 100%);
 	background-repeat: repeat-x;
-	border-radius:     0px !important;
-	border:            0px;
-	border-bottom:     1px solid #777;
+	border-radius:     0 !important;
+	border:            0;
+	border-bottom:     1px solid #4e4e4e;
 	height:            43px;
 	padding-left:      20px;
 	padding-right:     20px;
