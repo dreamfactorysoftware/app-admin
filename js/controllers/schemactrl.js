@@ -164,8 +164,9 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         var index = this.row.rowIndex;
         var newRecord = this.row.entity;
         if (!newRecord.id){
-            DB.save({name:Scope.currentTable}, newRecord, function () {
+            DB.save({name:Scope.currentTable}, newRecord, function (data) {
                 $("#save_" + index).attr('disabled', true);
+                Scope.tableData.push(data);
             });
         }else{
             DB.update({name:Scope.currentTable}, newRecord, function () {
