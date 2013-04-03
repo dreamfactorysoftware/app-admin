@@ -2058,3 +2058,7 @@ h5.text-info {
 #sidebar > ul > li:first-child.active {
 	border-top: 0 solid #4e4e4e !important;
 }
+
+.ngCell div{
+    height:100%;
+}

@@ -9,7 +9,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
-    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
+    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
     Scope.columnDefs = [];
     Scope.browseOptions = {data:'tableData', headerRowTemplate:customHeaderTemplate, canSelectRows:false, displaySelectionCheckbox:false, columnDefs:'columnDefs'};
     Scope.Schemas = Schema.get(function (data) {
@@ -164,8 +164,11 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         var index = this.row.rowIndex;
         var newRecord = this.row.entity;
         if (!newRecord.id){
-            DB.save({name:Scope.currentTable}, newRecord, function () {
+            DB.save({name:Scope.currentTable}, newRecord, function (data) {
                 $("#save_" + index).attr('disabled', true);
+                Scope.tableData.push(data);
+            }, function(){
+                window.top.Actions.showStatus("An Error has occurred", "error");
             });
         }else{
             DB.update({name:Scope.currentTable}, newRecord, function () {
