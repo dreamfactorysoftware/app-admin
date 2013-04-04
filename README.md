@@ -1,4 +1,6 @@
 app-admin
 =========
 
-DreamFactory Services Platform&amp;trade; Administration Application
+DreamFactory Services Platform&amp;trade; Admin Application
+
+
