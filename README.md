@@ -1,4 +1,7 @@
-app-admin
-=========
+= DreamFactory Services Platform(tm) Admin Application =
 
-DreamFactory Services Platform&amp;trade; Admin Application
+This is the DreamFactory Services Platform&amp;trade; Admin Application
+
+== Info ==
+== Help ==
+== Etc. ==
