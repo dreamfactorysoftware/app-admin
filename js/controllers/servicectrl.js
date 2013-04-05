@@ -208,7 +208,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     case "aws s3":
                         Scope.aws.access_key = fString.access_key;
                         Scope.aws.secret_key = fString.secret_key;
-                        Scope.aws.bucket_name = fString.bucket_name;
+                        //Scope.aws.bucket_name = fString.bucket_name;
                         break;
                     case "azure blob":
                         Scope.azure.account_name = fString.account_name;
