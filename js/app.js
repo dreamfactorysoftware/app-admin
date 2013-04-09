@@ -123,11 +123,4 @@ var showFileManager = function(){
     $("#root-file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/').show();
 
 };
-$(document).ready(function () {
-    $('#app-container').css('height', ($(window).height()-44));
 
-    $(window).resize(function () {
-        $('#app-container').css('height', ($(window).height()-44));
-        $('#grid-table').css('max-height', ($(window).height()-15)).css('height', ($(window).height()-15));
-    });
-});
