@@ -3,15 +3,16 @@ var SchemaCtrl = function ($scope, Schema, DB) {
     Scope = $scope;
     Scope.tableData = [];
     Scope.booleanOptions = [
-        {value:true, text:'true'},
-        {value:false, text:'false'}
+        {value: true, text: 'true'},
+        {value: false, text: 'false'}
     ];
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
     Scope.columnDefs = [];
-    Scope.browseOptions = {data:'tableData', headerRowTemplate:customHeaderTemplate, canSelectRows:false, displaySelectionCheckbox:false, columnDefs:'columnDefs'};
+    Scope.browseOptions = {};
+    Scope.browseOptions = {data: 'tableData', canSelectRows: false, displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
     Scope.Schemas = Schema.get(function (data) {
         Scope.schemaData = data.resource;
     });
@@ -23,65 +24,110 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         Scope.currentTable = this.table.name;
         Scope.browseOptions = {};
         Scope.tableData = [];
+        Scope.columnDefs = [];
         Scope.currentSchema = [];
 
-        DB.get({name:Scope.currentTable}, function (data) {
+        DB.get({name: Scope.currentTable}, function (data) {
             if (data.record.length > 0) {
                 Scope.tableData = data.record;
                 Scope.tableData.unshift({});
             } else {
                 Scope.tableData = [
-                    {"error":"No Data"}
+                    {"error": "No Data"}
                 ];
             }
             Scope.currentSchema = data.meta.schema.field;
-            Scope.columnDefs = Scope.buildColumns();
+            var columnDefs = [];
+            var saveColumn = {};
+            saveColumn.field = '';
+            saveColumn.cellTemplate = buttonTemplate;
+            saveColumn.width = '70px';
+            columnDefs.push(saveColumn);
+            var column = {};
+            Scope.currentSchema.forEach(function (field) {
+                column.field = field.name;
+                switch (field.type) {
+                    case "boolean":
+                        column.editableCellTemplate = booleanTemplate;
+                        column.enableFocusedCellEdit = true;
+                        column.minWidth = '100px';
+                        column.width = '50px';
+                        break;
+                    case "id":
+                        column.width = '50px';
+                        break;
+                    case "string":
+                        column.editableCellTemplate = inputTemplate;
+                        column.enableFocusedCellEdit = true;
+                        column.width = '100px';
+                        break;
+                    default:
+                        column.editableCellTemplate = inputTemplate;
+                        column.enableFocusedCellEdit = true;
+                        column.width = '100px';
+                }
+                columnDefs.push(column);
+                column = {};
+            });
+
+            Scope.columnDefs = columnDefs;
+            Scope.browseOptions.data = Scope.tableData;
+
         });
 
         $("tr.info").removeClass('info');
         $('#row_' + Scope.currentTable).addClass('info');
 
     };
-    Scope.buildColumns = function () {
-        var columnDefs = [];
-        var saveColumn = {};
-        saveColumn.field = '';
-        saveColumn.cellTemplate = buttonTemplate;
-        saveColumn.width = '70px';
-        columnDefs.push(saveColumn);
-        var column = {};
-        Scope.currentSchema.forEach(function (field) {
-            column.field = field.name;
-            switch (field.type) {
-                case "boolean":
-                    column.editableCellTemplate = booleanTemplate;
-                    column.enableFocusedCellEdit = true;
-                    column.minWidth = '100px';
-                    column.width = '50px';
-                    break;
-                case "id":
-                    column.width = '50px';
-                    break;
-                case "string":
-                    column.editableCellTemplate = inputTemplate;
-                    column.enableFocusedCellEdit = true;
-                    column.width = '100px';
-                    break;
-                default:
-                    column.editableCellTemplate = inputTemplate;
-                    column.enableFocusedCellEdit = true;
-                    column.width = '100px';
-            }
-            columnDefs.push(column);
-            column = {};
-        });
-        return columnDefs;
-    };
+
     Scope.showForm = function () {
         $("#grid-container").hide();
         $("#create-form").show();
         $("tr.info").removeClass('info');
         $(window).scrollTop(0);
+    }
+    Scope.showSchema = function () {
+        $("#create-form").hide();
+        var columnDefs = [];
+        Scope.browseOptions = {};
+        Scope.tableData = [];
+        Scope.columnDefs = [];
+        Scope.currentSchema = [];
+        Schema.get({ name: this.table.name }, function(data){
+            Scope.tableSchema = data;
+//            var saveColumn = {};
+//            saveColumn.field = '';
+//            saveColumn.cellTemplate = buttonTemplate;
+//            saveColumn.width = '70px';
+//            columnDefs.push(saveColumn);
+            var column = {};
+            //console.log(Scope);
+            var keys  = Object.keys(Scope.tableSchema.field[0]);
+            keys.forEach(function (key) {
+                    column.editableCellTemplate = inputTemplate;
+                    column.enableFocusedCellEdit = true;
+                    column.width = '100px';
+                    column.field = key;
+                    columnDefs.push(column);
+                    column = {};
+                }
+
+            );
+            Scope.columnDefs = columnDefs;
+            //console.log(Scope.columnDefs);
+            Scope.tableData = Scope.tableSchema.field;
+
+        });
+        ;
+        //console.log(this);
+        Scope.action = "Alter";
+        $("#grid-container").show();
+
+
+
+        $("tr.info").removeClass('info');
+        $('#row_' + this.table.name).addClass('info');
+        //console.log(this);
     }
     Scope.newTable = {};
     Scope.newTable.table = {};
@@ -115,7 +161,7 @@ var SchemaCtrl = function ($scope, Schema, DB) {
         if (!confirm("Are you sure you want to delete " + which)) {
             return;
         }
-        Schema.delete({ name:name }, function () {
+        Schema.delete({ name: name }, function () {
             Scope.showForm();
             window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + name).fadeOut();
@@ -163,25 +209,24 @@ var SchemaCtrl = function ($scope, Schema, DB) {
 
         var index = this.row.rowIndex;
         var newRecord = this.row.entity;
-        if (!newRecord.id){
-            DB.save({name:Scope.currentTable}, newRecord, function (data) {
+        if (!newRecord.id) {
+            DB.save({name: Scope.currentTable}, newRecord, function (data) {
                 $("#save_" + index).attr('disabled', true);
                 Scope.tableData.push(data);
-            }, function(){
+            }, function () {
                 window.top.Actions.showStatus("An Error has occurred", "error");
             });
-        }else{
-            DB.update({name:Scope.currentTable}, newRecord, function () {
+        } else {
+            DB.update({name: Scope.currentTable}, newRecord, function () {
                 $("#save_" + index).attr('disabled', true);
             });
         }
 
 
-
     }
     Scope.deleteRow = function () {
         var id = this.row.entity.id;
-        DB.delete({name:Scope.currentTable}, {id:id});
+        DB.delete({name: Scope.currentTable}, {id: id});
         Scope.tableData = removeByAttr(Scope.tableData, 'id', id);
 
     }
