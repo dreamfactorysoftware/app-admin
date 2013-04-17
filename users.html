@@ -46,7 +46,7 @@
 
                         <div id="step1">
                             <div class="section">
-                                Username : <input ng-model="user.username" type="text" required/>
+                                Email :  <input ng-model="user.email" type="email" required/>
                             </div>
                             <div class="section form-inline">
                                 First Name : <input class="input-small"  ng-model="user.first_name" type="text" required/>
@@ -55,16 +55,6 @@
                             <div class="section">
                                 Display Name : <input ng-model="user.display_name"
                                                       ng-bind="{{user.display_name}}" value="{{user.first_name}}&nbsp{{user.last_name}}" type="text"/>
-                            </div>
-                            <div class="section">
-                                Password : <input id="password" name="password" type="password" ng-required="action=='Create'" ng-model="user.password">
-                            </div>
-                            <div class="section">
-                                Verify Password : <input id="passwordRepeat" name="passwordRepeat" type="password" ng-required="action=='Create'" ng-model="passwordRepeat" ui-validate-equals="user.password">
-                                <span id="passwordError" ng-show='!userform.$pristine && userform.passwordRepeat.$error.equal' style='color: red;'>Please enter matching passwords</span>
-                            </div>
-                            <div class="section">
-                                Email :  <input ng-model="user.email" type="email" required/>
                             </div>
                             <div class="section">
                                 Phone : <input ng-model="user.phone" type="tel"/>
@@ -85,17 +75,34 @@
                         </div>
                         <div class="section">
                             <input ng-checked="user.is_active" type="checkbox" ng-model="user.is_active"/>&nbsp;Active
-
+                        </div>
+                        <div class="section">
+                            <div ng-show="action=='Create'">
+                                <input ng-checked="sendInvite" type="checkbox" ng-model="sendInvite"/>&nbsp;Send invite to user and let them set their own password
+                            </div>
+                            <div ng-show="action=='Edit'">
+                                <input ng-checked="passwordEdit" type="checkbox" ng-model="passwordEdit"/>&nbsp;Change password
+                            </div>
+                            <div ng-show="(action=='Create' && !sendInvite) || (action=='Edit' && passwordEdit)">
+                                <br/>
+                                Password : <input id="password" name="password" type="password" ng-model="user.password">
+                            </div>
+                            <div ng-show="(action=='Create' && !sendInvite) || (action=='Edit' && passwordEdit)">
+                                Verify Password : <input id="passwordRepeat" name="passwordRepeat" type="password" ng-model="passwordRepeat">
+                            </div>
                         </div>
                         <br/>
 
                         <div id="button_holder">
-                            <a id="save_button" ng-click="create()" class="btn btn-primary" ng-disabled="userform.$invalid">
+                            <button id="save_button" ng-show="action=='Create'" ng-click="create()" class="btn btn-primary" ng-disabled="userform.$invalid">
                                 <li class="icon-save"></li>
-                                &nbsp;Save</a>
-                            <a id="update_button" ng-click="save()" class="btn btn-primary" ng-disabled="userform.$invalid">
+                                &nbsp;Save</button>
+                            <button id="update_button" ng-show="action=='Edit'" ng-click="save()" class="btn btn-primary" ng-disabled="userform.$invalid">
                                 <li class="icon-save"></li>
-                                &nbsp;Update</a>
+                                &nbsp;Update</button>
+                            <button id="invite_button" ng-show="action=='Edit'" ng-click="invite()" class="btn btn-primary" ng-disabled="userform.$invalid">
+                                <li class="icon-envelope"></li>
+                                &nbsp;Invite</button>
                         </div>
 
                     </div>
