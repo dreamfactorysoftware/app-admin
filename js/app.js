@@ -17,38 +17,8 @@ var AdminApp = angular.module("AdminApp", ["ngResource", "ngGrid"]).
         $routeProvider.when('/file', { controller:FileCtrl, templateUrl:'files.html' });
         $routeProvider.when('/api', { controller:SwaggerCtrl, templateUrl:'swagger.html' });
         $routeProvider.when('/package', { controller:PackageCtrl, templateUrl:'package.html' });
-
-    }).
-    directive('uiValidateEquals', function() {
-
-        return {
-            require: 'ngModel',
-            link: function(scope, elm, attrs, ctrl) {
-
-                function validateEqual(myValue, otherValue) {
-                    if (myValue === otherValue) {
-                        ctrl.$setValidity('equal', true);
-                        return myValue;
-                    } else {
-                        ctrl.$setValidity('equal', false);
-                        return undefined;
-                    }
-                }
-
-                scope.$watch(attrs.uiValidateEquals, function(otherModelValue) {
-                    validateEqual(ctrl.$viewValue, otherModelValue);
-                });
-
-                ctrl.$parsers.unshift(function(viewValue) {
-                    return validateEqual(viewValue, scope.$eval(attrs.uiValidateEquals));
-                });
-
-                ctrl.$formatters.unshift(function(modelValue) {
-                    return validateEqual(modelValue, scope.$eval(attrs.uiValidateEquals));
-                });
-            }
-        };
-    });
+        $routeProvider.when('/config', { controller:ConfigCtrl, templateUrl:'config.html' });
+});
 AdminApp.factory('AppsRelated', function ($resource) {
     return $resource('/rest/system/app/:id/?app_name=admin&fields=*&related=roles', {}, { update:{ method:'PUT' }, query:{
         method:'GET',
@@ -109,8 +79,8 @@ AdminApp.factory('Group', function ($resource) {
         isArray:false
     } });
 });
-AdminApp.factory('Group', function ($resource) {
-    return $resource('/rest/system/app_group/:id/?app_name=admin&fields=*&related=apps', {}, { update:{ method:'PUT' }, query:{
+AdminApp.factory('Config', function ($resource) {
+    return $resource('/rest/system/config/?app_name=admin', {}, { update:{ method:'PUT' }, query:{
         method:'GET',
         isArray:false
     } });

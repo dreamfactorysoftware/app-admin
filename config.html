@@ -1,0 +1,55 @@
+<table style="width:100%" ng-controller="ConfigCtrl">
+    <tr>
+        <td id="config-details" class="well">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="brand">System Config</div>
+                </div>
+            </div>
+            <div id="config-form">
+                <div class="section">
+                    <b>Database Version:</b>&nbsp;&nbsp;{{Config.db_version}}
+                </div>
+                <div class="section">
+                    <h5>Open Registration</h5>
+                    <div class="alert alert-info">
+                        <li class="icon-info-sign"></li>
+                        &nbsp;If enabled, new users can add themselves as users to this DSP and will be assigned the selected role. If disabled, only an admin can add new users to this DSP.
+                    </div>
+                    <input type="checkbox" ng-checked="Config.allow_open_registration" ng-model="Config.allow_open_registration"/>&nbsp;&nbsp;Allow open registration
+                    <br/>
+                    <br/>
+                    <div>
+                        <p>Assign a Default Role for Open Registration Users</p>
+                        <div>
+                            <select ng-disabled="!Config.allow_open_registration" ng-model="Config.open_reg_role_id">
+                                <option ng-selected = "Config.open_reg_role_id == role.id" ng-repeat="role in Roles.record" value="{{role.id}}">{{role.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <h5>Guest Users</h5>
+                    <div class="alert alert-info">
+                        <li class="icon-info-sign"></li>
+                        &nbsp;If enabled, the DSP is available with no sign-in required and all guest users will be assigned the selected role. If disabled, sign-in is required.
+                    </div>
+                    <input type="checkbox" ng-checked="Config.allow_guest_user" ng-model="Config.allow_guest_user"/>&nbsp;&nbsp;Allow guest users
+                    <br/>
+                    <br/>
+                    <div>
+                        <p>Assign a Role for Guest Users</p>
+                        <div>
+                            <select ng-disabled="!Config.allow_guest_user" ng-model="Config.guest_role_id">
+                                <option ng-selected = "Config.guest_role_id == role.id" ng-repeat="role in Roles.record" value="{{role.id}}">{{role.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <button ng-click="save()" class="btn btn-info">Save</button>
+            </div>
+        </td>
+    </tr>
+</table>
+
