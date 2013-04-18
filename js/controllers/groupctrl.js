@@ -5,7 +5,7 @@
  * Time: 4:23 AM
  * To change this template use File | Settings | File Templates.
  */
-var GroupCtrl = function ($scope, Group, App) {
+var GroupCtrl = function ($scope, Group, App, $timeout) {
     Scope = $scope;
     Scope.group = {apps:[]};
     Scope.Groups = Group.get();
@@ -18,7 +18,10 @@ var GroupCtrl = function ($scope, Group, App) {
         var id = Scope.group.id;
         Group.update({id:id}, Scope.group, function(){
             Scope.promptForNew();
-            window.top.Actions.showStatus("Updated Successfully");
+            window.top.Actions.updateSession("update");
+            $timeout(function(){
+                window.top.Actions.showStatus("Updated Successfully");
+            },1000);
         });
 
     };
@@ -27,7 +30,10 @@ var GroupCtrl = function ($scope, Group, App) {
         Group.save(Scope.group, function(data){
             Scope.Groups.record.push(data);
             Scope.promptForNew();
-            window.top.Actions.showStatus("Created Successfully");
+            window.top.Actions.updateSession("update");
+            $timeout(function(){
+                window.top.Actions.showStatus("Created Successfully");
+            },1000);
         });
     };
     Scope.isAppInGroup = function(){

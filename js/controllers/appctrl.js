@@ -34,7 +34,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
         AppsRelated.update({id:id}, Scope.app, function () {
             updateByAttr(Scope.Apps.record, 'id', id, Scope.app);
             Scope.promptForNew();
-            window.top.Actions.updateSession();
+            window.top.Actions.updateSession("update");
             $timeout(function(){
                 window.top.Actions.showStatus("Updated Successfully");
             },1000);
@@ -51,7 +51,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                 Scope.Apps.record.push(data);
                 //Scope.app.id = data.id;
                 //Scope.app = data;
-                window.top.Actions.updateSession();
+                window.top.Actions.updateSession("update");
                 $timeout(function(){
                     window.top.Actions.showStatus("Created Successfully");
                 },1000);
