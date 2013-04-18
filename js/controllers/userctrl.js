@@ -1,9 +1,9 @@
-var UserCtrl = function ($scope, User, Role) {
+var UserCtrl = function ($scope, Config, User, Role) {
     Scope = $scope;
+    Scope.Config = Config.get();
     Scope.Users = User.get();
     Scope.action = "Create";
     Scope.Roles = Role.get();
-    Scope.sendInvite = true;
     Scope.passwordEdit = false;
     Scope.user = {};
     Scope.user.password = '';
@@ -35,7 +35,7 @@ var UserCtrl = function ($scope, User, Role) {
     };
     Scope.create = function () {
         var newRec = this.user;
-        if (!this.sendInvite) {
+        if (this.passwordEdit) {
             if (newRec.password == '' || newRec.password != this.passwordRepeat) {
                 window.top.Actions.showStatus("Please enter matching passwords", "error");
                 return;
@@ -49,9 +49,13 @@ var UserCtrl = function ($scope, User, Role) {
 
         User.save(newRec,
             function(response) {
-                Scope.promptForNew();
                 Scope.Users.record.push(response);
-                window.top.Actions.showStatus("Created Successfully");
+                if (!Scope.passwordEdit) {
+                    Scope.invite(true);
+                } else {
+                    window.top.Actions.showStatus("Created Successfully");
+                    Scope.promptForNew();
+                }
             },
             function(response) {
                 Scope.user.password = '';
@@ -59,12 +63,53 @@ var UserCtrl = function ($scope, User, Role) {
                 window.top.Actions.showStatus(getErrorString(response), "error");
             });
     };
-    Scope.invite = function () {
-        alert("Invite!");
+    Scope.invite = function (isCreate) {
+        if (isCreate) {
+            info = {"to": Scope.user.email, "first_name": Scope.user.first_name, "success": createSuccess, "error": createError};
+        } else {
+            info = {"to": this.user.email, "first_name": this.user.first_name, "success": resendSuccess, "error": resendError};
+        }
+        var data = {
+            "to": info.to,
+            "cc": "",
+            "bcc": "",
+            "subject": "Welcome to DreamFactory",
+            "body_html": "Hi {first_name},<br/><br/>You have been invited to become a DreamFactory user.<br/>" +
+                "Click the confirmation link below to register.<br/>{_invite_url_}<br/><br/>Enjoy!<br/>DreamFactory",
+            "from_name": "DreamFactory",
+            "from_email": "no-reply@dreamfactory.com",
+            "reply_to_name": "DreamFactory",
+            "reply_to_email": "no-reply@dreamfactory.com",
+            "first_name": info.first_name
+        };
+        $.ajax({
+            dataType: 'json',
+            type: 'POST',
+            url: CurrentServer + '/rest/Email/?app_name=admin&method=POST',
+            data: JSON.stringify(data),
+            cache: false,
+            success: info.success,
+            error: info.error
+        });
     };
+    function createSuccess(response) {
+        window.top.Actions.showStatus("User created and invite sent!");
+        Scope.promptForNew();
+    }
+
+    function createError(response) {
+        window.top.Actions.showStatus("User created but unable to send invite. " + getErrorString(response), "error");
+        Scope.promptForNew();
+    }
+    function resendSuccess(response) {
+        window.top.Actions.showStatus("Invite sent!");
+    }
+
+    function resendError(response) {
+        window.top.Actions.showStatus("Unable to send invite. " + getErrorString(response), "error");
+    }
     Scope.promptForNew = function () {
         Scope.action = "Create";
-        Scope.sendInvite = true;
         Scope.passwordEdit = false;
         Scope.user = {};
         Scope.user.password = '';
@@ -94,7 +139,6 @@ var UserCtrl = function ($scope, User, Role) {
     };
     Scope.showDetails = function(){
         Scope.action = "Edit";
-        Scope.sendInvite = true;
         Scope.passwordEdit = false;
         Scope.user = angular.copy(this.user);
         Scope.user.password = '';

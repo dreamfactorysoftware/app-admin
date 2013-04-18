@@ -15,9 +15,12 @@
                     <tr ng-repeat="user in Users.record" id="row_{{user.id}}">
                         <td ng-click="showDetails()">{{user.display_name}}</td>
                         <td class="no-border">
-                            <div class="btn-group">
-                                <a class="btn btn-small btn-inverse"><i class="icon-edit"></i></a>
-                                <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
+                            <div ng-show="user.confirm_code!='y'" class="btn-group pull-right">
+                                <a class="btn btn-small btn-inverse" title="Reinvite unconfirmed user" ng-click="invite(false)"><i class="icon-envelope"></i></a>
+                                <a class="btn btn-small btn-inverse" title="Delete this user" ng-click="delete()"><i class="icon-trash"></i></a>
+                            </div>
+                            <div ng-show="user.confirm_code=='y'" class="btn-group pull-right">
+                                <a class="btn btn-small btn-inverse" title="Delete this user" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -78,16 +81,15 @@
                         </div>
                         <div class="section">
                             <div ng-show="action=='Create'">
-                                <input ng-checked="sendInvite" type="checkbox" ng-model="sendInvite"/>&nbsp;Send invite to user and let them set their own password
+                                <input ng-checked="passwordEdit" type="checkbox" ng-model="passwordEdit"/>&nbsp;Skip email confirmation and set password manually
                             </div>
                             <div ng-show="action=='Edit'">
                                 <input ng-checked="passwordEdit" type="checkbox" ng-model="passwordEdit"/>&nbsp;Change password
                             </div>
-                            <div ng-show="(action=='Create' && !sendInvite) || (action=='Edit' && passwordEdit)">
+                            <div ng-show="passwordEdit">
                                 <br/>
                                 Password : <input id="password" name="password" type="password" ng-model="user.password">
-                            </div>
-                            <div ng-show="(action=='Create' && !sendInvite) || (action=='Edit' && passwordEdit)">
+                                <br/>
                                 Verify Password : <input id="passwordRepeat" name="passwordRepeat" type="password" ng-model="passwordRepeat">
                             </div>
                         </div>
@@ -100,9 +102,6 @@
                             <button id="update_button" ng-show="action=='Edit'" ng-click="save()" class="btn btn-primary" ng-disabled="userform.$invalid">
                                 <li class="icon-save"></li>
                                 &nbsp;Update</button>
-                            <button id="invite_button" ng-show="action=='Edit'" ng-click="invite()" class="btn btn-primary" ng-disabled="userform.$invalid">
-                                <li class="icon-envelope"></li>
-                                &nbsp;Invite</button>
                         </div>
 
                     </div>

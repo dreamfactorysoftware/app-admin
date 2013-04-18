@@ -16,8 +16,8 @@
                         <td ng-click='showDetails()'>{{service.name}}</td>
                         <td class="no-border">
                             <div class="btn-group pull-right">
-                                <a ng-click="showSwagger()" class="btn btn-small btn-inverse" ><i class="icon-book"></i></a>
-                                <a ng-hide="service.is_system" class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
+                                <a ng-click="showSwagger()" class="btn btn-small btn-inverse" title="Explore this service"><i class="icon-book"></i></a>
+                                <a ng-hide="service.is_system" class="btn btn-small btn-inverse" title="Delete this service" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
                         </td>
                     </tr>

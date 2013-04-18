@@ -15,9 +15,8 @@
                     <tr ng-repeat="role in Roles.record" id="row_{{role.id}}">
                         <td ng-click="showDetails()">{{role.name}}</td>
                         <td class="no-border">
-                            <div class="btn-group">
-                                <a class="btn btn-small btn-inverse"><i class="icon-edit"></i></a>
-                                <a class="btn btn-small btn-inverse" ng-click="delete()"><i class="icon-trash"></i></a>
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-small btn-inverse" title="Delete this role" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
                         </td>
                     </tr>
