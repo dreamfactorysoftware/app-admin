@@ -6,7 +6,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     Scope.currentServer = CurrentServer;
     Scope.action = "Create";
     setCurrentApp('applications');
-    Scope.app = {is_url_external:'0',roles:[]};
+    Scope.app = {is_url_external:'0', requires_fullscreen:'0', roles:[]};
     $('#update_button').hide();
     $('.external').hide();
 
@@ -18,7 +18,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     };
     Scope.promptForNew = function () {
         Scope.action = "Create";
-        Scope.app = {is_url_external:'0',roles:[]};
+        Scope.app = {is_url_external:'0', requires_fullscreen:'0', roles:[]};
         $('#context-root').show();
         $('#file-manager').hide();
         $('#app-preview').hide();
