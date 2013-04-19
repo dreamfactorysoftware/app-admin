@@ -50,6 +50,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                 $.pnotify({
                     title: 'Error' ,
                     type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
                     text: error[0].message
                 });
 
@@ -79,6 +81,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                 $.pnotify({
                     title: 'Error' ,
                     type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
                     text: error[0].message
                 });
 
@@ -115,6 +119,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                 $.pnotify({
                     title: 'Error' ,
                     type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
                     text: error[0].message
                 });
 
