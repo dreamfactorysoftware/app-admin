@@ -32,18 +32,29 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
 
         var id = Scope.app.id;
         AppsRelated.update({id:id}, Scope.app, function () {
-            updateByAttr(Scope.Apps.record, 'id', id, Scope.app);
+                updateByAttr(Scope.Apps.record, 'id', id, Scope.app);
 
-            window.top.Actions.updateSession("update");
+                window.top.Actions.updateSession("update");
 
-            $.pnotify({
-                title: Scope.app.name,
-                type: 'success',
-                text: 'Updated Successfully'
+                $.pnotify({
+                    title: Scope.app.name,
+                    type: 'success',
+                    text: 'Updated Successfully'
+                });
+                $(document).scrollTop();
+                Scope.promptForNew();
+
+            },
+            function(response){
+                var error = response.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    text: error[0].message
+                });
+
+
             });
-            Scope.promptForNew();
-
-        });
     };
     Scope.goToImport = function(){
         $location.path('/import');
@@ -64,12 +75,14 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                 Scope.showAppPreview(data.url);
             },
             function(response){
-                var errors = response.data.error;
-                errors.forEach(function(){
-                    //Scope.alerts.push(val);
-                    console.log(this);
-                }, this);
-                //Scope.alerts.push(response.data.error);
+                var error = response.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    text: error[0].message
+                });
+
+
             });
 
 
@@ -87,16 +100,26 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
         }
         var id = this.app.id;
         AppsRelated.delete({ id:id }, function () {
-            $("#row_" + id).fadeOut();
-            window.top.Actions.updateSession();
+                $("#row_" + id).fadeOut();
+                window.top.Actions.updateSession();
 
-            Scope.promptForNew();
-            $.pnotify({
-                title: Scope.app.name,
-                type: 'success',
-                text: 'Removed Successfully'
+                Scope.promptForNew();
+                $.pnotify({
+                    title: Scope.app.name,
+                    type: 'success',
+                    text: 'Removed Successfully'
+                });
+            },
+            function(response){
+                var error = response.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    text: error[0].message
+                });
+
+
             });
-        });
     };
     Scope.postFile = function(target){
         console.log(target);
