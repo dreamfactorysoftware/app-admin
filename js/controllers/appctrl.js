@@ -33,12 +33,15 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
         var id = Scope.app.id;
         AppsRelated.update({id:id}, Scope.app, function () {
             updateByAttr(Scope.Apps.record, 'id', id, Scope.app);
-            Scope.promptForNew();
-            window.top.Actions.updateSession("update");
-            $timeout(function(){
-                window.top.Actions.showStatus("Updated Successfully");
-            },1000);
 
+            window.top.Actions.updateSession("update");
+
+            $.pnotify({
+                title: Scope.app.name,
+                type: 'success',
+                text: 'Updated Successfully'
+            });
+            Scope.promptForNew();
 
         });
     };
@@ -52,9 +55,12 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                 //Scope.app.id = data.id;
                 //Scope.app = data;
                 window.top.Actions.updateSession("update");
-                $timeout(function(){
-                    window.top.Actions.showStatus("Created Successfully");
-                },1000);
+                $.pnotify({
+                    title: Scope.app.name,
+                    type: 'success',
+                    text: 'Created Successfully'
+                });
+                Scope.promptForNew();
                 Scope.showAppPreview(data.url);
             },
             function(response){
@@ -83,10 +89,13 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
         AppsRelated.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
             window.top.Actions.updateSession();
-            $timeout(function(){
-                window.top.Actions.showStatus("Deleted Successfully");
-            },1000);
+
             Scope.promptForNew();
+            $.pnotify({
+                title: Scope.app.name,
+                type: 'success',
+                text: 'Removed Successfully'
+            });
         });
     };
     Scope.postFile = function(target){
