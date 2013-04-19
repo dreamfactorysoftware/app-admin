@@ -105,8 +105,8 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             //console.log(Scope);
             var keys  = Object.keys(Scope.tableSchema.field[0]);
             keys.forEach(function (key) {
-                    //column.editableCellTemplate = inputTemplate;
-                    //column.enableFocusedCellEdit = true;
+                    column.editableCellTemplate = inputTemplate;
+                    column.enableFocusedCellEdit = true;
                     column.width = '100px';
                     column.field = key;
                     columnDefs.push(column);
