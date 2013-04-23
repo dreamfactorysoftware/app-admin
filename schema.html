@@ -82,9 +82,9 @@
                         <div class="section">
                             Allow Null: <input type="checkbox" ng-model="schema.table.field.allow_null"/>
                         </div>
-                        <div><a class="btn btn-primary" ng-click="addField()">
+                        <div><button ng-disabled="!schema.table.name" class="btn btn-success" ng-click="addField()">
                             <li class="icon-plus-sign-alt"></li>
-                            &nbsp;Add Field</a></div>
+                            &nbsp;Add Field</button></div>
 
                         <div id="fields_container"></div>
                         <table id="field-list" class="table table-hover table-striped">
@@ -107,9 +107,9 @@
 
                             </tbody>
                         </table>
-                        <div><a class="btn btn-primary" ng-click="create()">
+                        <div><button ng-disabled="!schema.table.name" class="btn btn-primary" ng-click="create()">
                             <li class="icon-save"></li>
-                            &nbsp;Create Table</a></div>
+                            &nbsp;Create Table</button></div>
                     </div>
 
 
