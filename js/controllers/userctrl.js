@@ -74,8 +74,8 @@ var UserCtrl = function ($scope, Config, User, Role) {
             "cc": "",
             "bcc": "",
             "subject": "Welcome to DreamFactory",
-            "body_html": "Hi {first_name},<br/><br/>You have been invited to become a DreamFactory user.<br/>" +
-                "Click the confirmation link below to register.<br/>{_invite_url_}<br/><br/>Enjoy!<br/>DreamFactory",
+            "body_html": "Hi {first_name},<br/><br/>You have been invited to become a DreamFactory user. " +
+                "Click the confirmation link below to set your password and log in.<br/><br/>{_invite_url_}<br/><br/>Enjoy!<br/><br/>DreamFactory",
             "from_name": "DreamFactory",
             "from_email": "no-reply@dreamfactory.com",
             "reply_to_name": "DreamFactory",
