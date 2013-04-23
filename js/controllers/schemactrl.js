@@ -286,7 +286,7 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
     Scope.enableSchemaSave = function () {
         $("#add_" + this.row.rowIndex).attr('disabled', false);
         $("#delete_" + this.row.rowIndex).attr('disabled', false);
-        $("#save_" + this.row.rowIndex).attr('disabled', false);
+        //$("#save_" + this.row.rowIndex).attr('disabled', false);
         //console.log(this);
     };
     Scope.saveRow = function () {
