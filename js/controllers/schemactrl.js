@@ -6,11 +6,26 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         {value: true, text: 'true'},
         {value: false, text: 'false'}
     ];
+    Scope.typeOptions = [
+        {value:"id", text: "id"},
+        {value:"string", text: "string"},
+        {value:"integer", text: "integer"},
+        {value:"text", text: "text"},
+        {value:"boolean", text: "boolean"},
+        {value:"binary", text: "binary"},
+        {value:"blob", text: "blob"},
+        {value:"float", text: "float"},
+        {value:"decimal", text: "decimal"},
+        {value:"datetime", text: "datetime"},
+        {value:"date", text: "date"},
+        {value:"time", text: "time"}
+    ]
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
     var schemaButtonTemplate = '<div ><button id="add_{{row.rowIndex}}" class="btn btn-small btn-primary" ng-show="this.row.entity.new" ng-click="schemaAddField()"><li class="icon-plus-sign"></li></button><button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaSaveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.name" ng-click="schemaDeleteField()"><li class="icon-remove"></li></button></div>';
+    var typeTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in typeOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     Scope.columnDefs = [];
     Scope.browseOptions = {};
     Scope.browseOptions = {data: 'tableData', canSelectRows: false, displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
@@ -105,7 +120,14 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             //console.log(Scope);
             var keys  = Object.keys(Scope.tableSchema.field[0]);
             keys.forEach(function (key) {
-                    column.editableCellTemplate = inputTemplate;
+                    if(key == 'type'){
+                        column.editableCellTemplate = typeTemplate;
+                    }else{
+                        column.editableCellTemplate = inputTemplate;
+                    }
+
+
+
                     column.enableFocusedCellEdit = true;
                     column.width = '100px';
                     column.field = key;
@@ -116,6 +138,7 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             );
             Scope.columnDefs = columnDefs;
             //console.log(Scope.columnDefs);
+            Scope.browseOptions.enableCellEdit = true;
             Scope.tableData = Scope.tableSchema.field;
             Scope.tableData.unshift({"new":true});
 
@@ -147,7 +170,11 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
     Scope.schemaAddField = function(){
         var table = this.tableSchema.name;
         var row = this.row.entity;
-        $http.put('/rest/schema/' + table + '/?app_name=admin', row);
+        $http.put('/rest/schema/' + table + '/?app_name=admin', row).success(function(data){
+            //post data to grid
+            Scope.tableData.unshift({});
+            //console.log("updated");
+        });
         //Scope.tableData = removeByAttr(Scope.tableData, 'name', name);    };
     };
     Scope.schemaDeleteField = function(){
@@ -164,6 +191,8 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         }
         $http.delete('/rest/schema/' + table + '/' + name + '?app_name=admin');
         Scope.tableData = removeByAttr(Scope.tableData, 'name', name);
+        //Scope.tableData.shift();
+        //Scope.tableData.unshift({"new":true});
     };
 
     Scope.create = function () {
