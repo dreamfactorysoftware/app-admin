@@ -1,4 +1,4 @@
-var SchemaCtrl = function ($scope, Schema, DB, $http) {
+var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];
@@ -22,9 +22,13 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
     ]
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
+    var schemaInputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSchemaSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
-    var schemaButtonTemplate = '<div ><button id="add_{{row.rowIndex}}" class="btn btn-small btn-primary" ng-show="this.row.entity.new" ng-click="schemaAddField()"><li class="icon-plus-sign"></li></button><button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaSaveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.name" ng-click="schemaDeleteField()"><li class="icon-remove"></li></button></div>';
+    var schemaButtonTemplate = '<div ><button id="add_{{row.rowIndex}}" class="btn btn-small btn-primary" disabled=true ng-show="this.row.entity.new" ng-click="schemaAddField()"><li class="icon-save"></li></button>' +
+        '<button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaSaveRow()"><li class="icon-save"></li></button>' +
+        '<button class="btn btn-small btn-danger" ng-show="!this.row.entity.new" ng-click="schemaDeleteField()"><li class="icon-remove"></li></button>' +
+        '<button id="delete_{{row.rowIndex}}" class="btn btn-small btn-danger" ng-show="this.row.entity.new" disabled=true ng-click="schemaDeleteField(true)"><li class="icon-remove"></li></button></div>';
     var typeTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in typeOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     Scope.columnDefs = [];
     Scope.browseOptions = {};
@@ -122,8 +126,10 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             keys.forEach(function (key) {
                     if(key == 'type'){
                         column.editableCellTemplate = typeTemplate;
+                    }else if (key =="allow_null"){
+                        column.editableCellTemplate = booleanTemplate;
                     }else{
-                        column.editableCellTemplate = inputTemplate;
+                        column.editableCellTemplate = schemaInputTemplate;
                     }
 
 
@@ -171,15 +177,16 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         var table = this.tableSchema.name;
         var row = this.row.entity;
         $http.put('/rest/schema/' + table + '/?app_name=admin', row).success(function(data){
-            //post data to grid
-            Scope.tableData.unshift({});
-            //console.log("updated");
+            Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
+            Scope.tableData.unshift(data);
+            Scope.tableData.unshift({"new":true});
         });
-        //Scope.tableData = removeByAttr(Scope.tableData, 'name', name);    };
+
     };
-    Scope.schemaDeleteField = function(){
+    Scope.schemaDeleteField = function(gridOnly){
         var table = this.tableSchema.name;
         var name = this.row.entity.name;
+        var index = this.row.rowIndex;
         which = name;
         if (!which || which == '') {
             which = "the field?";
@@ -189,17 +196,30 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         if (!confirm("Are you sure you want to delete " + which)) {
             return;
         }
-        $http.delete('/rest/schema/' + table + '/' + name + '?app_name=admin');
-        Scope.tableData = removeByAttr(Scope.tableData, 'name', name);
-        //Scope.tableData.shift();
-        //Scope.tableData.unshift({"new":true});
+        if(!gridOnly){
+            $http.delete('/rest/schema/' + table + '/' + name + '?app_name=admin');
+            Scope.tableData = removeByAttr(Scope.tableData, 'name', name);
+        }else{
+            //Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
+            Scope.tableData.splice(0,1);
+            $timeout(function () {
+                Scope.tableData.unshift({"new":true});
+                $("#delete_" + index).attr('disabled', true);
+            }, 0);
+
+        }
+
     };
 
     Scope.create = function () {
         Schema.save(Scope.newTable, function (data) {
-            //Scope.schemaData.push(data.table);
+            $.pnotify({
+                title: Scope.newTable.table.name,
+                type: 'success',
+                text: 'Created Successfully'
+            });
             Scope.showForm();
-            window.top.Actions.showStatus("Created Successfully");
+            //window.top.Actions.showStatus("Created Successfully");
             Scope.schemaData.push(Scope.newTable.table);
         });
     };
@@ -211,12 +231,17 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         } else {
             which = "the table '" + which + "'?";
         }
-        if (!confirm("Are you sure you want to delete " + which)) {
+        if (!confirm("Are you sure you want to drop " + which)) {
             return;
         }
         Schema.delete({ name: name }, function () {
+            $.pnotify({
+                title: name,
+                type: 'success',
+                text: 'Dropped Successfully'
+            });
             Scope.showForm();
-            window.top.Actions.showStatus("Deleted Successfully");
+            //window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + name).fadeOut();
         });
     };
@@ -255,6 +280,12 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
 
     }
     Scope.enableSave = function () {
+        $("#save_" + this.row.rowIndex).attr('disabled', false);
+        //console.log(this);
+    };
+    Scope.enableSchemaSave = function () {
+        $("#add_" + this.row.rowIndex).attr('disabled', false);
+        $("#delete_" + this.row.rowIndex).attr('disabled', false);
         $("#save_" + this.row.rowIndex).attr('disabled', false);
         //console.log(this);
     };
