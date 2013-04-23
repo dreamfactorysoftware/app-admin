@@ -2071,3 +2071,7 @@ h5.text-info {
 .ngCell div {
     height: 100%;
 }
+.section span{
+    display:inline-block;
+    width:90px;
+}

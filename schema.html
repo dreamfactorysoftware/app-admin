@@ -50,16 +50,15 @@
                             <b>Create Table</b>
                         </div>
                         <div class="section">
-                            Table Name: <input id="table-name" type="text" ng-model="schema.table.name"/>
+                            <span>Table Name:</span><input id="table-name" type="text" ng-model="schema.table.name"/>
                         </div>
-                        <div class="section">
+                        <div class="section info">
                             <b>Add Fields</b>
                         </div>
                         <div class="section">
-                            Field Name: <input type="text" ng-model="schema.table.field.name"/>
-                        </div>
-                        <div class="section">
-                            Field Type: <select ng-model="schema.table.field.type">
+                            <span>Field Name:</span><input type="text" ng-model="schema.table.field.name"/>
+                            <br/>
+                            <span>Field Type:</span><select ng-model="schema.table.field.type">
                             <option value="id">ID / Primary Key</option>
                             <option value="string">String</option>
                             <option value="integer">Integer</option>
@@ -75,12 +74,10 @@
 
 
                         </select>
-                        </div>
-                        <div class="section">
-                            Field Size: <input type="text" ng-model="schema.table.field.size"/>
-                        </div>
-                        <div class="section">
-                            Allow Null: <input type="checkbox" ng-model="schema.table.field.allow_null"/>
+                            <br/>
+                            <span>Field Size:</span><input type="text" ng-model="schema.table.field.size"/>
+                            <br/>
+                            <span>Allow Null:</span><input type="checkbox" ng-model="schema.table.field.allow_null"/>
                         </div>
                         <div><button ng-disabled="!schema.table.name" class="btn btn-success" ng-click="addField()">
                             <li class="icon-plus-sign-alt"></li>
