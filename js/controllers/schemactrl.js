@@ -2,6 +2,9 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];
+    Scope.newTable = {};
+    Scope.newTable.table = {};
+    Scope.newTable.table.field = [];
     Scope.booleanOptions = [
         {value: true, text: 'true'},
         {value: false, text: 'false'}
@@ -160,9 +163,7 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
         $('#row_' + this.table.name).addClass('info');
         //console.log(this);
     }
-    Scope.newTable = {};
-    Scope.newTable.table = {};
-    Scope.newTable.table.field = [];
+
     Scope.addField = function () {
 
         Scope.newTable.table.name = Scope.schema.table.name;
@@ -313,6 +314,14 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
         DB.delete({name: Scope.currentTable}, {id: id});
         Scope.tableData = removeByAttr(Scope.tableData, 'id', id);
 
+    }
+    Scope.areFieldsDefined = function(){
+        var hasFields = false;
+        if(Scope.newTable.table.field.length <= 0){
+
+            hasFields = true;
+        }
+        return hasFields;
     }
 };
 

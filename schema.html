@@ -46,6 +46,10 @@
                         <div id="schema-main" ng-grid="browseOptions"></div>
                     </div>
                     <div id="create-form">
+                        <div class="alert alert-info">
+                            <li class="icon-info-sign"></li>
+                            &nbsp;Propose table structure and click "Create Table" to save.
+                        </div>
                         <div class="section">
                             <b>Create Table</b>
                         </div>
@@ -104,7 +108,7 @@
 
                             </tbody>
                         </table>
-                        <div><button ng-disabled="!schema.table.name" class="btn btn-primary" ng-click="create()">
+                        <div><button ng-disabled = "areFieldsDefined()" class="btn btn-primary" ng-click="create()">
                             <li class="icon-save"></li>
                             &nbsp;Create Table</button></div>
                     </div>
