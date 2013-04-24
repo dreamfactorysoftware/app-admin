@@ -50,6 +50,7 @@
 
 #grid-table th {
     width: auto;
+    white-space:nowrap;
 }
 
 #app-details {
