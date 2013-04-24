@@ -45,6 +45,10 @@
                     </div>
                 </div>
             </div>
+            <div class="alert alert-info">
+                <li class="icon-info-sign"></li>
+                DreamFactory makes it easy to build and deploy applications by providing all the back-end infrastructure. Use this tab to manage your apps.
+            </div>
             <div>
 
                 <div class="add_new">
@@ -114,8 +118,11 @@
                             <input type="checkbox" ng-checked="app.requires_fullscreen == 1" ng-model="app.requires_fullscreen">&nbsp;Run Full Screen
                         </div>
                         <div class="section">
-                            Assign this app to a role(s).
-
+                            <p>Assign this app to a role(s).</p>
+                            <div class="alert alert-info">
+                                <li class="icon-info-sign"></li>
+                                Each user who is assigned to one of the selected roles will have access to this app. Go to the Roles tab to create and manage roles.
+                            </div>
                             <table class="table table-hover table-striped table-bordered">
 
                                 <tr ng-repeat="role in Roles.record" id="row_{{role.id}}">

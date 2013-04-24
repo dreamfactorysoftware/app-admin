@@ -36,6 +36,10 @@
                     </div>
                 </div>
             </div>
+            <div class="alert alert-info">
+                <li class="icon-info-sign"></li>
+                Roles provide a way to grant or deny access to specific applications and services on a per-user basis.
+            </div>
             <form novalidate class="css-form" name="roleform">
                 <div>
                     <div class="detail-view"></div>
@@ -54,7 +58,7 @@
                                 <input ng-model="role.description" type="text"/>
                             </div>
                             <div class="section">
-                                Users Assigned to this Role.
+                                <p>Users Assigned to this Role.</p>
                                 <div class="limit-list">
                                     <table class="table table-hover table-striped table-bordered">
 
@@ -72,7 +76,11 @@
                                 </div>
                             </div>
                             <div class="section">
-                                Apps Assigned to this Role.&nbsp;&nbsp;&nbsp;<a><i class="icon-star"></i></a> = Set this app to auto load when users of this role log in.
+                                <p>Apps Assigned to this Role.&nbsp;&nbsp;&nbsp;<a><i class="icon-star"></i></a> = Set this app to auto load when users of this role log in.</p>
+                                <div class="alert alert-info">
+                                    <li class="icon-info-sign"></li>
+                                    Each user who is assigned to this role will have access to the selected apps.
+                                </div>
                                 <div class="limit-list">
                                     <table class="table table-hover table-striped table-bordered">
 
@@ -93,8 +101,11 @@
 
                             </div>
                             <div class="section">
-                                Assign Service Access to this Role<br/><br/>
-
+                                <p>Assign Service Access to this Role</p>
+                                <div class="alert alert-info">
+                                    <li class="icon-info-sign"></li>
+                                    Use the controls below to add service access to this role.
+                                </div>
                                 <span class="access">Service :</span> <select ng-change="loadComponents()"
                                                                               ng-model="service.service_id"
                                                                               ng-options="service.id as service.name for service in Services.record">
@@ -118,6 +129,11 @@
                             <div style="display:none;padding-left:10px;" id="alert-container"
                                  class="alert alert-error"></div>
                             <div class="section limit-list">
+                                <div class="alert alert-info">
+                                    <li class="icon-info-sign"></li>
+                                    Each user who is assigned to this role will have the service access specified below.
+                                </div>
+                                <p ng-show="role.role_service_accesses.length==0">No service access for this role. Use the controls above to add service access.</p>
                                 <table id="field-list" class="table table-hover table-striped">
 
                                     <tbody>
