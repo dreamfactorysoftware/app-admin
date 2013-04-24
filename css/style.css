@@ -1944,11 +1944,10 @@ body {
 
 .section {
     background-color: #EFEFEF;
-    border-color:     #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
-    border-style:     solid;
-    border-width:     1px;
-    margin:           1px;
-    padding:          5px;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px 4px 4px 4px;
+    margin-bottom: 20px;
+    padding: 8px 35px 8px 14px;
 }
 
 #schema-main {
@@ -2075,4 +2074,8 @@ h5.text-info {
 .section span{
     display:inline-block;
     width:90px;
+}
+span.label{
+    margin-bottom: 10px;
+    padding: 5px;
 }

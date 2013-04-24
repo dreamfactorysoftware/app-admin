@@ -45,24 +45,21 @@
 
                 <form novalidate class="css-form" name="userform">
                     <div class="add_new">
-                        <h5 class="text-info">{{action}} user</h5>
+                        <span class="label label-info"><i class="icon-user"></i>&nbsp;{{action}} User</span>
 
                         <div id="step1">
                             <div class="section">
                                 Email :  <input ng-model="user.email" type="email" required/>
-                            </div>
-                            <div class="section form-inline">
+                                <br/>
                                 First Name : <input class="input-small"  ng-model="user.first_name" type="text" required/>
                                 Last Name :  <input class="input-small"  ng-model="user.last_name" type="text" required/>
-                            </div>
-                            <div class="section">
+                                <br/>
                                 Display Name : <input ng-model="user.display_name"
                                                       ng-bind="{{user.display_name}}" value="{{user.first_name}}&nbsp{{user.last_name}}" type="text"/>
-                            </div>
-                            <div class="section">
+                                <br/>
                                 Phone : <input ng-model="user.phone" type="tel"/>
                             </div>
-                            <div class="section">
+                            <div class="section" ng-class="{'alert alert-success': user.is_sys_admin}">
                                 <input ng-click="toggleRoleSelect($event.target.checked)"  ng-checked="user.is_sys_admin" type="checkbox" ng-model="user.is_sys_admin"/>&nbsp;This is a System Administrator
                             </div>
                             <div class="section">
@@ -76,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="section">
+                        <div class="section" ng-class="{'alert alert-success': user.is_active}">
                             <input ng-checked="user.is_active" type="checkbox" ng-model="user.is_active"/>&nbsp;Active
                         </div>
                         <div class="section">
