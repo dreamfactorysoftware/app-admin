@@ -42,33 +42,33 @@
                 <div class="detail-view"></div>
 
                 <div class="add_new">
-                    <h5 class="text-info">{{action}} service</h5>
+                    <span class="label label-info">{{action}} service</span>
                     <div ng-include src="'swagger.html'">
                     </div>
                     <div id="step1">
                         <div class="section" ng-show="action=='Update'">
-                            <p>Type</p>
+                            <span>Type:</span>
                             <select ng-disabled = true ng-init="showFields()" ng-change="showFields()" ng-model = "service.type" ng-options="option.name as option.name for option in serviceOptions"></select>
                         </div>
                         <div class="section" ng-show="action!='Update'">
-                            <p>Type</p>
+                            <span>Type:</span>
                             <select ng-init="showFields()" ng-change="showFields()" ng-model = "service.type" ng-options="option.name as option.name for option in serviceCreateOptions"></select>
                         </div>
 
                         <div class="section">
-                            <p>Service Name</p>
+                            <span>Service Name</span>
                             <input ng-model="service.name" type="text"/>
                         </div>
                         <div class="section">
-                            <p>API Name</p>
+                            <span>Api Name:</span>
                             <input ng-disabled = "service.is_system" ng-model="service.api_name" type="text"/>
                         </div>
                         <div class="section">
-                            <p>Description</p>
+                            <span>Description:</span>
                             <input ng-model="service.description" type="text"/>
                         </div>
                         <div class="section base_url">
-                            <p>Base URL</p>
+                            <span>Base URL</span>
                             <input ng-model="service.base_url" type="text"/>
                         </div>
                         <div class="section parameters">
@@ -127,8 +127,8 @@
                             <p>Native Format</p>
                             <input ng-model="service.native_format" type="text"/>
                         </div>
-                        <div class="section">
-                            <input ng-checked="service.is_active" type="checkbox" ng-model="service.is_active"/>&nbsp;Active
+                        <div ng-class="{'alert alert-success': service.is_active}" class="section" >
+                            <input  ng-checked="service.is_active" type="checkbox" ng-model="service.is_active"/>&nbsp;Active
                         </div>
                         <div id="button_holder">
                             <a id="save_button" ng-click="create()" class="btn btn-primary">
