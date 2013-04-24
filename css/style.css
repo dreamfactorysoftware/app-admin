@@ -17,7 +17,7 @@
 }
 
 #grid-table td {
-    width: 150px;
+    width: 100%;
 }
 
 #step2 .well {
@@ -44,7 +44,7 @@
 }
 
 #grid-table .no-border {
-    width: 50px;
+
 
 }
 
