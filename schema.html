@@ -50,15 +50,13 @@
                             <li class="icon-info-sign"></li>
                             &nbsp;Propose table structure and click "Create Table" to save.
                         </div>
-                        <div class="section">
-                            <b>Create Table</b>
-                        </div>
+                        <span class="label label-info"><i class="icon-plus-sign-alt"></i>&nbsp;Create Table</span>
                         <div class="section">
                             <span>Table Name:</span><input id="table-name" type="text" ng-model="schema.table.name"/>
                         </div>
-                        <div class="section info">
-                            <b>Add Fields</b>
-                        </div>
+
+                        <span class="label label-info"><i class="icon-plus-sign-alt"></i>&nbsp;Add Fields</span>
+
                         <div class="section">
                             <span>Field Name:</span><input type="text" ng-model="schema.table.field.name"/>
                             <br/>
@@ -81,11 +79,12 @@
                             <br/>
                             <span>Field Size:</span><input type="text" ng-model="schema.table.field.size"/>
                             <br/>
-                            <span>Allow Null:</span><input type="checkbox" ng-model="schema.table.field.allow_null"/>
+                            <span>Allow Null:</span><input type="checkbox" ng-model="schema.table.field.allow_null"/><br/>
+                            <div><button ng-disabled="!schema.table.name" class="btn btn-success" ng-click="addField()">
+                                <li class="icon-plus-sign-alt"></li>
+                                &nbsp;Add Field</button></div>
                         </div>
-                        <div><button ng-disabled="!schema.table.name" class="btn btn-success" ng-click="addField()">
-                            <li class="icon-plus-sign-alt"></li>
-                            &nbsp;Add Field</button></div>
+
 
                         <div id="fields_container"></div>
                         <table id="field-list" class="table table-hover table-striped">
