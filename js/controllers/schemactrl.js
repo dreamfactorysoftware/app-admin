@@ -181,7 +181,18 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
             Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
             Scope.tableData.unshift(data);
             Scope.tableData.unshift({"new":true});
-        });
+        }).error(function(response){
+                var error = response.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
+                    text: error[0].message
+                });
+
+
+            });
 
     };
     Scope.schemaDeleteField = function(gridOnly){
@@ -198,8 +209,26 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
             return;
         }
         if(!gridOnly){
-            $http.delete('/rest/schema/' + table + '/' + name + '?app_name=admin');
-            Scope.tableData = removeByAttr(Scope.tableData, 'name', name);
+            $http.delete('/rest/schema/' + table + '/' + name + '?app_name=admin').success(function(){
+                Scope.tableData = removeByAttr(Scope.tableData, 'name', name);
+                $.pnotify({
+                    title: name,
+                    type: 'success',
+                    text: 'Deleted Successfully'
+                });
+            }).error(function(response){
+                    var error = response.data.error;
+                    $.pnotify({
+                        title: 'Error' ,
+                        type: 'error',
+                        hide:false,
+                        addclass: "stack-bottomright",
+                        text: error[0].message
+                    });
+
+
+                });;
+
         }else{
             //Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
             Scope.tableData.splice(0,1);
@@ -215,10 +244,22 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
     Scope.create = function () {
         Schema.save(Scope.newTable, function (data) {
             $.pnotify({
-                title: Scope.newTable.table.name,
-                type: 'success',
-                text: 'Created Successfully'
-            });
+                    title: Scope.newTable.table.name,
+                    type: 'success',
+                    text: 'Created Successfully'
+                },
+                function(response){
+                    var error = response.data.error;
+                    $.pnotify({
+                        title: 'Error' ,
+                        type: 'error',
+                        hide:false,
+                        addclass: "stack-bottomright",
+                        text: error[0].message
+                    });
+
+
+                });
             Scope.showForm();
             //window.top.Actions.showStatus("Created Successfully");
             Scope.schemaData.push(Scope.newTable.table);
@@ -236,15 +277,27 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
             return;
         }
         Schema.delete({ name: name }, function () {
-            $.pnotify({
-                title: name,
-                type: 'success',
-                text: 'Dropped Successfully'
+                $.pnotify({
+                    title: name,
+                    type: 'success',
+                    text: 'Dropped Successfully'
+                });
+                Scope.showForm();
+                //window.top.Actions.showStatus("Deleted Successfully");
+                $("#row_" + name).fadeOut();
+            },
+            function(response){
+                var error = response.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
+                    text: error[0].message
+                });
+
+
             });
-            Scope.showForm();
-            //window.top.Actions.showStatus("Deleted Successfully");
-            $("#row_" + name).fadeOut();
-        });
     };
 
     Scope.validateJSON = function () {
@@ -296,11 +349,21 @@ var SchemaCtrl = function ($scope, Schema, DB, $http, $timeout) {
         var newRecord = this.row.entity;
         if (!newRecord.id) {
             DB.save({name: Scope.currentTable}, newRecord, function (data) {
-                $("#save_" + index).attr('disabled', true);
-                Scope.tableData.push(data);
-            }, function () {
-                window.top.Actions.showStatus("An Error has occurred", "error");
-            });
+                    $("#save_" + index).attr('disabled', true);
+                    Scope.tableData.push(data);
+                },
+                function(response){
+                    var error = response.data.error;
+                    $.pnotify({
+                        title: 'Error' ,
+                        type: 'error',
+                        hide:false,
+                        addclass: "stack-bottomright",
+                        text: error[0].message
+                    });
+
+
+                });
         } else {
             DB.update({name: Scope.currentTable}, newRecord, function () {
                 $("#save_" + index).attr('disabled', true);
