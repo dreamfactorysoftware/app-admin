@@ -1,25 +1,18 @@
-<table style="width:100%" ng-controller="SchemaCtrl">
+<table style="width:100%" ng-controller="DataCtrl">
     <tr>
         <td id="item-list" class="well">
             <div id="grid-table">
                 <table id="app-list" class="table table-hover table-striped">
                     <thead>
                     <tr>
-                        <th>Table</th>
-
-                        <th class="no-border"></th>
+                        <th>Table Name</th>
                     </tr>
                     </thead>
                     <tbody>
 
                     <tr ng-repeat="table in schemaData" id="row_{{table.name}}">
                         <td ng-click="showData()">{{table.name}}</td>
-                        <td class="no-border">
-                            <div class="btn-group">
-                                <a ng-click="showSchema()" class="btn btn-small btn-inverse" title="Edit schema"><i class="icon-edit"></i></a>
-                                <a class="btn btn-small btn-inverse" title="Delete this table" ng-click="delete()"><i class="icon-trash"></i></a>
-                            </div>
-                        </td>
+
                     </tr>
 
                     </tbody>
@@ -30,139 +23,26 @@
         <td id="app-details" class="well">
             <div class="navbar">
                 <div class="navbar-inner"><div class="brand">Tables</div>
-                    <div class="btn-group pull-right">
-                        <a ng-click="showJSON()" class="btn btn-small">
-                            <li class="icon-upload-alt"></li>
-                            Import JSON Schema
-                        </a><a ng-click="showForm()" class="btn btn-small">
-                        <li class="icon-plus-sign-alt"></li>
-                        Create New Table</a>
-                    </div>
+
+                </div>
+            </div>
+            <div id="splash">
+                <div class="alert alert-info">
+                    <li class="icon-info-sign"></li>
+                    &nbsp;Select a table from the left to begin viewing / editing data.  Click to edit a particular value in the rendered table.
                 </div>
             </div>
             <div>
                 <div class="detail-view">
                     <div id="grid-container">
-                        <div class="alert alert-info">
-                            <li class="icon-info-sign"></li>
-                            &nbsp;View / Edit your database schema below. The first row is used to add a new field.
-                        </div>
                         <div id="schema-main" ng-grid="browseOptions"></div>
                     </div>
-                    <div id="create-form">
-                        <div class="alert alert-info">
-                            <li class="icon-info-sign"></li>
-                            &nbsp;Propose table structure and click "Create Table" to save.
-                        </div>
-                        <div class="section">
-                            <span>Table Name:</span><input id="table-name" type="text" ng-model="schema.table.name"/>
-                        </div>
 
-                        <div class="alert alert-info">
-                            <li class="icon-info-sign"></li>
-                            &nbsp;Add fields
-                        </div>
-
-                        <div class="section">
-                            <span>Field Name:</span><input ng-disabled="!schema.table.name"  type="text" ng-model="schema.table.field.name"/>
-                            <br/>
-                            <span>Field Type:</span><select  ng-disabled="!schema.table.name" ng-model="schema.table.field.type">
-                            <option value="id">ID / Primary Key</option>
-                            <option value="string">String</option>
-                            <option value="integer">Integer</option>
-                            <option value="text">Text</option>
-                            <option value="boolean">Boolean</option>
-                            <option value="binary">Binary</option>
-                            <option value="blob">Blob</option>
-                            <option value="float">Float</option>
-                            <option value="decimal">Decimal</option>
-                            <option value="datetime">Datetime</option>
-                            <option value="date">Date</option>
-                            <option value="time">Time</option>
-
-
-                        </select>
-                            <br/>
-                            <span>Field Size:</span><input ng-disabled="!schema.table.name" type="text" ng-model="schema.table.field.size"/>
-                            <br/>
-                            <span>Allow Null:</span><input ng-disabled="!schema.table.name"type="checkbox" ng-model="schema.table.field.allow_null"/><br/>
-                            <div><button ng-disabled="!schema.table.name" class="btn btn-success" ng-click="addField()">
-                                <li class="icon-plus-sign-alt"></li>
-                                &nbsp;Add Field</button></div>
-                        </div>
-
-
-                        <div id="fields_container"></div>
-                        <table id="field-list" class="table table-hover table-striped">
-
-                            <tbody>
-
-                            <tr ng-repeat="field in newTable.table.field">
-                                <td>{{field.name}}</td>
-                                <td>{{field.type}}</td>
-                                <td>{{field.size}}</td>
-                                <td>{{field.allow_null}}</td>
-                                <td class="no-border">
-                                    <div class="btn-group">
-
-                                        <a class="btn btn-small btn-inverse" ng-click="removeField()"><i
-                                                class="icon-trash"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-                        <div><button ng-disabled = "areFieldsDefined() && !schema.table.name" class="btn btn-primary" ng-click="create()">
-                            <li class="icon-save"></li>
-                            &nbsp;Create Table</button></div>
-                    </div>
 
 
 
                 </div>
-                <div id="json_upload" style="display:none;">
-                    <style>
-                        body {
-                            font-family: sans-serif;
-                        }
 
-                        #result {
-                            padding: 1em;
-                        }
-
-                        .pass {
-                            background-color: #efe;
-                            color: #393;
-                            border: 2px solid #393;
-                        }
-
-                        .fail {
-                            background-color: #fee;
-                            color: #933;
-                            border: 2px solid #933;
-                        }
-
-                        textarea {
-                            width: 100%;
-                        }
-                    </style>
-
-
-                    <div class="alert alert-info">Paste your JSON Schema below, Click Validate to use JSONlint before creating.</div>
-
-                    <textarea id="source" rows="20" cols="50"></textarea>
-
-                    <div style="white-space: nowrap" class="form-inline">
-                        <button ng-click="validateJSON()" id="button">Validate</button>&nbsp;<input type="checkbox" value="yes" id="reformat"/>
-                        <label for="reformat">Reformat JSON?</label>
-                    </div>
-                    <h2>Results</h2>
-                    <pre id="result"></pre>
-                    <p>
-                        <button class="btn btn-primary" ng-click="postJSON()" class="icon-save"> Create Table(s)</button>
-                    </p>
-                </div>
 
             </div>
         </td>
