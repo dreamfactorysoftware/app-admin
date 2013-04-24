@@ -1831,7 +1831,7 @@ div.dataTables_wrapper .ui-widget-header {
     margin-right: 0;
     padding:      0;
     width:        auto;
-    max-height:   400px;
+
     overflow:     auto;
 
 }
