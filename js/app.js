@@ -18,6 +18,7 @@ var AdminApp = angular.module("AdminApp", ["ngResource", "ngGrid"]).
         $routeProvider.when('/api', { controller:SwaggerCtrl, templateUrl:'swagger.html' });
         $routeProvider.when('/package', { controller:PackageCtrl, templateUrl:'package.html' });
         $routeProvider.when('/config', { controller:ConfigCtrl, templateUrl:'config.html' });
+        $routeProvider.when('/data', { controller:DataCtrl, templateUrl:'data.html' });
 });
 AdminApp.factory('AppsRelated', function ($resource) {
     return $resource('/rest/system/app/:id/?app_name=admin&fields=*&related=roles', {}, { update:{ method:'PUT' }, query:{

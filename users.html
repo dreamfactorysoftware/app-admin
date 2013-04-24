@@ -50,13 +50,13 @@
                         <div id="step1">
                             <div class="section">
                                 Email :  <input ng-model="user.email" type="email" required/>
-                                <br/>
+                           <br/>
                                 First Name : <input class="input-small"  ng-model="user.first_name" type="text" required/>
                                 Last Name :  <input class="input-small"  ng-model="user.last_name" type="text" required/>
-                                <br/>
+                           <br/>
                                 Display Name : <input ng-model="user.display_name"
                                                       ng-bind="{{user.display_name}}" value="{{user.first_name}}&nbsp{{user.last_name}}" type="text"/>
-                                <br/>
+                            <br/>
                                 Phone : <input ng-model="user.phone" type="tel"/>
                             </div>
                             <div class="section" ng-class="{'alert alert-success': user.is_sys_admin}">
