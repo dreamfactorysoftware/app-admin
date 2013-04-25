@@ -65,7 +65,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Remote SQL DB Schema"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
-        {name:"Local Email Service"}
+        {name:"Local Email Service"},
+        {name:"Remote Email Service"}
     ];
     Scope.serviceCreateOptions = [
         {name:"Remote Web Service"},
@@ -86,6 +87,13 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.save = function () {
         if (Scope.service.type == "Remote SQL DB") {
             Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+
+        }
+        if (Scope.service.type == "Remote Email Service") {
+
+            Scope.service.storage_type = "smtp";
+            Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
 
         }
@@ -116,11 +124,11 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
         if (Scope.service.type == "Remote Email Service") {
-            if (Scope.service.credentials) {
-                Scope.service.storage_type = "smtp";
-                Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
-                Scope.service.credentials = JSON.stringify(Scope.service.credentials);
-            }
+
+            Scope.service.storage_type = "smtp";
+            Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+
         }
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {

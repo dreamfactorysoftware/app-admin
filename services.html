@@ -52,7 +52,7 @@
                     <div id="step1">
                         <div class="section" ng-show="action=='Update'">
                             <span>Type:</span>
-                            <select ng-disabled = "service.is_system" ng-init="showFields()" ng-change="showFields()" ng-model = "service.type" ng-options="option.name as option.name for option in serviceOptions"></select>
+                            <select ng-disabled = "service.is_system || action == 'Update'"  ng-init="showFields()" ng-change="showFields()" ng-model = "service.type" ng-options="option.name as option.name for option in serviceOptions"></select>
                         </div>
                         <div class="section" ng-show="action!='Update'">
                             <span>Type:</span>
