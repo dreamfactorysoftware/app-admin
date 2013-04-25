@@ -40,7 +40,6 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         $("#grid-container").show();
         $(".detail-view").show();
         $("#splash").hide();
-        console.log("chosen");
         //$("#json_upload").hide();
         //$("#create-form").hide();
         Scope.currentTable = this.table.name;
