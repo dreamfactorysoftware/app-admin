@@ -102,9 +102,10 @@
                                 <div id="parameter-grid" ng-grid="browseOptions"></div>
                             </div>
                             <div style="display:none" id="error-container" class="alert alert-danger">Param already exists</div>
-                            <input id="param-name" placeholder="Param Name" class="input-small" type="text" ng-model="param.name"/><input id="param-value" placeholder="Param Value" type="text" ng-model="param.value"/><br/>
-                            <a id="param-update" class="btn btn-inverse" ng-click="updateParams()"><i class="icon-plus-sign"></i> Add Parameter</a>
-
+                            <div ng-show="service.type == 'Remote Web Service'">
+                                <input id="param-name" placeholder="Param Name" class="input-small" type="text" ng-model="param.name"/><input id="param-value" placeholder="Param Value" type="text" ng-model="param.value"/><br/>
+                                <a id="param-update" class="btn btn-inverse" ng-click="updateParams()"><i class="icon-plus-sign"></i> Add Parameter</a>
+                            </div>
                         </div>
                         <div class="section dsn">
                             <p>Connection String</p>

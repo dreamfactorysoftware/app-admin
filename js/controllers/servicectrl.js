@@ -34,12 +34,13 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     var headerInputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableHeaderSave()" />';
     //var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var headerButtonTemplate = '<div><button id="header_save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveHeaderRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-click="deleteHeaderRow()"><li class="icon-remove"></li></button></div>';
-
+    var emailButtonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button></div>';
     Scope.columnDefs = [
         {field:'name', width:100},
         {field:'value', enableFocusedCellEdit:true, width:200, enableCellSelection:true, editableCellTemplate:inputTemplate },
         {field:'Update', cellTemplate:buttonTemplate, width:80}
     ];
+
     Scope.browseOptions = {data:'tableData', width:500, columnDefs:'columnDefs', canSelectRows:false, displaySelectionCheckbox:false};
     Scope.headerColumnDefs = [
         {field:'name', width:100},
@@ -155,6 +156,29 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     };
 
     Scope.showFields = function () {
+        if(Scope.service.type.contains("Email")){
+            if(!Scope.service.id){
+                Scope.tableData=[
+                    {"name":"from_name", "value" :""},
+                    {"name": "from_email" ,"value":""},
+                    {"name": "reply_to_name" ,"value":""},
+                    {"name": "reply_to_email" ,"value":""}
+                ];
+            }
+
+            Scope.columnDefs = [
+                {field:'name', width:100},
+                {field:'value', enableFocusedCellEdit:true, width:200, enableCellSelection:true, editableCellTemplate:inputTemplate },
+                {field:'Update', cellTemplate:emailButtonTemplate, width:80}
+            ];
+        }else{
+            Scope.columnDefs = [
+                {field:'name', width:100},
+                {field:'value', enableFocusedCellEdit:true, width:200, enableCellSelection:true, editableCellTemplate:inputTemplate },
+                {field:'Update', cellTemplate:buttonTemplate, width:80}
+            ];
+            Scope.tableData = [];
+        }
 
         switch (Scope.service.type) {
             case "Local SQL DB":
@@ -183,11 +207,11 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 break;
             case "Remote Email Service":
                 $(".base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
-                $(".user, .pwd,.host,.port, .security").show();
+                $(".user, .pwd,.host,.port, .security, .parameters").show();
                 break;
             case "Local Email Service":
                 $(".base_url, .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
-                $(".command").show();
+                $(".command, .parameters").show();
                 break;
             default:
                 $(".base_url, .command, .host, .security, .port, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
