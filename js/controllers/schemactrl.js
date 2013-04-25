@@ -110,6 +110,8 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
     }
     Scope.showSchema = function () {
         $("#create-form").hide();
+        $("#json_upload").hide();
+        $(".detail-view").show();
         var columnDefs = [];
         Scope.browseOptions = {};
         Scope.tableData = [];
