@@ -78,15 +78,23 @@
                         </div>
                         <div class="section host">
                             <span>Host</span>
-                            <input ng-model="service.host" type="text" placeholder = "Eg: SMTP.gmail.com"/>
+                            <input ng-model="service.host" type="text" placeholder = "e.g. SMTP.gmail.com"/>
                         </div>
                         <div class="section port">
                             <span>Port</span>
-                            <input ng-model="service.port" type="text" placeholder = "Eg: 465"/>
+                            <input ng-model="service.port" type="text" placeholder = "e.g. 465"/>
                         </div>
                         <div class="section security">
                             <span>Security</span>
                             <select ng-options="option.value as option.name for option in securityOptions" ng-model="service.security"> <option style="display:none" value="">None</option></select>
+                        </div>
+                        <div class="section command">
+
+                            <div class="alert alert-info">
+                                <li class="icon-info-sign"></li>
+                                OPTIONAL : Defaults to use the local mail service.
+                            </div>
+                            <span>Command</span> <input class="input-large" ng-value="" type="text" ng-model="service.storage_type" placeholder="e.g. /usr/sbin/sendmail -bs"/>
                         </div>
                         <div class="section parameters">
                             <p>Parameters</p>

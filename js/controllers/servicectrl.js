@@ -20,7 +20,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $("tr.info").removeClass('info');
         Scope.service.type = "Remote Web Service";
         Scope.showFields();
-        Scope.service.storage_type = "aws s3";
+
         Scope.aws = {};
         Scope.azure = {};
         Scope.service.is_active=true;
@@ -158,35 +158,39 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
         switch (Scope.service.type) {
             case "Local SQL DB":
-                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.user, .pwd, .dsn").hide();
+                $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.user, .pwd, .dsn").hide();
                 // $(".user, .pwd, .dsn").show();
                 break;
             case "Remote SQL DB":
-                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".user, .pwd, .dsn").show();
                 break;
             case "Remote SQL DB Schema":
-                $(".base_url, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url,.host,.command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".user, .pwd, .dsn").show();
                 break;
             case "Remote Web Service":
-                $(".user, .pwd, .dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .pwd,.host, .command, .security, .port, .dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".base_url, .parameters, .headers").show();
                 break;
             case "Local File Storage":
-                $(".user, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .pwd,.host, .command, .security, .port,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".storage_name").show();
                 break;
             case "Remote File Storage":
-                $(".user, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .host, .security,.command,  .port, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".storage_name, .storage_type").show();
                 break;
             case "Remote Email Service":
-                $(".base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".user, .pwd,.host,.port, .security").show();
                 break;
+            case "Local Email Service":
+                $(".base_url, .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".command").show();
+                break;
             default:
-                $(".base_url, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url, .command, .host, .security, .port, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
         }
     };
     Scope.showSwagger = function () {
