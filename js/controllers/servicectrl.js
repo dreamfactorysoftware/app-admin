@@ -156,7 +156,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     };
 
     Scope.showFields = function () {
-        if(Scope.service.type.contains("Email")){
+        if(Scope.service.type.indexOf("Email") != -1){
             if(!Scope.service.id){
                 Scope.tableData=[
                     {"name":"from_name", "value" :""},
