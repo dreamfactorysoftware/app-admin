@@ -63,6 +63,7 @@
                             <span>Service Name</span>
                             <input ng-model="service.name" type="text"/>
                         </div>
+
                         <div class="section">
                             <span>Api Name:</span>
                             <input ng-disabled = "service.is_system" ng-model="service.api_name" type="text"/>
@@ -74,6 +75,18 @@
                         <div class="section base_url">
                             <span>Base URL</span>
                             <input ng-model="service.base_url" type="text"/>
+                        </div>
+                        <div class="section host">
+                            <span>Host</span>
+                            <input ng-model="service.host" type="text" placeholder = "Eg: SMTP.gmail.com"/>
+                        </div>
+                        <div class="section port">
+                            <span>Port</span>
+                            <input ng-model="service.port" type="text" placeholder = "Eg: 465"/>
+                        </div>
+                        <div class="section security">
+                            <span>Security</span>
+                            <select ng-options="option.value as option.name for option in securityOptions" ng-model="service.security"> <option style="display:none" value="">None</option></select>
                         </div>
                         <div class="section parameters">
                             <p>Parameters</p>

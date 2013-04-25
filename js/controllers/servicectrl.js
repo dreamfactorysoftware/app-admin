@@ -8,6 +8,7 @@
 var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope = $scope;
     Scope.promptForNew = function () {
+
         Scope.action = "Create";
         $('#step1').show();
         Scope.service = {};
@@ -71,7 +72,14 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Remote SQL DB"},
         {name:"Remote SQL DB Schema"},
         {name:"Local File Storage"},
-        {name:"Remote File Storage"}
+        {name:"Remote File Storage"},
+        {name:"Local Email Service"},
+        {name:"Remote Email Service"}
+
+    ];
+    Scope.securityOptions = [
+        {name:"SSL", value:"SSL"},
+        {name:"TLS", value:"TLS"}
     ];
     $('#update_button').hide();
 
@@ -107,6 +115,13 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.create = function () {
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
+        if (Scope.service.type == "Remote Email Service") {
+            if (Scope.service.credentials) {
+                Scope.service.storage_type = "smtp";
+                Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
+                Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+            }
+        }
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {
                 Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
@@ -158,6 +173,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".user, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".storage_name, .storage_type").show();
                 break;
+            case "Remote Email Service":
+                $(".base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .pwd,.host,.port, .security").show();
+                break;
             default:
                 $(".base_url, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
         }
@@ -191,6 +210,16 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $('#step1').show();
         $("#swagger, #swagger iframe").hide();
         Scope.service = angular.copy(this.service);
+        if (Scope.service.type == "Remote Email Service") {
+            if (Scope.service.credentials) {
+                var cString = Scope.service.credentials;
+                Scope.service.host = cString.host;
+                Scope.service.port = cString.port;
+                Scope.service.security = cString.security;
+                Scope.service.user = cString.user;
+                Scope.service.pwd = cString.pwd;
+            }
+        }
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {
                 var cString = Scope.service.credentials;
