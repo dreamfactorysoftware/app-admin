@@ -14,6 +14,9 @@ var UserCtrl = function ($scope, Config, User, Role) {
     };
 
     Scope.save = function () {
+        if(!this.user.display_name){
+            this.user.display_name = this.user.first_name + ' ' + this.user.last_name;
+        }
         if (this.passwordEdit) {
             if (this.user.password == '' || this.user.password != this.passwordRepeat) {
                 window.top.Actions.showStatus("Please enter matching passwords", "error");
