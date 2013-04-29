@@ -29,6 +29,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
 
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
+    var emailInputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="updateEmailScope()" />';
     //var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
     var headerInputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableHeaderSave()" />';
@@ -157,7 +158,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
     Scope.showFields = function () {
         if(Scope.service.type.indexOf("Email") != -1){
-            if(!Scope.service.id){
+            if(!Scope.service.id ){
                 Scope.tableData=[
                     {"name":"from_name", "value" :""},
                     {"name": "from_email" ,"value":""},
@@ -167,9 +168,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             }
 
             Scope.columnDefs = [
-                {field:'name', width:100},
-                {field:'value', enableFocusedCellEdit:true, width:200, enableCellSelection:true, editableCellTemplate:inputTemplate },
-                {field:'Update', cellTemplate:emailButtonTemplate, width:80}
+                {field:'name', width:'*'},
+                {field:'value', enableFocusedCellEdit:true, width:'**', enableCellSelection:true, editableCellTemplate:emailInputTemplate }
+
             ];
         }else{
             Scope.columnDefs = [
@@ -363,6 +364,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.enableHeaderSave = function () {
         $("#header_save_" + this.row.rowIndex).prop('disabled', false);
     };
+    Scope.updateEmailScope = function(){
+        //var index = this.row.rowIndex;
+        var newRecord = this.row.entity;
+        var name = this.row.entity.name;
+        updateByAttr(Scope.tableData, "name", name, newRecord);
+    }
 
     $("#param-value").keyup(function (event) {
         if (event.keyCode == 13) {
