@@ -1,10 +1,10 @@
 var FileCtrl = function ($scope, $location, $timeout) {
     Scope = $scope;
-    Scope.uploadPackageFile = function () {
-        document.forms["upload-file-form"].submit();
+    Scope.importPackageFile = function () {
+        document.forms["import-file-form"].submit();
     };
-    Scope.uploadPackageUrl = function () {
-        document.forms["upload-url-form"].submit();
+    Scope.importPackageUrl = function () {
+        document.forms["import-url-form"].submit();
     }
     $("#root-file-manager").css('height', $(window).height()).css('width', '100%').show();
     $("#root-file-manager iframe").css('height', $(window).height()).css('width', '100%').attr("src", CurrentServer + '/public/admin/filemanager/?path=/&allowroot=true').show();
