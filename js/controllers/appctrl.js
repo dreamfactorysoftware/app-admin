@@ -10,8 +10,42 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     $('#update_button').hide();
     $('.external').hide();
 
-    Scope.Apps = AppsRelated.get();
-    Scope.Roles = Role.get();
+    Scope.Apps = AppsRelated.get(function(){}, function(response){
+        var code = response.status;
+        if(code == 401){
+            window.top.Actions.doSignInDialog("stay");
+            return;
+        }
+        var error = response.data.error;
+        $.pnotify({
+            title: 'Error' ,
+            type: 'error',
+            hide:false,
+            addclass: "stack-bottomright",
+            text: error[0].message
+        });
+
+
+
+    });
+    Scope.Roles = Role.get(function(){}, function(response){
+        var code = response.status;
+        if(code == 401){
+            window.top.Actions.doSignInDialog("stay");
+            return;
+        }
+        var error = response.data.error;
+        $.pnotify({
+            title: 'Error' ,
+            type: 'error',
+            hide:false,
+            addclass: "stack-bottomright",
+            text: error[0].message
+        });
+
+
+
+    });
 
     Scope.formChanged = function () {
         $('#save_' + this.app.id).removeClass('disabled');
@@ -46,6 +80,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
 
             },
             function(response){
+                var code = response.status;
+                if(code == 401){
+                    window.top.Actions.doSignInDialog("stay");
+                    return;
+                }
                 var error = response.data.error;
                 $.pnotify({
                     title: 'Error' ,
@@ -77,6 +116,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                 Scope.showAppPreview(data.url);
             },
             function(response){
+                var code = response.status;
+                if(code == 401){
+                    window.top.Actions.doSignInDialog("stay");
+                    return;
+                }
                 var error = response.data.error;
                 $.pnotify({
                     title: 'Error' ,
