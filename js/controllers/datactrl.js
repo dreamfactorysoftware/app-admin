@@ -51,7 +51,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         DB.get({name: Scope.currentTable}, function (data) {
             if (data.record.length > 0) {
                 Scope.tableData = data.record;
-                Scope.tableData.unshift({});
+                Scope.tableData.unshift({"new":true});
             } else {
                 Scope.tableData = [
                     {"error": "No Data"}
@@ -284,10 +284,12 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
 
         var index = this.row.rowIndex;
         var newRecord = this.row.entity;
-        if (!newRecord.id) {
+        if (newRecord.new) {
             DB.save({name: Scope.currentTable}, newRecord, function (data) {
                 $("#save_" + index).attr('disabled', true);
-                Scope.tableData.push(data);
+                Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
+                Scope.tableData.unshift(data);
+                Scope.tableData.unshift({"new":true});
             }, function () {
                 window.top.Actions.showStatus("An Error has occurred", "error");
             });
