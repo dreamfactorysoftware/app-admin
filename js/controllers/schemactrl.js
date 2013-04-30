@@ -93,6 +93,21 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             Scope.columnDefs = columnDefs;
             Scope.browseOptions.data = Scope.tableData;
 
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
 
         $("tr.info").removeClass('info');
@@ -150,8 +165,23 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             Scope.tableData = Scope.tableSchema.field;
             Scope.tableData.unshift({"new":true});
 
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
-        ;
+
         //console.log(this);
         Scope.action = "Alter";
         $("#grid-container").show();
@@ -215,6 +245,21 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             Scope.showForm();
             //window.top.Actions.showStatus("Created Successfully");
             Scope.schemaData.push(Scope.newTable.table);
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
     };
     Scope.delete = function () {
@@ -237,6 +282,21 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             Scope.showForm();
             //window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + name).fadeOut();
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
     };
 
@@ -269,6 +329,21 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
                     Scope.schemaData.push(table);
                 })
             }
+
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
 
         });
 
