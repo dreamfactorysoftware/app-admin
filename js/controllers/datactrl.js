@@ -35,6 +35,21 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
     Scope.browseOptions = {data: 'tableData', canSelectRows: false, displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
     Scope.Schemas = Schema.get(function (data) {
         Scope.schemaData = data.resource;
+    }, function(response){
+        var code = response.status;
+        if(code == 401){
+            window.top.Actions.doSignInDialog("stay");
+            return;
+        }
+        var error = response.data.error;
+        $.pnotify({
+            title: 'Error' ,
+            type: 'error',
+            hide:false,
+            addclass: "stack-bottomright",
+            text: error[0].message
+        });
+
     });
     Scope.showData = function () {
         $("#grid-container").show();
@@ -94,6 +109,21 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
             Scope.columnDefs = columnDefs;
             Scope.browseOptions.data = Scope.tableData;
 
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
 
         $("tr.info").removeClass('info');
@@ -147,9 +177,22 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
             Scope.tableData = Scope.tableSchema.field;
             Scope.tableData.unshift({"new":true});
 
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
-        ;
-        //console.log(this);
         Scope.action = "Alter";
         $("#grid-container").show();
 
@@ -212,6 +255,21 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
             Scope.showForm();
             //window.top.Actions.showStatus("Created Successfully");
             Scope.schemaData.push(Scope.newTable.table);
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
     };
     Scope.delete = function () {
@@ -234,6 +292,21 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
             Scope.showForm();
             //window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + name).fadeOut();
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
     };
 
@@ -290,12 +363,40 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
                 Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
                 Scope.tableData.unshift(data);
                 Scope.tableData.unshift({"new":true});
-            }, function () {
-                window.top.Actions.showStatus("An Error has occurred", "error");
+            }, function(response){
+                var code = response.status;
+                if(code == 401){
+                    window.top.Actions.doSignInDialog("stay");
+                    return;
+                }
+                var error = response.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
+                    text: error[0].message
+                });
+
             });
         } else {
             DB.update({name: Scope.currentTable}, newRecord, function () {
                 $("#save_" + index).attr('disabled', true);
+            }, function(response){
+                var code = response.status;
+                if(code == 401){
+                    window.top.Actions.doSignInDialog("stay");
+                    return;
+                }
+                var error = response.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
+                    text: error[0].message
+                });
+
             });
         }
 
