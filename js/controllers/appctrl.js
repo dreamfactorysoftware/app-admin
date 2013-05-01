@@ -2,47 +2,47 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
 
     $('#alert_container').empty();
     Scope = $scope;
-    Scope.alerts =[];
+    Scope.alerts = [];
     Scope.currentServer = CurrentServer;
     Scope.action = "Create";
     setCurrentApp('applications');
-    Scope.app = {is_url_external:'0', requires_fullscreen:'0', roles:[]};
+    Scope.app = {is_url_external: '0', requires_fullscreen: '0', roles: []};
     $('#update_button').hide();
     $('.external').hide();
 
-    Scope.Apps = AppsRelated.get(function(){}, function(response){
+    Scope.Apps = AppsRelated.get(function () {
+    }, function (response) {
         var code = response.status;
-        if(code == 401){
+        if (code == 401) {
             window.top.Actions.doSignInDialog("stay");
             return;
         }
         var error = response.data.error;
         $.pnotify({
-            title: 'Error' ,
+            title: 'Error',
             type: 'error',
-            hide:false,
+            hide: false,
             addclass: "stack-bottomright",
             text: error[0].message
         });
-
 
 
     });
-    Scope.Roles = Role.get(function(){}, function(response){
+    Scope.Roles = Role.get(function () {
+    }, function (response) {
         var code = response.status;
-        if(code == 401){
+        if (code == 401) {
             window.top.Actions.doSignInDialog("stay");
             return;
         }
         var error = response.data.error;
         $.pnotify({
-            title: 'Error' ,
+            title: 'Error',
             type: 'error',
-            hide:false,
+            hide: false,
             addclass: "stack-bottomright",
             text: error[0].message
         });
-
 
 
     });
@@ -52,7 +52,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     };
     Scope.promptForNew = function () {
         Scope.action = "Create";
-        Scope.app = {is_url_external:'0', requires_fullscreen:'0', roles:[]};
+        Scope.app = {is_url_external: '0', requires_fullscreen: '0', roles: []};
         $('#context-root').show();
         $('#file-manager').hide();
         $('#app-preview').hide();
@@ -65,7 +65,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     Scope.save = function () {
 
         var id = Scope.app.id;
-        AppsRelated.update({id:id}, Scope.app, function () {
+        AppsRelated.update({id: id}, Scope.app, function () {
                 updateByAttr(Scope.Apps.record, 'id', id, Scope.app);
 
                 window.top.Actions.updateSession("update");
@@ -79,17 +79,17 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                 Scope.promptForNew();
 
             },
-            function(response){
+            function (response) {
                 var code = response.status;
-                if(code == 401){
+                if (code == 401) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
                 var error = response.data.error;
                 $.pnotify({
-                    title: 'Error' ,
+                    title: 'Error',
                     type: 'error',
-                    hide:false,
+                    hide: false,
                     addclass: "stack-bottomright",
                     text: error[0].message
                 });
@@ -97,7 +97,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
 
             });
     };
-    Scope.goToImport = function(){
+    Scope.goToImport = function () {
         $location.path('/import');
     }
     Scope.create = function () {
@@ -113,19 +113,19 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                     text: 'Created Successfully'
                 });
                 Scope.promptForNew();
-                Scope.showAppPreview(data.url);
+                Scope.showAppPreview(data.url, data.is_url_external);
             },
-            function(response){
+            function (response) {
                 var code = response.status;
-                if(code == 401){
+                if (code == 401) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
                 var error = response.data.error;
                 $.pnotify({
-                    title: 'Error' ,
+                    title: 'Error',
                     type: 'error',
-                    hide:false,
+                    hide: false,
                     addclass: "stack-bottomright",
                     text: error[0].message
                 });
@@ -143,11 +143,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
         } else {
             which = "the application '" + which + "'?";
         }
-        if(!confirm("Are you sure you want to delete " + which)) {
+        if (!confirm("Are you sure you want to delete " + which)) {
             return;
         }
         var id = this.app.id;
-        AppsRelated.delete({ id:id }, function () {
+        AppsRelated.delete({ id: id }, function () {
                 $("#row_" + id).fadeOut();
                 window.top.Actions.updateSession();
 
@@ -158,12 +158,12 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                     text: 'Removed Successfully'
                 });
             },
-            function(response){
+            function (response) {
                 var error = response.data.error;
                 $.pnotify({
-                    title: 'Error' ,
+                    title: 'Error',
                     type: 'error',
-                    hide:false,
+                    hide: false,
                     addclass: "stack-bottomright",
                     text: error[0].message
                 });
@@ -171,14 +171,14 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
 
             });
     };
-    Scope.postFile = function(target){
+    Scope.postFile = function (target) {
         console.log(target);
     }
-    Scope.showLocal = function(){
+    Scope.showLocal = function () {
         $('.local').show();
         $('.external').hide();
     };
-    Scope.hideLocal = function(){
+    Scope.hideLocal = function () {
         $('.local').hide();
         $('.external').show();
     };
@@ -191,22 +191,27 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
         $("#file-manager").show();
         $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/app/' + this.app.api_name + '/&allowroot=false').show();
     };
-    Scope.showAppPreview = function (appUrl) {
+    Scope.showAppPreview = function (appUrl, external) {
         var path = "";
         Scope.action = "Preview ";
         $('#step1').hide();
 
         $("#app-preview").show();
-        if(this.app.is_url_external == '0'){
-            if(appUrl){
-                path =  CurrentServer + '/app/' + this.app.api_name + '/' + appUrl;
-            }else{
-                path =  CurrentServer + '/app/' + this.app.api_name + '/' + this.app.url;
+        if (appUrl) {
+            if (external) {
+                path = appUrl;
+            } else {
+                path = CurrentServer + '/app/' + this.app.api_name + '/' + appUrl;
             }
         }else{
-            path = this.app.url;
+            if (this.app.is_url_external == '0') {
+                path = CurrentServer + '/app/' + this.app.api_name + '/' + this.app.url;
+            } else {
+                path = this.app.url;
+            }
         }
-        $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", path ).show();
+
+        $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", path).show();
         $('#create_button').hide();
         $('#update_button').hide();
         $('#file-manager').hide();
@@ -215,9 +220,9 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     Scope.showDetails = function () {
         Scope.action = "Update";
         Scope.app = this.app;
-        if(Scope.app.is_url_external == 1){
+        if (Scope.app.is_url_external == 1) {
             Scope.hideLocal();
-        }else{
+        } else {
             Scope.showLocal();
         }
         $('#button_holder').hide();
@@ -254,7 +259,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
         }
     };
 
-    Scope.reload = function(){
+    Scope.reload = function () {
         Scope.Apps = AppsRelated.get();
     }
     $(window).resize();
