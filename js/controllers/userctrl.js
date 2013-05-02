@@ -1,7 +1,21 @@
 var UserCtrl = function ($scope, Config, User, Role) {
     Scope = $scope;
     Scope.Config = Config.get();
-    Scope.Users = User.get();
+    Scope.Users = User.get(function(){}, function(response){
+        var code = response.status;
+        if(code == 401){
+            window.top.Actions.doSignInDialog("stay");
+            return;
+        }
+        var error = response.data.error;
+        $.pnotify({
+            title: 'Error' ,
+            type: 'error',
+            hide:false,
+            addclass: "stack-bottomright",
+            text: error[0].message
+        });
+    });
     Scope.action = "Create";
     Scope.Roles = Role.get();
     Scope.passwordEdit = false;
@@ -29,11 +43,27 @@ var UserCtrl = function ($scope, Config, User, Role) {
         User.update({id:id}, Scope.user, function() {
             updateByAttr(Scope.Users.record, 'id', id, Scope.user);
             Scope.promptForNew();
-            window.top.Actions.showStatus("Updated Successfully");
+            $.pnotify({
+                title: "Success",
+                type: 'success',
+                text: 'Updated Successfully'
+            });
         }, function(response) {
-                Scope.user.password = '';
-                Scope.passwordRepeat = '';
-                window.top.Actions.showStatus(getErrorString(response), "error");
+            Scope.user.password = '';
+            Scope.passwordRepeat = '';
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
     Scope.create = function () {
@@ -56,14 +86,31 @@ var UserCtrl = function ($scope, Config, User, Role) {
                 if (!Scope.passwordEdit) {
                     Scope.invite(true);
                 } else {
-                    window.top.Actions.showStatus("Created Successfully");
+                    //window.top.Actions.updateSession("update");
+                    $.pnotify({
+                        title: Scope.app.name,
+                        type: 'success',
+                        text: 'Created Successfully'
+                    });
                     Scope.promptForNew();
                 }
             },
             function(response) {
                 Scope.user.password = '';
                 Scope.passwordRepeat = '';
-                window.top.Actions.showStatus(getErrorString(response), "error");
+                var code = response.status;
+                if(code == 401){
+                    window.top.Actions.doSignInDialog("stay");
+                    return;
+                }
+                var error = response.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
+                    text: error[0].message
+                });
             });
     };
     Scope.invite = function (isCreate) {
@@ -96,20 +143,51 @@ var UserCtrl = function ($scope, Config, User, Role) {
         });
     };
     function createSuccess(response) {
-        window.top.Actions.showStatus("User created and invite sent!");
+        $.pnotify({
+            title: "Success",
+            type: 'success',
+            text: 'User Created and Invite Sent!'
+        });
         Scope.promptForNew();
     }
 
     function createError(response) {
-        window.top.Actions.showStatus("User created but unable to send invite. " + getErrorString(response), "error");
-        Scope.promptForNew();
+        var code = response.status;
+        if(code == 401){
+            window.top.Actions.doSignInDialog("stay");
+            return;
+        }
+        var error = response.data.error;
+        $.pnotify({
+            title: 'Error' ,
+            type: 'error',
+            hide:false,
+            addclass: "stack-bottomright",
+            text: error[0].message
+        });
     }
     function resendSuccess(response) {
-        window.top.Actions.showStatus("Invite sent!");
+        $.pnotify({
+            title: "Success",
+            type: 'success',
+            text: 'Invite Sent!'
+        });
     }
 
     function resendError(response) {
-        window.top.Actions.showStatus("Unable to send invite. " + getErrorString(response), "error");
+        var code = response.status;
+        if(code == 401){
+            window.top.Actions.doSignInDialog("stay");
+            return;
+        }
+        var error = response.data.error;
+        $.pnotify({
+            title: 'Error' ,
+            type: 'error',
+            hide:false,
+            addclass: "stack-bottomright",
+            text: error[0].message
+        });
     }
     Scope.promptForNew = function () {
         Scope.action = "Create";
@@ -135,9 +213,25 @@ var UserCtrl = function ($scope, Config, User, Role) {
         User.delete({ id:id }, function () {
             Scope.promptForNew();
             $("#row_" + id).fadeOut();
-            window.top.Actions.showStatus("Deleted Successfully");
+            $.pnotify({
+                title: "Success",
+                type: 'success',
+                text: 'Deleted Successfully'
+            });
         }, function(response) {
-                window.top.Actions.showStatus(getErrorString(response), "error");
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
     Scope.showDetails = function(){
