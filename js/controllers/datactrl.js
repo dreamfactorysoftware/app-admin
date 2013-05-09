@@ -32,7 +32,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
     var typeTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in typeOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     Scope.columnDefs = [];
     Scope.browseOptions = {};
-    Scope.browseOptions = {data: 'tableData', canSelectRows: false, displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
+    Scope.browseOptions = {data: 'tableData',enableCellSelection: true, enableCellEdit:true, multiSelect:false,displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
     Scope.Schemas = Schema.get(function (data) {
         Scope.schemaData = data.resource;
     }, function(response){
@@ -75,41 +75,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
             }
             Scope.relatedOptions = data.meta.schema.related;
             Scope.currentSchema = data.meta.schema.field;
-            var columnDefs = [];
-            var saveColumn = {};
-            saveColumn.field = '';
-            saveColumn.cellTemplate = buttonTemplate;
-            saveColumn.width = '70px';
-            columnDefs.push(saveColumn);
-            var column = {};
-            Scope.currentSchema.forEach(function (field) {
-                column.field = field.name;
-                switch (field.type) {
-                    case "boolean":
-                        column.editableCellTemplate = booleanTemplate;
-                        column.enableFocusedCellEdit = true;
-                        column.minWidth = '100px';
-                        column.width = '50px';
-                        break;
-                    case "id":
-                        column.width = '50px';
-                        break;
-                    case "string":
-                        column.editableCellTemplate = inputTemplate;
-                        column.enableFocusedCellEdit = true;
-                        column.width = '100px';
-                        break;
-                    default:
-                        column.editableCellTemplate = inputTemplate;
-                        column.enableFocusedCellEdit = true;
-                        column.width = '100px';
-                }
-                columnDefs.push(column);
-                column = {};
-            });
-
-            Scope.columnDefs = columnDefs;
-            Scope.browseOptions.data = Scope.tableData;
+            Scope.buildColumns();
 
         }, function(response){
             var code = response.status;
@@ -132,7 +98,101 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         $('#row_' + Scope.currentTable).addClass('info');
 
     };
+    Scope.showRelated = function () {
+        //$("#grid-container").show();
+        //$(".detail-view").show();
+        //$("#splash").hide();
+        //$("#json_upload").hide();
+        //$("#create-form").hide();
+        //Scope.currentTable = this.table.name;
+        Scope.browseOptions = {};
+        Scope.tableData = [];
+        Scope.columnDefs = [];
+        Scope.currentSchema = [];
 
+        $http({method: 'GET', url: '/someUrl'}).
+            success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+            }).
+            error(function(data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+            });
+
+        DB.get({name: Scope.currentTable}, function (data) {
+            if (data.record.length > 0) {
+                Scope.tableData = data.record;
+
+                Scope.tableData.unshift({"new":true});
+            } else {
+                Scope.tableData = [
+                    {"error": "No Data"}
+                ];
+            }
+            Scope.relatedOptions = data.meta.schema.related;
+            Scope.currentSchema = data.meta.schema.field;
+            Scope.buildColumns();
+
+        }, function(response){
+            var code = response.status;
+            if(code == 401){
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error' ,
+                type: 'error',
+                hide:false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
+        });
+
+        $("tr.info").removeClass('info');
+        $('#row_' + Scope.currentTable).addClass('info');
+
+    };
+    Scope.buildColumns = function(){
+        var columnDefs = [];
+        var saveColumn = {};
+        saveColumn.field = '';
+        saveColumn.cellTemplate = buttonTemplate;
+        saveColumn.width = '70px';
+        columnDefs.push(saveColumn);
+        var column = {};
+        Scope.currentSchema.forEach(function (field) {
+            column.field = field.name;
+            switch (field.type) {
+                case "boolean":
+                    column.editableCellTemplate = booleanTemplate;
+                    column.enableFocusedCellEdit = true;
+                    column.minWidth = '100px';
+                    column.width = '50px';
+                    break;
+                case "id":
+                    column.width = '50px';
+                    break;
+                case "string":
+                    column.editableCellTemplate = inputTemplate;
+                    column.enableFocusedCellEdit = true;
+                    column.width = '100px';
+                    break;
+                default:
+                    column.editableCellTemplate = inputTemplate;
+                    column.enableFocusedCellEdit = true;
+                    column.width = '100px';
+            }
+            columnDefs.push(column);
+            column = {};
+        });
+
+        Scope.columnDefs = columnDefs;
+        Scope.browseOptions.data = Scope.tableData;
+
+    }
     Scope.showForm = function () {
         $("#grid-container").hide();
         $("#create-form").show();
