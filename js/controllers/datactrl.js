@@ -66,12 +66,14 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         DB.get({name: Scope.currentTable}, function (data) {
             if (data.record.length > 0) {
                 Scope.tableData = data.record;
+
                 Scope.tableData.unshift({"new":true});
             } else {
                 Scope.tableData = [
                     {"error": "No Data"}
                 ];
             }
+            Scope.relatedOptions = data.meta.schema.related;
             Scope.currentSchema = data.meta.schema.field;
             var columnDefs = [];
             var saveColumn = {};

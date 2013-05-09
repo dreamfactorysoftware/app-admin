@@ -36,6 +36,12 @@
                 <div class="detail-view">
                     <div id="grid-container">
                         <div id="schema-main" ng-grid="browseOptions"></div>
+                        <div ng-show = "relatedOptions.length">
+                            <select ng-model = "related" ng-options = "option.name as option.name for option in relatedOptions">
+                                <option value="">Related Data</option>
+                            </select>
+
+                        </div>
                     </div>
 
 
