@@ -2,6 +2,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];
+    Scope.selectedRow = [];
     Scope.booleanOptions = [
         {value: true, text: 'true'},
         {value: false, text: 'false'}
@@ -32,7 +33,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
     var typeTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in typeOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     Scope.columnDefs = [];
     Scope.browseOptions = {};
-    Scope.browseOptions = {data: 'tableData',enableCellSelection: true, enableCellEdit:true, multiSelect:false,displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
+    Scope.browseOptions = {data: 'tableData',enableCellSelection: true,selectedItems: Scope.selectedRow, enableCellEdit:true, multiSelect:false,displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
     Scope.Schemas = Schema.get(function (data) {
         Scope.schemaData = data.resource;
     }, function(response){
@@ -64,15 +65,11 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         Scope.currentSchema = [];
 
         DB.get({name: Scope.currentTable}, function (data) {
-            if (data.record.length > 0) {
-                Scope.tableData = data.record;
 
-                Scope.tableData.unshift({"new":true});
-            } else {
-                Scope.tableData = [
-                    {"error": "No Data"}
-                ];
-            }
+            Scope.tableData = data.record;
+            Scope.tableData.unshift({"new":true});
+
+
             Scope.relatedOptions = data.meta.schema.related;
             Scope.currentSchema = data.meta.schema.field;
             Scope.buildColumns();
@@ -99,60 +96,49 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
 
     };
     Scope.showRelated = function () {
-        //$("#grid-container").show();
-        //$(".detail-view").show();
-        //$("#splash").hide();
-        //$("#json_upload").hide();
-        //$("#create-form").hide();
-        //Scope.currentTable = this.table.name;
+        var ref_table = this.option.ref_table;
+        var ref_field = this.option.ref_field;
+        var field = this.option.field;
+        var type = this.option.type;
+
+        var related_url;
+        if(type=="has_many"){
+            related_url = "/" + ref_table + "?app_name=admin&include_schema=true&filter=" + ref_field + "=" + Scope.selectedRow[0][field]
+        }else if(type=="belongs_to"){
+            related_url = "/" + ref_table + "?filter=" + ref_field + "=" +  Scope.selectedRow[0][field] +"&app_name=admin&include_schema=true";
+        }
+        Scope.currentTable = ref_table;
         Scope.browseOptions = {};
         Scope.tableData = [];
         Scope.columnDefs = [];
         Scope.currentSchema = [];
+        Scope.relatedOptions = null;
 
-        $http({method: 'GET', url: '/someUrl'}).
+        $http({method: 'GET', url: '/rest/db' + related_url}).
             success(function(data, status, headers, config) {
-                // this callback will be called asynchronously
-                // when the response is available
+                Scope.tableData = data.record;
+                Scope.tableData.unshift({"new":true});
+                Scope.currentSchema = data.meta.schema.field;
+                Scope.buildColumns();
+                $("tr.info").removeClass('info');
+                $('#row_' + Scope.currentTable).addClass('info');
             }).
             error(function(data, status, headers, config) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
+                var code = data.status;
+                if(code == 401){
+                    window.top.Actions.doSignInDialog("stay");
+                    return;
+                }
+                var error = data.data.error;
+                $.pnotify({
+                    title: 'Error' ,
+                    type: 'error',
+                    hide:false,
+                    addclass: "stack-bottomright",
+                    text: error[0].message
+                });
             });
 
-        DB.get({name: Scope.currentTable}, function (data) {
-            if (data.record.length > 0) {
-                Scope.tableData = data.record;
-
-                Scope.tableData.unshift({"new":true});
-            } else {
-                Scope.tableData = [
-                    {"error": "No Data"}
-                ];
-            }
-            Scope.relatedOptions = data.meta.schema.related;
-            Scope.currentSchema = data.meta.schema.field;
-            Scope.buildColumns();
-
-        }, function(response){
-            var code = response.status;
-            if(code == 401){
-                window.top.Actions.doSignInDialog("stay");
-                return;
-            }
-            var error = response.data.error;
-            $.pnotify({
-                title: 'Error' ,
-                type: 'error',
-                hide:false,
-                addclass: "stack-bottomright",
-                text: error[0].message
-            });
-
-        });
-
-        $("tr.info").removeClass('info');
-        $('#row_' + Scope.currentTable).addClass('info');
 
     };
     Scope.buildColumns = function(){
@@ -199,71 +185,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         $("tr.info").removeClass('info');
         $(window).scrollTop(0);
     }
-    Scope.showSchema = function () {
-        $("#create-form").hide();
-        var columnDefs = [];
-        Scope.browseOptions = {};
-        Scope.tableData = [];
-        Scope.columnDefs = [];
-        Scope.currentSchema = [];
-        Schema.get({ name: this.table.name }, function(data){
-            Scope.tableSchema = data;
-            var saveColumn = {};
-            saveColumn.field = '';
-            saveColumn.cellTemplate = schemaButtonTemplate;
-            saveColumn.width = '70px';
-            columnDefs.push(saveColumn);
-            var column = {};
-            //console.log(Scope);
-            var keys  = Object.keys(Scope.tableSchema.field[0]);
-            keys.forEach(function (key) {
-                    if(key == 'type'){
-                        column.editableCellTemplate = typeTemplate;
-                    }else{
-                        column.editableCellTemplate = schemaInputTemplate;
-                    }
 
-
-
-                    column.enableFocusedCellEdit = true;
-                    column.width = '100px';
-                    column.field = key;
-                    columnDefs.push(column);
-                    column = {};
-                }
-
-            );
-            Scope.columnDefs = columnDefs;
-            //console.log(Scope.columnDefs);
-            Scope.browseOptions.enableCellEdit = true;
-            Scope.tableData = Scope.tableSchema.field;
-            Scope.tableData.unshift({"new":true});
-
-        }, function(response){
-            var code = response.status;
-            if(code == 401){
-                window.top.Actions.doSignInDialog("stay");
-                return;
-            }
-            var error = response.data.error;
-            $.pnotify({
-                title: 'Error' ,
-                type: 'error',
-                hide:false,
-                addclass: "stack-bottomright",
-                text: error[0].message
-            });
-
-        });
-        Scope.action = "Alter";
-        $("#grid-container").show();
-
-
-
-        $("tr.info").removeClass('info');
-        $('#row_' + this.table.name).addClass('info');
-        //console.log(this);
-    }
     Scope.newTable = {};
     Scope.newTable.table = {};
     Scope.newTable.table.field = [];
@@ -419,6 +341,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
 
         var index = this.row.rowIndex;
         var newRecord = this.row.entity;
+
         if (newRecord.new) {
             DB.save({name: Scope.currentTable}, newRecord, function (data) {
                 $("#save_" + index).attr('disabled', true);

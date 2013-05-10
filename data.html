@@ -37,8 +37,9 @@
                     <div id="grid-container">
                         <div id="schema-main" ng-grid="browseOptions"></div>
                         <div ng-show = "relatedOptions.length">
-                            <select ng-model = "related" ng-options = "option.name as option.name for option in relatedOptions">
+                            <select ng-disabled= "selectedRow.length==0" ng-model = "related">
                                 <option value="">Related Data</option>
+                                <option ng-click="showRelated()" ng-repeat="option in relatedOptions" value="{{option.name}}">{{option.name}}</option>
                             </select>
 
                         </div>
