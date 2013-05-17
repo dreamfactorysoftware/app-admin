@@ -17,25 +17,25 @@
     <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
 
     <script type="text/javascript">
-	$(function () {
-	    window.swaggerUi = new SwaggerUi({
+        $(function () {
+            window.swaggerUi = new SwaggerUi({
                 discoveryUrl:location.protocol + "//" + location.host + "/rest/",
                 apiKeyName:"swagger_app_name",
                 apiKey:"admin",
                 dom_id:"swagger-ui-container",
                 supportHeaderParams: true,
-                headers: { "X-Application-Name": "admin" },
+                headers: { "X-DreamFactory-Application-Name": "admin" },
                 supportedSubmitMethods: ['get', 'post', 'put', 'merge', 'delete'],
                 onComplete: function(swaggerApi, swaggerUi){
-                	if(console) {
+                    if(console) {
                         console.log("Loaded SwaggerUI")
                         console.log(swaggerApi);
                         console.log(swaggerUi);
                     }
-                  $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+                    $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
                 },
                 onFailure: function(data) {
-                	if(console) {
+                    if(console) {
                         console.log("Unable to Load SwaggerUI");
                         console.log(data);
                     }
