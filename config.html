@@ -87,7 +87,7 @@
                                 <label ng-repeat = "verb in allVerbs"><input ng-click="toggleVerb()" ng-disabled="host.verbs.length == allVerbs.length" ng-checked="host.verbs.indexOf(verb) != -1 " type="checkbox"/>&nbsp;{{verb}}</label>
                             </td>
                             <td>
-                                <input type="checkbox" ng-model="host.is_active"/>
+                                <input type="checkbox" ng-model="host.is_enabled"/>
                             </td>
 
                         </tr>
