@@ -2079,3 +2079,14 @@ span.label{
     margin-bottom: 10px;
     padding: 8px;
 }
+#cors-list label{
+    display:inline-block;
+    font-size:9px;
+    position:relative;
+    bottom:4px;
+    margin:3px;
+}
+#cors-list{
+    max-height:300px;
+    overflow:auto;
+}
