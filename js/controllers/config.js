@@ -94,7 +94,7 @@ var ConfigCtrl = function ($scope, Config, Role) {
         var newhost = {};
         newhost.verbs = Scope.allVerbs;
         newhost.host = "";
-        newhost.is_active = true;
+        newhost.is_enabled = true;
         Scope.Config.allowed_hosts.unshift(newhost);
     }
 }
