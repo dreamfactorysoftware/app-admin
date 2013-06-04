@@ -171,7 +171,7 @@
 .ngViewport{
     overflow: scroll;
     min-height: 20px;
-    height:250px!important;
+
 }
 
 .ngCanvas{
@@ -256,7 +256,7 @@ input {
     padding: 0;
     border-top: 1px solid rgb(212,212,212);
     position: relative;
-    display:none;
+    display:block;
 }
 .ngTotalSelectContainer {
     float: left;
