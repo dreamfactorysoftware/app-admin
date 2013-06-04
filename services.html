@@ -132,6 +132,23 @@
                             <p>Storage Name</p>
                             <input ng-model="service.storage_name" type="text"/>
                         </div>
+                        <div class="section nosql_type">
+                            <p>NoSQL Type</p>
+                            <select ng-options="option.value as option.name for option in NoSQLOptions" ng-model="service.storage_type" type="text"></select>
+                            <div class=" well sub-section aws_info" ng-show="service.storage_type=='aws dynamodb'">
+                                <label>Access Key</label><input type="text" ng-model="aws.access_key"/>
+                                <label>Secret Key</label><input type="text" ng-model="aws.secret_key"/>
+                            </div>
+                            <div class=" well sub-section aws_info" ng-show="service.storage_type=='aws simpledb'">
+                                <label>Access Key</label><input type="text" ng-model="aws.access_key"/>
+                                <label>Secret Key</label><input type="text" ng-model="aws.secret_key"/>
+                            </div>
+                            <div class=" well sub-section azure_info" ng-show="service.storage_type =='azure tables'">
+                                <label>Account Name</label><input type="text" ng-model="azure.account_name"/>
+                                <label>Account Key</label><input type="text" ng-model="azure.account_key"/>
+
+                            </div>
+                        </div>
                         <div class="section storage_type">
                             <p>Storage Type</p>
                             <select ng-options="option.value as option.name for option in remoteOptions" ng-model="service.storage_type" type="text"></select>

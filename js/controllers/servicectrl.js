@@ -58,6 +58,11 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Amazon S3", value:"aws s3"},
         {name:"Windows Azure Storage", value:"azure blob"}
     ];
+    Scope.NoSQLOptions = [
+        {name:"Amazon DynamoDB", value:"aws dynamodb"},
+        {name:"Amazon SimpleDB", value:"aws simpledb"},
+        {name:"Windows Azure Tables", value:"azure tables"}
+    ];
     Scope.service.storage_type = "aws s3";
     Scope.serviceOptions = [
         {name:"Remote Web Service"},
@@ -65,6 +70,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Remote SQL DB"},
         {name:"Local SQL DB Schema"},
         {name:"Remote SQL DB Schema"},
+        {name:"NoSQL DB"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
         {name:"Local Email Service"},
@@ -74,6 +80,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Remote Web Service"},
         {name:"Remote SQL DB"},
         {name:"Remote SQL DB Schema"},
+        {name:"NoSQL DB"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
         {name:"Local Email Service"},
@@ -105,6 +112,20 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
                     break;
                 case "azure blob":
+                    Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
+                    break;
+            }
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+        }
+        if (Scope.service.type == "NoSQL DB") {
+            switch (Scope.service.storage_type) {
+                case "aws dynamodb":
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    break;
+                case "aws simpledb":
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    break;
+                case "azure tables":
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
                     break;
             }
@@ -149,6 +170,20 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
+        if (Scope.service.type == "NoSQL DB") {
+            switch (Scope.service.storage_type) {
+                case "aws dynamodb":
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    break;
+                case "aws simpledb":
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    break;
+                case "azure tables":
+                    Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
+                    break;
+            }
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+        }
         Service.save(Scope.service, function (data) {
             Scope.promptForNew();
             window.top.Actions.showStatus("Created Successfully");
@@ -176,46 +211,50 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.columnDefs = [
                 {field:'name', width:100},
                 {field:'value', enableFocusedCellEdit:true, width:200, enableCellSelection:true, editableCellTemplate:inputTemplate },
-                {field:'Update', cellTemplate:buttonTemplate, width:80}
+                {field:'Update', cellTemplate:buttonTemplate, width:100}
             ];
             Scope.tableData = [];
         }
 
         switch (Scope.service.type) {
             case "Local SQL DB":
-                $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.user, .pwd, .dsn").hide();
+                $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.user, .pwd, .dsn,.nosql_type").hide();
                 // $(".user, .pwd, .dsn").show();
                 break;
             case "Remote SQL DB":
-                $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".user, .pwd, .dsn").show();
                 break;
             case "Remote SQL DB Schema":
-                $(".base_url,.host,.command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url,.host,.command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".user, .pwd, .dsn").show();
                 break;
             case "Remote Web Service":
-                $(".user, .pwd,.host, .command, .security, .port, .dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .pwd,.host, .command, .security, .port, .dsn ,.storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".base_url, .parameters, .headers").show();
                 break;
             case "Local File Storage":
-                $(".user, .pwd,.host, .command, .security, .port,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .pwd,.host, .command, .security, .port,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".storage_name").show();
                 break;
             case "Remote File Storage":
-                $(".user, .host, .security,.command,  .port, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".user, .host, .security,.command,  .port, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".storage_name, .storage_type").show();
                 break;
             case "Remote Email Service":
-                $(".base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format.nosql_type").hide();
                 $(".user, .pwd,.host,.port, .security, .parameters").show();
                 break;
             case "Local Email Service":
-                $(".base_url, .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url, .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".command, .parameters").show();
                 break;
+            case "NoSQL DB":
+                $(".base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".nosql_type").show();
+                break;
             default:
-                $(".base_url, .command, .host, .security, .port, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format").hide();
+                $(".base_url, .command, .host, .security, .port, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
         }
     };
     Scope.showSwagger = function () {
@@ -272,6 +311,29 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 var fString = Scope.service.credentials;
                 switch (Scope.service.storage_type) {
                     case "aws s3":
+                        Scope.aws.access_key = fString.access_key;
+                        Scope.aws.secret_key = fString.secret_key;
+                        //Scope.aws.bucket_name = fString.bucket_name;
+                        break;
+                    case "azure blob":
+                        Scope.azure.account_name = fString.account_name;
+                        Scope.azure.account_key = fString.account_key;
+                        break;
+                }
+            }
+        }
+        if (Scope.service.type == "NoSQL DB") {
+            Scope.aws = {};
+            Scope.azure = {};
+            if (Scope.service.credentials) {
+                var fString = Scope.service.credentials;
+                switch (Scope.service.storage_type) {
+                    case "aws dynamodb":
+                        Scope.aws.access_key = fString.access_key;
+                        Scope.aws.secret_key = fString.secret_key;
+                        //Scope.aws.bucket_name = fString.bucket_name;
+                        break;
+                    case "aws simpledb":
                         Scope.aws.access_key = fString.access_key;
                         Scope.aws.secret_key = fString.secret_key;
                         //Scope.aws.bucket_name = fString.bucket_name;
