@@ -23,6 +23,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
         Scope.aws = {};
         Scope.azure = {};
+        Scope.rackspace = {};
+        Scope.openstack = {};
         Scope.service.is_active=true;
         $(window).scrollTop(0);
     };
@@ -116,6 +118,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 case "azure blob":
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
                     break;
+                case "rackspace cloudfiles":
+                    Scope.service.credentials = {url:Scope.rackspace.url, api_key:Scope.rackspace.api_key, username: Scope.rackspace.username, tenant_name: Scope.rackspace.tenant_name, region: Scope.rackspace.region};
+                    break;
+                case "openstack object storage":
+                    Scope.service.credentials = {url:Scope.openstack.url, api_key:Scope.openstack.api_key, username: Scope.openstack.username, tenant_name: Scope.openstack.tenant_name, region: Scope.openstack.region};
+                    break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
@@ -169,6 +177,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 case "azure blob":
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
                     break;
+                case "rackspace cloudfiles":
+                    Scope.service.credentials = {url:Scope.rackspace.url, api_key:Scope.rackspace.api_key, username: Scope.rackspace.username, tenant_name: Scope.rackspace.tenant_name, region: Scope.rackspace.region};
+                    break;
+                case "openstack object storage":
+                    Scope.service.credentials = {url:Scope.openstack.url, api_key:Scope.openstack.api_key, username: Scope.openstack.username, tenant_name: Scope.openstack.tenant_name, region: Scope.openstack.region};
+                    break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
@@ -183,6 +197,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 case "azure tables":
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
                     break;
+
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
@@ -321,6 +336,21 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         Scope.azure.account_name = fString.account_name;
                         Scope.azure.account_key = fString.account_key;
                         break;
+                    case "rackspace cloudfiles":
+                        Scope.rackspace.url = fString.url;
+                        Scope.rackspace.api_key = fString.api_key;
+                        Scope.rackspace.username = fString.username;
+                        Scope.rackspace.tenant_name = fString.tenant_name;
+                        Scope.rackspace.region = fString.region;
+
+                        break;
+                    case "openstack object storage":
+                        Scope.openstack.url = fString.url;
+                        Scope.openstack.api_key = fString.api_key;
+                        Scope.openstack.username = fString.username;
+                        Scope.openstack.tenant_name = fString.tenant_name;
+                        Scope.openstack.region = fString.region;
+                        break;
                 }
             }
         }
@@ -340,7 +370,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         Scope.aws.secret_key = fString.secret_key;
                         //Scope.aws.bucket_name = fString.bucket_name;
                         break;
-                    case "azure blob":
+                    case "azure tables":
                         Scope.azure.account_name = fString.account_name;
                         Scope.azure.account_key = fString.account_key;
                         break;
