@@ -56,7 +56,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
     Scope.remoteOptions = [
         {name:"Amazon S3", value:"aws s3"},
-        {name:"Windows Azure Storage", value:"azure blob"}
+        {name:"Windows Azure Storage", value:"azure blob"},
+        {name:"RackSpace CloudFiles", value:"rackspace cloudfiles"},
+        {name:"OpenStack Object Storage", value:"openstack object storage"}
     ];
     Scope.NoSQLOptions = [
         {name:"Amazon DynamoDB", value:"aws dynamodb"},

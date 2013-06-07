@@ -2076,8 +2076,12 @@ h5.text-info {
     width:90px;
 }
 span.label{
+    background: none repeat scroll 0 0 transparent;
+    color: #777777;
+    font-size: 2em;
     margin-bottom: 10px;
     padding: 8px;
+    text-shadow: none;
 }
 #cors-list label{
     display:inline-block;
