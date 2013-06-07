@@ -62,6 +62,11 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"RackSpace CloudFiles", value:"rackspace cloudfiles"},
         {name:"OpenStack Object Storage", value:"openstack object storage"}
     ];
+    Scope.rackspaceRegions = [
+        {name: "London", value:"LON"},
+        {name: "Chicago", value: "ORD"},
+        {name: "Dallas / Fort Worth", value:"DFW"}
+    ];
     Scope.NoSQLOptions = [
         {name:"Amazon DynamoDB", value:"aws dynamodb"},
         {name:"Amazon SimpleDB", value:"aws simpledb"},
@@ -463,6 +468,19 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         var newRecord = this.row.entity;
         var name = this.row.entity.name;
         updateByAttr(Scope.tableData, "name", name, newRecord);
+    };
+    Scope.changeUrl = function(){
+        switch (this.rackspace.region) {
+            case "LON":
+                Scope.rackspace.url = "https://lon.identity.api.rackspacecloud.com/v1.0";
+                break;
+            case "ORD":
+                Scope.rackspace.url = "https://identity.api.rackspacecloud.com/v1.0";
+                break;
+            case "DFW":
+                Scope.rackspace.url = "https://identity.api.rackspacecloud.com/v1.0";
+                break;
+        }
     }
 
     $("#param-value").keyup(function (event) {

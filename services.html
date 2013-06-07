@@ -162,20 +162,20 @@
 
                     </div>
                     <div class=" well sub-section " ng-show="service.storage_type =='rackspace cloudfiles'">
-                        <label>URL/Endpoint</label><input type="text" ng-model="rackspace.url"/>
-                        <label>API Key</label><input type="text" ng-model="rackspace.api_key"/>
                         <label>Username</label><input type="text" ng-model="rackspace.username"/>
+                        <label>API Key</label><input type="text" ng-model="rackspace.api_key"/>
                         <label>Tenant Name</label><input type="text" ng-model="rackspace.tenant_name"/>
-                        <label>Region</label><input type="text" ng-model="rackspace.region"/>
-
+                        <label>Region</label>
+                        <select ng-change = "changeUrl()" ng-options = "option.value as option.name for option in rackspaceRegions" ng-model = "rackspace.region"></select>
+                        <label>URL/Endpoint</label><input ng-disabled = "!rackspace.region" type="text" ng-model="rackspace.url"/>
                     </div>
                     <div class=" well sub-section" ng-show="service.storage_type =='openstack object storage'">
-                        <label>URL/Endpoint</label><input type="text" ng-model="openstack.url"/>
-                        <label>API Key</label><input type="text" ng-model="openstack.api_key"/>
+
                         <label>Username</label><input type="text" ng-model="openstack.username"/>
+                        <label>API Key</label><input type="text" ng-model="openstack.api_key"/>
                         <label>Tenant Name</label><input type="text" ng-model="openstack.tenant_name"/>
                         <label>Region</label><input type="text" ng-model="openstack.region"/>
-
+                        <label>URL/Endpoint</label><input type="text" ng-model="openstack.url"/>
                     </div>
                 </div>
                 <div class="section credentials">
