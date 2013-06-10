@@ -264,7 +264,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".storage_name, .storage_type").show();
                 break;
             case "Remote Email Service":
-                $(".base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format.nosql_type").hide();
+                $(".base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
                 $(".user, .pwd,.host,.port, .security, .parameters").show();
                 break;
             case "Local Email Service":
