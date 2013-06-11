@@ -67,7 +67,10 @@ var ConfigCtrl = function ($scope, Config, Role) {
 
             });
     };
+    Scope.upgrade = function () {
 
+        window.top.location = CurrentServer + '/site/upgrade';
+    }
     Scope.removeHost = function () {
         var index = this.$index;
         Scope.Config.allowed_hosts.splice(index, 1);

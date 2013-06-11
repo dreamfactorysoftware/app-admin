@@ -8,9 +8,15 @@
             </div>
             <div id="config-form">
                 <div class="section versions">
-                    <b>DSP Version:</b>&nbsp;&nbsp;{{Config.dsp_version}}<br/>
-                    <b>Database Version:</b>&nbsp;&nbsp;{{Config.db_version}}
-
+                    <b>Database Version:</b>&nbsp;&nbsp;{{Config.db_version}}<br/>
+                    <b>DSP Version:</b>&nbsp;&nbsp;{{Config.dsp_version}}
+                    <span ng-show="Config.upgrade_available===false">
+                        &nbsp;(Up to date)
+                    </span>
+                    <div ng-show="Config.upgrade_available===true">
+                        DSP Version {{Config.latest_version}} is available!&nbsp;&nbsp;
+                        <button ng-click="upgrade()" class="btn btn-success">Upgrade Now</button>
+                    </div>
                 </div>
                 <div class="section">
                     <h5>Open Registration</h5>
