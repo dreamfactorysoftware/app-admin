@@ -472,13 +472,13 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.changeUrl = function(){
         switch (this.rackspace.region) {
             case "LON":
-                Scope.rackspace.url = "https://lon.identity.api.rackspacecloud.com/v1.0";
+                Scope.rackspace.url = "https://lon.identity.api.rackspacecloud.com/";
                 break;
             case "ORD":
-                Scope.rackspace.url = "https://identity.api.rackspacecloud.com/v1.0";
+                Scope.rackspace.url = "https://identity.api.rackspacecloud.com/";
                 break;
             case "DFW":
-                Scope.rackspace.url = "https://identity.api.rackspacecloud.com/v1.0";
+                Scope.rackspace.url = "https://identity.api.rackspacecloud.com/";
                 break;
         }
     }
