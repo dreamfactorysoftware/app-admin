@@ -95,3 +95,9 @@ var showFileManager = function(){
 
 };
 
+AdminApp.factory('EmailTemplates', function ($resource) {
+    return $resource('/rest/system/email_template/:id/?app_name=admin&fields=*', {}, { update:{ method:'PUT' }
+
+    });
+
+});

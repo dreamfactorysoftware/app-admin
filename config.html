@@ -69,6 +69,158 @@
                     </div>
                 </div>
 
+                <!-- Add email template section -->
+                <div class="section">
+                    <h5>Email Templates</h5>
+                    <div class="alert alert-info">
+                        <li class="icon-info-sign"></li>
+                        &nbsp;Create a new email template or modify an existing one.
+                    </div>
+                    <select data-ng-model="selectedEmailTemplateId" data-ng-options="email.id as email.name for email in emailTemplates.record | filter: emailTemplatesFilter">
+                        <option value="">- - Select a template - -</option>
+                    </select>
+                    <input data-ng-model="emailTemplatesFilter" type="text" placeholder="Filter By Name" />
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn" data-ng-click="newEmailTemplate()">New</button>
+                        <button type="button" class="btn" data-ng-click="saveEmailTemplate(getSelectedEmailTemplate)">Save</button>
+                        <button type="button" class="btn" data-ng-click="duplicateEmailTemplate()">Duplicate</button>
+                        <button type="button" class="btn btn-danger" data-ng-click="deleteEmailTemplate(getSelectedEmailTemplate.id)">Delete</button>
+                    </div>
+                    <form novalidate>
+                        <div class="tabbable tabs-left">
+                            <ul class="nav nav-tabs" style="margin-right: 0">
+                                <li data-ng-class="templateInfo={true: 'active', false: ''}[currentCreateEmailTab=='template-info-pane']"><a href="javascript:void(0)" data-ng-click="showCreateEmailTab('template-info-pane')"
+                                                                                                                                             data-toggle="tab">Template Info</a></li>
+                                <li data-ng-class="templateTo={true: 'active', false: ''}[currentCreateEmailTab=='template-to-pane']"><a href="javascript:void(0)" data-ng-click="showCreateEmailTab('template-to-pane')"
+                                                                                                                                         data-toggle="tab">Template To</a></li>
+                                <li data-ng-class="templateBody={true: 'active', false: ''}[currentCreateEmailTab=='template-body-pane']"><a href="javascript:void(0)" data-ng-click="showCreateEmailTab('template-body-pane')"
+                                                                                                                                             data-toggle="tab">Template Body</a></li>
+                                <li data-ng-class="templateReply={true: 'active', false: ''}[currentCreateEmailTab=='template-reply-pane']"><a href="javascript:void(0)" data-ng-click="showCreateEmailTab('template-reply-pane')"
+                                                                                                                                               data-toggle="tab">Template From</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane" data-ng-class="templateInfo" id="template-info-pane">
+                                    <div style="padding: 20px 10px 0 40px; background: white; border: 1px solid #dddddd; border-left: none">
+                                        <p>
+                                            <label for="template-name">Template Name:</label>
+                                            <input type="text"
+                                                   name="template-name"
+                                                   id="template-name"
+                                                   data-ng-model="getSelectedEmailTemplate.name"
+                                                   placeholder="Required"
+                                                   required>
+                                        </p>
+                                        <p>
+                                            <label for="template-description">Template Description:</label>
+                                            <textarea
+                                                    style="resize: none"
+                                                    name="template-description"
+                                                    id="template-description"
+                                                    data-ng-model="getSelectedEmailTemplate.description"></textarea>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" data-ng-class="templateTo" id="template-to-pane">
+                                    <div style="padding: 20px 10px 0 40px; background: white; border: 1px solid #dddddd; border-left: none">
+                                        <p>
+                                            <label for="template-to">To:</label>
+                                            <input type="text"
+                                                   name="template-to"
+                                                   id="template-to"
+                                                   data-ng-model="getSelectedEmailTemplate.to">
+                                        </p>
+                                        <p>
+                                            <label for="template-cc">CC:</label>
+                                            <input type="text"
+                                                   name="template-cc"
+                                                   id="template-cc"
+                                                   data-ng-model="getSelectedEmailTemplate.cc">
+                                        </p>
+                                        <p>
+                                            <label for="template-bcc">BCC:</label>
+                                            <input type="text"
+                                                   name="template-bcc"
+                                                   id="template-bcc"
+                                                   data-ng-model="getSelectedEmailTemplate.bcc">
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" data-ng-class="templateBody" id="template-body-pane">
+                                    <div style="padding: 20px 10px 0 40px; background: white; border: 1px solid #dddddd; border-left: none">
+                                        <p>
+                                            <label for="template-subject">Subject:</label>
+                                            <input style="width: 80%"
+                                                   type="text"
+                                                   name="template-subject"
+                                                   id="template-subject"
+                                                   size="120"
+                                                   data-ng-model="getSelectedEmailTemplate.subject">
+                                        </p>
+                                        <!--
+                                        <p style="display: inline-block; float:left;">
+                                            <label for="template-body-text">Body Text:</label>
+                                            <textarea style="width: 300px; resize: none"
+                                                      rows="5"
+                                                      cols="250"
+                                                      name="template-body-text"
+                                                      id="template-body-text"
+                                                      data-ng-model="getSelectedEmailTemplate.body_text"></textarea>
+                                        </p>
+                                        -->
+                                        <p style="display: inline-block;">
+                                            <label for="template-body-html">Body:</label>
+                                            <textarea style="width: 80%; resize: none"
+                                                      rows="5"
+                                                      cols="250"
+                                                      name="template-body-html"
+                                                      id="template-body-html"
+                                                      data-ng-model="getSelectedEmailTemplate.body_html"></textarea>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" data-ng-class="templateReply" id="template-reply-pane">
+                                    <div style="padding: 10px 10px 0 40px; background: white; border: 1px solid #dddddd; border-left: none">
+                                        <div style="display: inline-block;">
+                                            <h6>From:</h6>
+                                            <p>
+                                                <label for="template-from-name">From Name:</label>
+                                                <input type="text"
+                                                       name="template-from-name"
+                                                       id="template-from-name"
+                                                       data-ng-model="getSelectedEmailTemplate.from_name">
+                                            </p>
+                                            <p>
+                                                <label for="template-from-email">From Email:</label>
+                                                <input type="text"
+                                                       name="template-from-email"
+                                                       id="template-from-email"
+                                                       data-ng-model="getSelectedEmailTemplate.from_email">
+                                            </p>
+                                        </div>
+                                        <div style="display:inline-block; margin-left: 40px">
+                                            <h6>Reply:</h6>
+                                            <p>
+                                                <label for="template-reply-to-name">Reply To Name:</label>
+                                                <input type="text"
+                                                       name="template-reply-to-name"
+                                                       id="template-reply-to-name"
+                                                       data-ng-model="getSelectedEmailTemplate.reply_to_name">
+                                            </p>
+                                            <p>
+                                                <label for="template-reply-to-email">Reply To Email:</label>
+                                                <input type="text"
+                                                       name="template-reply-to-email"
+                                                       id="template-reply-to-email"
+                                                       data-ng-model="getSelectedEmailTemplate.reply_to_email">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <div class="section">
                     <h5>CORS Access</h5>
                     <label>Choose which hosts have cross domain access to your DSP</label>
