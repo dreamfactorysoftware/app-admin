@@ -1,4 +1,4 @@
-var ConfigCtrl = function ($scope, Config, Role) {
+var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
     Scope = $scope;
     Scope.allVerbs = ["GET","POST", "PUT", "MERGE", "PATCH", "DELETE", "COPY"];
     Scope.Config = Config.get(function () {
