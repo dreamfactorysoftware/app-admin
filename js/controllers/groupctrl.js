@@ -19,9 +19,30 @@ var GroupCtrl = function ($scope, Group, App, $timeout) {
         Group.update({id:id}, Scope.group, function(){
             Scope.promptForNew();
             window.top.Actions.updateSession("update");
+            /*
             $timeout(function(){
                 window.top.Actions.showStatus("Updated Successfully");
             },1000);
+            */
+            $.pnotify({
+                title: 'App Groups',
+                type: 'success',
+                text: 'Updated Successfully.'
+            });
+        }, function(response) {
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
 
     };
@@ -31,9 +52,30 @@ var GroupCtrl = function ($scope, Group, App, $timeout) {
             Scope.Groups.record.push(data);
             Scope.promptForNew();
             window.top.Actions.updateSession("update");
+            /*
             $timeout(function(){
                 window.top.Actions.showStatus("Created Successfully");
             },1000);
+            */
+            $.pnotify({
+                title: 'App Groups',
+                type: 'success',
+                text: 'Created Successfully.'
+            });
+        }, function(response) {
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
     Scope.isAppInGroup = function(){
@@ -72,8 +114,28 @@ var GroupCtrl = function ($scope, Group, App, $timeout) {
         var id = this.group.id;
         Group.delete({ id:id }, function () {
             Scope.promptForNew();
-            window.top.Actions.showStatus("Deleted Successfully");
+            //window.top.Actions.showStatus("Deleted Successfully");
+            $.pnotify({
+                title: 'App Groups',
+                type: 'success',
+                text: 'Deleted Successfully.'
+            });
+
             $("#row_" + id).fadeOut();
+        }, function(response) {
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
     Scope.promptForNew = function () {

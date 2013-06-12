@@ -152,9 +152,29 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Service.update({id:id}, Scope.service, function (data) {
             updateByAttr(Scope.Services.record, 'id', id, data)
             Scope.promptForNew();
-            window.top.Actions.showStatus("Updated Successfully");
+            //window.top.Actions.showStatus("Updated Successfully");
+            $.pnotify({
+                title: 'Services',
+                type: 'success',
+                text: 'Updated Successfully.'
+            });
+
+
         }, function (data) {
-            alert(data.error[0].message);
+            //alert(data.error[0].message);
+            var code = data.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = data.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
 
     };
@@ -208,8 +228,29 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         }
         Service.save(Scope.service, function (data) {
             Scope.promptForNew();
-            window.top.Actions.showStatus("Created Successfully");
+            //window.top.Actions.showStatus("Created Successfully");
+
+            $.pnotify({
+                title: 'Services',
+                type: 'success',
+                text: 'Created Successfully.'
+            });
             Scope.Services.record.push(data);
+        }, function(data) {
+
+            var code = data.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = data.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
 
@@ -299,8 +340,29 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
         Service.delete({ id:id }, function () {
             Scope.promptForNew();
-            window.top.Actions.showStatus("Deleted Successfully");
+            //window.top.Actions.showStatus("Deleted Successfully");
+            $.pnotify({
+                title: 'Services',
+                type: 'success',
+                text: 'Deleted Successfully.'
+            });
+
             $("#row_" + id).fadeOut();
+        }, function(data) {
+
+            var code = data.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = data.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
 

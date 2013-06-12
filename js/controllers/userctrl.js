@@ -19,7 +19,13 @@ var UserCtrl = function ($scope, Config, User, Role) {
         }
         if (this.passwordEdit) {
             if (this.user.password == '' || this.user.password != this.passwordRepeat) {
-                window.top.Actions.showStatus("Please enter matching passwords", "error");
+                //window.top.Actions.showStatus("Please enter matching passwords", "error");
+
+                $.pnotify({
+                    title: 'Users',
+                    type: 'error',
+                    text: 'Please enter matching passwords.'
+                });
                 return;
             }
         } else {
@@ -29,18 +35,46 @@ var UserCtrl = function ($scope, Config, User, Role) {
         User.update({id:id}, Scope.user, function() {
             updateByAttr(Scope.Users.record, 'id', id, Scope.user);
             Scope.promptForNew();
-            window.top.Actions.showStatus("Updated Successfully");
+            //window.top.Actions.showStatus("Updated Successfully");
+
+            $.pnotify({
+                title: 'Users',
+                type: 'success',
+                text: 'Updated Successfully'
+            });
         }, function(response) {
             Scope.user.password = '';
             Scope.passwordRepeat = '';
-            window.top.Actions.showStatus(getErrorString(response), "error");
+            //window.top.Actions.showStatus(getErrorString(response), "error");
+
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
+
+
     Scope.create = function () {
         var newRec = this.user;
         if (this.passwordEdit) {
             if (newRec.password == '' || newRec.password != this.passwordRepeat) {
-                window.top.Actions.showStatus("Please enter matching passwords", "error");
+                //window.top.Actions.showStatus("Please enter matching passwords.", "error");
+
+                $.pnotify({
+                    title: 'Error',
+                    type: 'error',
+                    text: 'Please enter matching passwords.'
+                });
                 return;
             }
         } else {
@@ -56,14 +90,36 @@ var UserCtrl = function ($scope, Config, User, Role) {
                 if (!Scope.passwordEdit) {
                     Scope.invite(true);
                 } else {
-                    window.top.Actions.showStatus("Created Successfully");
+                    //window.top.Actions.showStatus("Created Successfully");
+
+                    $.pnotify({
+                        title: 'Users',
+                        type: 'success',
+                        text: 'Created Successfully'
+                    });
+
                     Scope.promptForNew();
                 }
             },
             function(response) {
                 Scope.user.password = '';
                 Scope.passwordRepeat = '';
-                window.top.Actions.showStatus(getErrorString(response), "error");
+                //window.top.Actions.showStatus(getErrorString(response), "error");
+
+                var code = response.status;
+                if (code == 401) {
+                    window.top.Actions.doSignInDialog("stay");
+                    return;
+                }
+                var error = response.data.error;
+                console.log(response);
+                $.pnotify({
+                    title: 'Error',
+                    type: 'error',
+                    hide: false,
+                    addclass: "stack-bottomright",
+                    text: error[0].message
+                });
             });
     };
     Scope.invite = function (isCreate) {
@@ -96,20 +152,55 @@ var UserCtrl = function ($scope, Config, User, Role) {
         });
     };
     function createSuccess(response) {
-        window.top.Actions.showStatus("User created and invite sent!");
+        //window.top.Actions.showStatus("User created and invite sent!");
+        $.pnotify({
+            title: 'Users',
+            type: 'success',
+            text: 'User created and invite sent!'
+        });
+
         Scope.promptForNew();
     }
 
     function createError(response) {
-        window.top.Actions.showStatus("User created but unable to send invite. " + getErrorString(response), "error");
+        //window.top.Actions.showStatus("User created but unable to send invite. " + getErrorString(response), "error");
+
+        $.pnotify({
+            title: 'Error',
+            type: 'error',
+            hide: false,
+            addclass: "stack-bottomright",
+            text: 'User created but unable to send invite. Failed to launch service \'Email\'.  Unknown type value \'\' in service record.'
+        });
+
         Scope.promptForNew();
     }
     function resendSuccess(response) {
-        window.top.Actions.showStatus("Invite sent!");
+        //window.top.Actions.showStatus("Invite sent!");
+
+        $.pnotify({
+            title: 'Users',
+            type: 'success',
+            text: 'Invite sent!'
+        });
     }
 
     function resendError(response) {
-        window.top.Actions.showStatus("Unable to send invite. " + getErrorString(response), "error");
+        //window.top.Actions.showStatus("Unable to send invite. " + getErrorString(response), "error");
+
+        var code = response.status;
+        if (code == 401) {
+            window.top.Actions.doSignInDialog("stay");
+            return;
+        }
+
+        $.pnotify({
+            title: 'Error',
+            type: 'error',
+            hide: false,
+            addclass: "stack-bottomright",
+            text: 'User created but unable to send invite. Failed to launch service \'Email\'.  Unknown type value \'\' in service record.'
+        });
     }
     Scope.promptForNew = function () {
         Scope.action = "Create";
@@ -135,9 +226,30 @@ var UserCtrl = function ($scope, Config, User, Role) {
         User.delete({ id:id }, function () {
             Scope.promptForNew();
             $("#row_" + id).fadeOut();
-            window.top.Actions.showStatus("Deleted Successfully");
+            //window.top.Actions.showStatus("Deleted Successfully");
+
+            $.pnotify({
+                title: 'Users',
+                type: 'success',
+                text: 'Deleted Successfully.'
+            });
         }, function(response) {
-            window.top.Actions.showStatus(getErrorString(response), "error");
+            //window.top.Actions.showStatus(getErrorString(response), "error");
+
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
         });
     };
     Scope.showDetails = function(){

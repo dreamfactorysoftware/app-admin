@@ -208,11 +208,15 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
                 });
 
 
-            });
+        });
     };
 
     // Deletes and email from the database
     Scope.deleteEmailTemplate = function(templateId) {
+
+        if(!confirm('Delete Email Template: \n\n' + Scope.getSelectedEmailTemplate.name)) {
+            return;
+        }
 
         EmailTemplates.delete({id: templateId}, function() {
                 $.pnotify({
@@ -235,7 +239,7 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
                     addclass: "stack-bottomright",
                     text: error[0].message
                 });
-            });
+        });
 
         Scope.$emit('templateDeleted');
 
@@ -383,4 +387,5 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
             });
         }
     });
+
 }

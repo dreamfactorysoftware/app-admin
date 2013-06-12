@@ -4,8 +4,8 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     Scope.action = "Create new ";
     Scope.actioned = "Created";
     $('#update_button').hide();
-    $("#alert-container").empty().hide();
-    $("#success-container").empty().hide();
+    //$("#alert-container").empty().hide();
+    //$("#success-container").empty().hide();
     Scope.components = [
         {name: "*", label: "All"}
     ];
@@ -33,25 +33,67 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
 
     Scope.Roles = RolesRelated.get();
     Scope.save = function () {
-        $("#alert-container").empty().hide();
-        $("#success-container").hide();
+        //$("#alert-container").empty().hide();
+        //$("#success-container").hide();
         var id = this.role.id;
         RolesRelated.update({id: id}, Scope.role, function () {
             updateByAttr(Scope.Roles.record, 'id', id, Scope.role);
             Scope.promptForNew();
-            window.top.Actions.showStatus("Updated Successfully");
+            //window.top.Actions.showStatus("Updated Successfully");
+
+            // Success Message
+            $.pnotify({
+                title: 'Roles',
+                type: 'success',
+                text: 'Role Updated Successfully'
+            });
         }, function (response) {
-            $("#alert-container").html(response.data.error[0].message).show();
+            //$("#alert-container").html(response.data.error[0].message).show();
+
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
     Scope.create = function () {
         RolesRelated.save(Scope.role, function (data) {
             Scope.Roles.record.push(data);
-            window.top.Actions.showStatus("Created Successfully");
+            //window.top.Actions.showStatus("Created Successfully");
             Scope.promptForNew();
 
+            // Success Message
+            $.pnotify({
+                title: 'Roles',
+                type: 'success',
+                text: 'Role Created Successfully'
+            });
+
         }, function (response) {
-            $("#alert-container").html(response.data.error[0].message).show();
+            //$("#alert-container").html(response.data.error[0].message).show();
+
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
     };
 
@@ -114,15 +156,20 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
                 // console.log(index);
                 rows.splice(index, 1);
             }
-        })
+        });
         //Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
     };
 
     Scope.addServiceAccess = function () {
-        $("#alert-container").empty().hide();
+        //$("#alert-container").empty().hide();
         var newAccess = angular.copy(Scope.service);
         if (checkForDuplicates(Scope.role.role_service_accesses, 'service_id', Scope.service.service_id, 'component', Scope.service.component)) {
-            $("#alert-container").html("<b>Service access already exists.</b>").show();
+            //$("#alert-container").html("<b>Service access already exists.</b>").show();
+            $.pnotify({
+                title: 'Roles',
+                type: 'error',
+                text: 'Service access already exists.'
+            });
         } else if (Scope.service.service_id === null) {
 
             if (Scope.role.role_service_accesses.length > 0) {
@@ -133,29 +180,53 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
                     }
                 });
                 if (inRole) {
-                    $("#alert-container").html("<b>Service access already exists for all components.</b>").show();
+                    //$("#alert-container").html("<b>Service access already exists for all components.</b>").show();
+
+                    $.pnotify({
+                        title: 'Roles',
+                        type: 'error',
+                        text: 'Service access already exists for all components.'
+                    });
+
                 } else {
                     Scope.role.role_service_accesses.push(newAccess);
+                    $.pnotify({
+                        title: 'Roles',
+                        type: 'success',
+                        text: 'Service access granted.'
+                    });
 
                 }
             } else {
-                console.log("im pushing it");
+
                 Scope.role.role_service_accesses.push(newAccess);
+                $.pnotify({
+                    title: 'Roles',
+                    type: 'success',
+                    text: 'Service access granted.'
+                });
+
             }
 
         } else {
 
             Scope.role.role_service_accesses.push(newAccess);
-
+            $.pnotify({
+                title: 'Roles',
+                type: 'success',
+                text: 'Service access granted.'
+            });
         }
     }
     Scope.editServiceAccess = function () {
-        $("#alert-container").empty().hide();
+        //$("#alert-container").empty().hide();
         var newAccess = this.service_access;
         Scope.role.role_service_accesses = removeByAttrs(Scope.role.role_service_accesses, 'service_id', this.service_access.service_id, 'component', this.service_access.component);
         Scope.role.role_service_accesses.push(newAccess);
     };
 
+
+    //ADDED PNOTIFY
     $scope.delete = function () {
         var which = this.role.name;
         if (!which || which == '') {
@@ -169,10 +240,35 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         var id = this.role.id;
         RolesRelated.delete({ id: id }, function () {
             Scope.promptForNew();
-            window.top.Actions.showStatus("Deleted Successfully");
+
+            //window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + id).fadeOut();
+
+            // Success message
+            $.pnotify({
+                title: 'Roles',
+                type: 'success',
+                text: 'Role deleted.'
+            });
+        }, function(response) {
+
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
         });
-        Scope.promptForNew();
+
+        // Shouldn't prompt for new on failure
+        //Scope.promptForNew();
     };
     $scope.promptForNew = function () {
         angular.element(":checkbox").attr('checked', false);
@@ -181,7 +277,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         Scope.role = {users: [], apps: [], role_service_accesses: []};
         $('#save_button').show();
         $('#update_button').hide();
-        $("#alert-container").empty().hide();
+        //$("#alert-container").empty().hide();
         $("tr.info").removeClass('info');
         $(window).scrollTop(0);
     };
