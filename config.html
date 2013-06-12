@@ -19,29 +19,40 @@
                     </div>
                 </div>
                 <div class="section">
-                    <h5>Open Registration</h5>
+                    <h5>CORS Access</h5>
+                    <label>Choose which hosts have cross domain access to your DSP</label>
+                    <button ng-click="promptForNew()" class="btn btn-success"><li class="icon-add"></li> Add New Host</button>
+                    <br/><br/>
+                    <table id="cors-list" class="table table-hover table-striped">
 
-                    <div class="alert alert-info">
-                        <li class="icon-info-sign"></li>
-                        &nbsp;If enabled, new users can add themselves as users to this DSP and will be assigned the
-                        selected role. If disabled, only an admin can add new users to this DSP.
-                    </div>
-                    <input type="checkbox" ng-checked="Config.allow_open_registration"
-                           ng-model="Config.allow_open_registration"/>&nbsp;&nbsp;Allow open registration
-                    <br/>
-                    <br/>
+                        <tbody>
+                        <tr>
+                            <th></th>
+                            <th>Host</th>
+                            <th>Allowed Verbs</th>
+                            <th>Enabled</th>
 
-                    <div>
-                        <p>Assign a Default Role for Open Registration Users</p>
+                        </tr>
 
-                        <div>
-                            <select ng-disabled="!Config.allow_open_registration" ng-model="Config.open_reg_role_id">
-                                <option ng-selected="Config.open_reg_role_id == role.id"
-                                        ng-repeat="role in Roles.record" value="{{role.id}}">{{role.name}}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
+                        <tr ng-repeat="host in Config.allowed_hosts">
+                            <td>
+                                <li ng-click="removeHost()" class="btn btn-danger icon-remove"></li>
+                            </td>
+                            <td><input placeholder="Enter Host Name" type="text" ng-model="host.host"/></td>
+                            <td>
+                                <label><input ng-click="selectAll($event)"  ng-checked="host.verbs.length == allVerbs.length" type="checkbox"/>&nbsp;ALL</li></label>
+                                <label ng-repeat = "verb in allVerbs"><input ng-click="toggleVerb()" ng-disabled="host.verbs.length == allVerbs.length" ng-checked="host.verbs.indexOf(verb) != -1 " type="checkbox"/>&nbsp;{{verb}}</label>
+                            </td>
+                            <td>
+                                <input type="checkbox" ng-model="host.is_enabled"/>
+                            </td>
+
+                        </tr>
+                    </table>
+
+
+                    <!--<input type="text" placeholder="Enter Host Name" ng-model="CORS.host.name"/>-->
+                    <!--<button cls="btn btn-primary" ng-click="addHost()">Add Host</button>-->
                 </div>
                 <div class="section">
                     <h5>Guest Users</h5>
@@ -68,7 +79,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="section">
+                    <h5>Open Registration</h5>
 
+                    <div class="alert alert-info">
+                        <li class="icon-info-sign"></li>
+                        &nbsp;If enabled, new users can add themselves as users to this DSP and will be assigned the
+                        selected role. If disabled, only an admin can add new users to this DSP.
+                    </div>
+                    <input type="checkbox" ng-checked="Config.allow_open_registration"
+                           ng-model="Config.allow_open_registration"/>&nbsp;&nbsp;Allow open registration
+                    <br/>
+                    <br/>
+
+                    <div>
+                        <p>Assign a Default Role for Open Registration Users</p>
+
+                        <div>
+                            <select ng-disabled="!Config.allow_open_registration" ng-model="Config.open_reg_role_id">
+                                <option ng-selected="Config.open_reg_role_id == role.id"
+                                        ng-repeat="role in Roles.record" value="{{role.id}}">{{role.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <!-- Add email template section -->
                 <div class="section">
                     <h5>Email Templates</h5>
@@ -219,43 +254,6 @@
                             </div>
                         </div>
                     </form>
-                </div>
-
-                <div class="section">
-                    <h5>CORS Access</h5>
-                    <label>Choose which hosts have cross domain access to your DSP</label>
-                    <button ng-click="promptForNew()" class="btn btn-success"><li class="icon-add"></li> Add New Host</button>
-                    <br/><br/>
-                    <table id="cors-list" class="table table-hover table-striped">
-
-                        <tbody>
-                        <tr>
-                            <th></th>
-                            <th>Host</th>
-                            <th>Allowed Verbs</th>
-                            <th>Enabled</th>
-
-                        </tr>
-
-                        <tr ng-repeat="host in Config.allowed_hosts">
-                            <td>
-                                <li ng-click="removeHost()" class="btn btn-danger icon-remove"></li>
-                            </td>
-                            <td><input placeholder="Enter Host Name" type="text" ng-model="host.host"/></td>
-                            <td>
-                                <label><input ng-click="selectAll($event)"  ng-checked="host.verbs.length == allVerbs.length" type="checkbox"/>&nbsp;ALL</li></label>
-                                <label ng-repeat = "verb in allVerbs"><input ng-click="toggleVerb()" ng-disabled="host.verbs.length == allVerbs.length" ng-checked="host.verbs.indexOf(verb) != -1 " type="checkbox"/>&nbsp;{{verb}}</label>
-                            </td>
-                            <td>
-                                <input type="checkbox" ng-model="host.is_enabled"/>
-                            </td>
-
-                        </tr>
-                    </table>
-
-
-                    <!--<input type="text" placeholder="Enter Host Name" ng-model="CORS.host.name"/>-->
-                    <!--<button cls="btn btn-primary" ng-click="addHost()">Add Host</button>-->
                 </div>
                 <br/>
                 <button ng-click="save()" class="btn btn-primary">Save</button>
