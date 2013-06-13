@@ -1,5 +1,6 @@
 {
 	"name":              "dreamfactory/app-admin",
+	"version":           "1.0.4",
 	"description":       "DreamFactory Services Platform(tm) Admin Application",
 	"keywords":          ["dreamfactory", "dsp", "cloud", "dsp-admin", "dsp-app", "dsp-core"],
 	"type":              "dreamfactory-platform",
