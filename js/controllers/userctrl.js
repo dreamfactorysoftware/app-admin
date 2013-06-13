@@ -1,4 +1,5 @@
 var UserCtrl = function ($scope, Config, User, Role) {
+
     Scope = $scope;
     Scope.Config = Config.get();
     Scope.Users = User.get();
@@ -10,17 +11,17 @@ var UserCtrl = function ($scope, Config, User, Role) {
     Scope.passwordRepeat = '';
 
     Scope.formChanged = function () {
+
         $('#save_' + this.user.id).removeClass('disabled');
     };
 
     Scope.save = function () {
+
         if(!this.user.display_name){
             this.user.display_name = this.user.first_name + ' ' + this.user.last_name;
         }
         if (this.passwordEdit) {
             if (this.user.password == '' || this.user.password != this.passwordRepeat) {
-                //window.top.Actions.showStatus("Please enter matching passwords", "error");
-
                 $.pnotify({
                     title: 'Users',
                     type: 'error',
@@ -35,8 +36,6 @@ var UserCtrl = function ($scope, Config, User, Role) {
         User.update({id:id}, Scope.user, function() {
             updateByAttr(Scope.Users.record, 'id', id, Scope.user);
             Scope.promptForNew();
-            //window.top.Actions.showStatus("Updated Successfully");
-
             $.pnotify({
                 title: 'Users',
                 type: 'success',
@@ -45,8 +44,6 @@ var UserCtrl = function ($scope, Config, User, Role) {
         }, function(response) {
             Scope.user.password = '';
             Scope.passwordRepeat = '';
-            //window.top.Actions.showStatus(getErrorString(response), "error");
-
             var code = response.status;
             if (code == 401) {
                 window.top.Actions.doSignInDialog("stay");
@@ -58,18 +55,17 @@ var UserCtrl = function ($scope, Config, User, Role) {
                 type: 'error',
                 hide: false,
                 addclass: "stack-bottomright",
-                text: error[0].message
+                text: getErrorString(response)
             });
         });
     };
 
 
     Scope.create = function () {
+
         var newRec = this.user;
         if (this.passwordEdit) {
             if (newRec.password == '' || newRec.password != this.passwordRepeat) {
-                //window.top.Actions.showStatus("Please enter matching passwords.", "error");
-
                 $.pnotify({
                     title: 'Error',
                     type: 'error',
@@ -86,12 +82,11 @@ var UserCtrl = function ($scope, Config, User, Role) {
 
         User.save(newRec,
             function(response) {
+
                 Scope.Users.record.push(response);
                 if (!Scope.passwordEdit) {
                     Scope.invite(true);
                 } else {
-                    //window.top.Actions.showStatus("Created Successfully");
-
                     $.pnotify({
                         title: 'Users',
                         type: 'success',
@@ -102,10 +97,9 @@ var UserCtrl = function ($scope, Config, User, Role) {
                 }
             },
             function(response) {
+
                 Scope.user.password = '';
                 Scope.passwordRepeat = '';
-                //window.top.Actions.showStatus(getErrorString(response), "error");
-
                 var code = response.status;
                 if (code == 401) {
                     window.top.Actions.doSignInDialog("stay");
@@ -118,11 +112,13 @@ var UserCtrl = function ($scope, Config, User, Role) {
                     type: 'error',
                     hide: false,
                     addclass: "stack-bottomright",
-                    text: error[0].message
+                    text: getErrorString(response)
                 });
             });
     };
+
     Scope.invite = function (isCreate) {
+
         if (isCreate) {
             info = {"to": Scope.user.email, "first_name": Scope.user.first_name, "success": createSuccess, "error": createError};
         } else {
@@ -151,8 +147,9 @@ var UserCtrl = function ($scope, Config, User, Role) {
             error: info.error
         });
     };
+
     function createSuccess(response) {
-        //window.top.Actions.showStatus("User created and invite sent!");
+
         $.pnotify({
             title: 'Users',
             type: 'success',
@@ -163,20 +160,19 @@ var UserCtrl = function ($scope, Config, User, Role) {
     }
 
     function createError(response) {
-        //window.top.Actions.showStatus("User created but unable to send invite. " + getErrorString(response), "error");
 
         $.pnotify({
             title: 'Error',
             type: 'error',
             hide: false,
             addclass: "stack-bottomright",
-            text: 'User created but unable to send invite. Failed to launch service \'Email\'.  Unknown type value \'\' in service record.'
+            text: 'User created but unable to send invite. ' + getErrorString(response)
         });
 
         Scope.promptForNew();
     }
+
     function resendSuccess(response) {
-        //window.top.Actions.showStatus("Invite sent!");
 
         $.pnotify({
             title: 'Users',
@@ -186,7 +182,6 @@ var UserCtrl = function ($scope, Config, User, Role) {
     }
 
     function resendError(response) {
-        //window.top.Actions.showStatus("Unable to send invite. " + getErrorString(response), "error");
 
         var code = response.status;
         if (code == 401) {
@@ -199,10 +194,12 @@ var UserCtrl = function ($scope, Config, User, Role) {
             type: 'error',
             hide: false,
             addclass: "stack-bottomright",
-            text: 'User created but unable to send invite. Failed to launch service \'Email\'.  Unknown type value \'\' in service record.'
+            text: 'Unable to send invite. ' + getErrorString(response)
         });
     }
+
     Scope.promptForNew = function () {
+
         Scope.action = "Create";
         Scope.passwordEdit = false;
         Scope.user = {};
@@ -212,7 +209,9 @@ var UserCtrl = function ($scope, Config, User, Role) {
         $(window).scrollTop(0);
         Scope.userform.$setPristine();
     };
+
     Scope.delete = function () {
+
         var which = this.user.display_name;
         if (!which || which == '') {
             which = "the user?";
@@ -226,16 +225,12 @@ var UserCtrl = function ($scope, Config, User, Role) {
         User.delete({ id:id }, function () {
             Scope.promptForNew();
             $("#row_" + id).fadeOut();
-            //window.top.Actions.showStatus("Deleted Successfully");
-
             $.pnotify({
                 title: 'Users',
                 type: 'success',
                 text: 'Deleted Successfully.'
             });
         }, function(response) {
-            //window.top.Actions.showStatus(getErrorString(response), "error");
-
             var code = response.status;
             if (code == 401) {
                 window.top.Actions.doSignInDialog("stay");
@@ -247,12 +242,14 @@ var UserCtrl = function ($scope, Config, User, Role) {
                 type: 'error',
                 hide: false,
                 addclass: "stack-bottomright",
-                text: error[0].message
+                text: getErrorString(response)
             });
 
         });
     };
+
     Scope.showDetails = function(){
+
         Scope.action = "Edit";
         Scope.passwordEdit = false;
         Scope.user = angular.copy(this.user);
@@ -262,6 +259,7 @@ var UserCtrl = function ($scope, Config, User, Role) {
         $('#row_' + Scope.user.id).addClass('info');
         Scope.userform.$setPristine();
     }
+
     Scope.toggleRoleSelect = function (checked) {
 
         if(checked == true){
