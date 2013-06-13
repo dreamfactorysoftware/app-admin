@@ -26,12 +26,11 @@
 			"role":  "Black Ops"
 		}
 	],
-	"homepage":          "http://dreamfactorybeta.com/",
-	"license":           ["GPL-3.0", "proprietary"],
+	"homepage":          "http://dreamfactory.com/",
+	"license":           ["Apache2.0"],
 	"support":           {
-		"email":  "developer-support@dreamfactory.com",
+		"email":  "support@dreamfactory.com",
 		"issues": "https://bitbucket.org/dreamfactory/app-admin/issues",
-		"forum":  "https://bitbucket.org/dreamfactory/app-admin/forum",
 		"wiki":   "https://bitbucket.org/dreamfactory/app-admin/wiki",
 		"source": "https://bitbucket.org/dreamfactory/app-admin/src"
 	},
