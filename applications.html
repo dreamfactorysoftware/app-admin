@@ -17,7 +17,7 @@
                         <td ng-click="showDetails()">{{app.name}}</td>
                         <td class="no-border">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-small btn-inverse" title="Preview this app" ng-click="showAppPreview()"><i
+                                <a class="btn btn-small btn-inverse" title="Preview this app" ng-click="showAppPreview(app.launch_url)"><i
                                         class="icon-eye-open"></i></a>
                                 <a ng-show="app.is_url_external == 0" class="btn btn-small btn-inverse"
                                    title="Manage app files" ng-click="showFileManager()"><i

@@ -113,7 +113,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
                     text: 'Created Successfully'
                 });
                 Scope.promptForNew();
-                Scope.showAppPreview(data.url, data.is_url_external);
+                Scope.showAppPreview(data.launch_url);
             },
             function (response) {
                 var code = response.status;
@@ -191,27 +191,15 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
         $("#file-manager").show();
         $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/app/' + this.app.api_name + '/&allowroot=false').show();
     };
-    Scope.showAppPreview = function (appUrl, external) {
-        var path = "";
+    Scope.showAppPreview = function (appUrl) {
+
         Scope.action = "Preview ";
         $('#step1').hide();
 
         $("#app-preview").show();
-        if (appUrl) {
-            if (external) {
-                path = appUrl;
-            } else {
-                path = CurrentServer + '/app/' + this.app.api_name + '/' + appUrl;
-            }
-        }else{
-            if (this.app.is_url_external == '0') {
-                path = CurrentServer + '/app/' + this.app.api_name + '/' + this.app.url;
-            } else {
-                path = this.app.url;
-            }
-        }
 
-        $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", path).show();
+
+        $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", appUrl).show();
         $('#create_button').hide();
         $('#update_button').hide();
         $('#file-manager').hide();
