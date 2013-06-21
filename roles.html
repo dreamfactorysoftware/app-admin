@@ -111,7 +111,7 @@
                                                                               ng-options="service.id as service.name for service in Services.record">
                             </select><br/>
                                 <span class="access">Component:</span> <select ng-model="service.component"
-                                                                               ng-options="component.name as component.label for component in components">
+                                                                               ng-options="component.name as component.name for component in components">
 
                             </select><br/>
                                 <span class="access">Access:</span> <select ng-model="service.access" style="width:140px;">
@@ -146,7 +146,7 @@
                                                 <option ng-selected="service_access.service_id == service.id" ng-repeat="service in Services.record" value="{{service.id}}">{{service.name}}</option>
                                             </select>
                                             <select style="width:140px;" ng-change="editServiceAccess();" ng-model="service_access.component"
-                                                    ng-options="component.name as component.label for component in components">
+                                                    ng-options="component.name as component.name for component in components">
 
                                             </select>
                                             <select ng-model="service_access.access" style="width:140px;">
