@@ -70,7 +70,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.NoSQLOptions = [
         {name:"Amazon DynamoDB", value:"aws dynamodb"},
         {name:"Amazon SimpleDB", value:"aws simpledb"},
-        {name:"Windows Azure Tables", value:"azure tables"}
+        {name:"Windows Azure Tables", value:"azure tables"},
+        {name:"CouchDB", value:"couchdb"}
     ];
     Scope.service.storage_type = "aws s3";
     Scope.serviceOptions = [
@@ -142,6 +143,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     break;
                 case "azure tables":
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
+                    break;
+                case "couchdb":
+                    Scope.service.credentials = {dsn:Scope.service.dsn};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -439,6 +443,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         break;
                     case "azure tables":
                         Scope.azure.account_name = fString.account_name;
+                        Scope.azure.account_key = fString.account_key;
+                        break;
+                    case "couchdb":
+                        Scope.service.dsn = fString.dsn;
                         Scope.azure.account_key = fString.account_key;
                         break;
                 }

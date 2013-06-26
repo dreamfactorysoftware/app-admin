@@ -148,6 +148,10 @@
                         <label>Account Key</label><input type="text" ng-model="azure.account_key"/>
 
                     </div>
+                    <div class=" well sub-section azure_info" ng-show="service.storage_type =='couchdb'">
+                        <p>Connection String</p>
+                        <input ng-model="service.dsn" type="text"/>
+                    </div>
                 </div>
                 <div class="section storage_type">
                     <p>Storage Type</p>
