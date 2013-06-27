@@ -1,13 +1,27 @@
+<div class="navbar" style="margin-bottom:5px;">
+    <div class="navbar-inner">
+        <div class="brand">Applications</div>
+        <div class="btn-group pull-right">
+            <a ng-click="goToImport()" class="btn btn-small">
+                <li class="icon-upload-alt"></li>
+                Import New App
+            </a><a ng-click="promptForNew()" class="btn btn-small">
+            <li class="icon-plus-sign-alt"></li>
+            Create New App</a>
+        </div>
+    </div>
+</div>
 <table style="width:100%">
     <tr>
-        <td id="item-list" class="well">
+        <td id="item-list" style="vertical-align:top;" class="well">
             <div id="grid-table">
-                <table id="app-list" class="table table-hover table-striped">
+                <table id="app-list" class="table table-hover table-striped" >
                     <thead>
                     <tr>
-                        <th>App Label</th>
+                        <th>My Apps</th>
 
-                        <th class="no-border"><a class="btn btn-inverse btn-small pull-right" title="Refresh list" ng-click="reload()"><i
+                        <th class="no-border"><a class="btn btn-inverse btn-small pull-right" title="Refresh list"
+                                                 ng-click="reload()"><i
                                 class="icon-refresh"></i></a></th>
                     </tr>
                     </thead>
@@ -17,12 +31,14 @@
                         <td ng-click="showDetails()">{{app.name}}</td>
                         <td class="no-border">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-small btn-inverse" title="Preview this app" ng-click="showAppPreview(app.launch_url)"><i
+                                <a class="btn btn-small btn-inverse" title="Preview this app"
+                                   ng-click="showAppPreview(app.launch_url)"><i
                                         class="icon-eye-open"></i></a>
                                 <a ng-show="app.is_url_external == 0" class="btn btn-small btn-inverse"
                                    title="Manage app files" ng-click="showFileManager()"><i
                                         class="icon-folder-open"></i></a>
-                                <a class="btn btn-small btn-inverse" title="Delete this app" ng-click="delete()"><i class="icon-trash"></i></a>
+                                <a class="btn btn-small btn-inverse" title="Delete this app" ng-click="delete()"><i
+                                        class="icon-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -33,27 +49,16 @@
         </td>
         <td>&nbsp;</td>
         <td id="app-details" class="well">
-            <div class="navbar">
-                <div class="navbar-inner"><div class="brand">Applications</div>
-                    <div class="btn-group pull-right">
-                        <a ng-click="goToImport()" class="btn btn-small">
-                            <li class="icon-upload-alt"></li>
-                            Import New App
-                        </a><a ng-click="promptForNew()" class="btn btn-small">
-                        <li class="icon-plus-sign-alt"></li>
-                        Create New App</a>
-                    </div>
-                </div>
-            </div>
             <div class="alert alert-info" ng-show="action=='Create' || action=='Update'">
                 <li class="icon-info-sign"></li>
-                DreamFactory makes it easy to build and deploy applications by providing all the back-end infrastructure. Use this tab to manage your apps.
+                DreamFactory makes it easy to build and deploy applications by providing all the back-end
+                infrastructure. Use this tab to manage your apps.
             </div>
+            <h3>{{action}} application</h3>
+
             <div>
 
                 <div class="add_new">
-                    <span class="label label-info">{{action}} application</span>
-
                     <div id="file-manager">
                         <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
                     </div>
@@ -61,67 +66,72 @@
                         <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
                     </div>
                     <div id="step1">
-                        <div class="section">
-                            <p>Is this hosted locally on this server or externally?</p>
+                        <div id="context-root" class="local">
+                            <label><b>App Name</b></label> <input ng-disabled="action=='Update'" type="text" ng-model="app.api_name">
+                        </div>
+                        <div class="options">
+                            <label><b>Hosting</b></label>
+                            <br/><input type="radio" ng-model="app.is_url_external" value='0'/>&nbsp;&nbsp;Use our default app storage service or one of your own.
+                            <br/><input type="radio" ng-model="app.is_url_external" value='1'/>&nbsp;&nbsp;I will just supply a URL to point to my application.
 
-                            <select name="app_location" ng-model="app.is_url_external">
-                                <option value='0' ng-click="showLocal()">Local</option>
-                                <option ng-click="hideLocal()" value='1'>External</option>
+
+                            <br/><input ng-show="app.is_url_external ==1" placeholder="http://www.myserver.com/"
+                                        name="app_path" type="text"
+                                        ng-model="app.url">
+
+                            <div ng-show="app.is_url_external==1" class="alert alert-success">Your URL will be:
+                                {{app.url}}
+                            </div><br/>
+                            <p ng-hide="app.is_url_external==1" id="remote_storage">Choose where you want your files for this app stored.  The app service is our default storage service.</p>
+                            <label ng-hide="app.is_url_external==1"><b>Storage Service</b></label>
+                            <select ng-change="loadStorageContainers()" ng-hide="app.is_url_external==1" ng-model="app.storage_service_id">
+                                <option ng-selected = "service.id == app.storage_service_id" value = "{{service.id}}"  ng-repeat = "service in storageServices">{{service.api_name}}</option>
                             </select>
-                        </div>
-                        <div id="context-root" class=" section local">
-                            <p>Application Path eg: myApp </p>
+                            <label ng-hide=" app.is_url_external==1"><b>Storage Container</b></label>
+                            <select ng-hide="app.is_url_external==1" id="storage_options" ng-model="app.storage_container"
+                                    ng-options="option.name as option.name for option in storageOptions">
+                            </select>
 
-                            <div class="alert alert-info">
-                                <li class="icon-info-sign"></li>
-                                &nbsp;This will be your context root and cannot be changed.
-                            </div>
-                            <input ng-disabled="action=='Update'" type="text" ng-model="app.api_name">
                         </div>
-                        <div class="section external">
-                            <p>Application Name</p>
-                            <input type="text" ng-model="app.api_name">
-                        </div>
-                        <div class=" section">
-                            <p>Public name for this App </p>
+
+
+                        <div>
+                            <p><b>Public name on LaunchPad</b></p>
                             <input type="text" ng-model="app.name">
                         </div>
-                        <div class=" section">
-                            <p>Public description for this App </p>
+                        <div>
+                            <p><b>Public description on LaunchPad</b></p>
                             <input name="app_desc" type="text" ng-model="app.description">
                         </div>
-                        <div class=" section">
-                            <p>Default Path</p>
+                        <div ng-show="app.is_url_external==0">
+                            <p><b>Default Path</b></p>
 
                             <div class="alert alert-info local">
                                 <li class="icon-info-sign"></li>
                                 &nbsp;This is the default file to load when your app is loaded.
                             </div>
-                            <div class="alert alert-info external">
-                                <li class="icon-info-sign"></li>
-                                &nbsp;This is the external link to your app.
-                            </div>
                             <input class="local" placeholder="/index.html" name="app_path" type="text"
                                    ng-model="app.url">
-                            <input class="external" placeholder="http://www.myserver.com/" name="app_path" type="text"
-                                   ng-model="app.url">
 
-                            <div class="alert alert-success local">
+
+                            <div ng-show = "app.is_url_external==0"  class="alert alert-success local">
                                 <li class="icon-cloud"></li>
                                 &nbsp;Your URL will be:
-                                {{currentServer}}/app/{{app.api_name}}<span>{{app.url}}</span></div>
-                            <div class="alert alert-success external">Your URL will be:
-                                {{app.url}}
+                                {{currentServer}}/{{storageContainers[app.storage_service_id].name}}/{{app.storage_container}}/{{app.api_name}}<span>{{app.url}}</span>
                             </div>
+
                         </div>
-                        <div class="section form-inline">
-                            <input type="checkbox" ng-checked="app.requires_fullscreen == 1" ng-model="app.requires_fullscreen">&nbsp;Run Full Screen
+                        <div class="form-inline">
+                            <input type="checkbox" ng-checked="app.requires_fullscreen == 1"
+                                   ng-model="app.requires_fullscreen">&nbsp;Run Full Screen
                         </div>
-                        <div class="section">
-                            <p>Assign this app to a role(s).</p>
+                        <div ><br/>
+                            <p><b>Assign this app to a role(s).</b></p>
+
                             <div class="alert alert-info">
                                 <li class="icon-info-sign"></li>
-                                Each user who is assigned to one of the selected roles will have access to this app. Go to the Roles tab to create and manage roles.
+                                Each user who is assigned to one of the selected roles will have access to this app. Go
+                                to the Roles tab to create and manage roles.
                             </div>
                             <table class="table table-hover table-striped table-bordered">
 

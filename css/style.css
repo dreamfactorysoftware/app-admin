@@ -1832,7 +1832,7 @@ div.dataTables_wrapper .ui-widget-header {
     margin-right: 0;
     padding:      0;
     width:        auto;
-
+    background-color:#f5f5f5;
     overflow:     auto;
 
 }

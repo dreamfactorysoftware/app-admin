@@ -1,4 +1,4 @@
-var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
+var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $timeout) {
 
     $('#alert_container').empty();
     Scope = $scope;
@@ -6,9 +6,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     Scope.currentServer = CurrentServer;
     Scope.action = "Create";
     setCurrentApp('applications');
-    Scope.app = {is_url_external: '0', requires_fullscreen: '0', roles: []};
+    Scope.app = {is_url_external: "0", requires_fullscreen: '0', roles: [], storage_service_id: null};
     $('#update_button').hide();
     $('.external').hide();
+
+    Scope.storageOptions = [];
 
     Scope.Apps = AppsRelated.get(function () {
     }, function (response) {
@@ -46,7 +48,46 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
 
 
     });
+    Scope.Services = Service.get(function () {
+        Scope.storageServices = [];
+        Scope.storageContainers = {}
+        Scope.Services.record.forEach(function (service) {
 
+            if (service.type.indexOf("File Storage") != -1) {
+                Scope.storageServices.push(service);
+
+                $http.get('/rest/' + service.api_name + '?app_name=admin').success(function (data) {
+                    Scope.storageContainers[service.id] = {options: []};
+                    data.resource.forEach(function (container) {
+                        if(service.api_name =="app"){
+                            Scope.app.storage_service_id = service.id;
+                            Scope.app.storage_container = "applications";
+                            Scope.storageContainers[service.id].options.push({name: container.name});
+                            Scope.storageContainers[service.id].name = service.api_name;
+                            Scope.loadStorageContainers();
+                        }else{
+                            Scope.storageContainers[service.id].options.push({name: container.name});
+                            Scope.storageContainers[service.id].name = service.api_name;
+                        }
+
+                    })
+
+                });
+            }
+
+
+
+        });
+    })
+
+    Scope.loadStorageContainers = function () {
+        Scope.storageOptions = [];
+        Scope.storageOptions = Scope.storageContainers[Scope.app.storage_service_id].options;
+
+
+
+
+    }
     Scope.formChanged = function () {
         $('#save_' + this.app.id).removeClass('disabled');
     };
@@ -206,13 +247,10 @@ var AppCtrl = function ($scope, AppsRelated, Role, $location, $timeout) {
     };
 
     Scope.showDetails = function () {
+        Scope.app = {};
         Scope.action = "Update";
         Scope.app = this.app;
-        if (Scope.app.is_url_external == 1) {
-            Scope.hideLocal();
-        } else {
-            Scope.showLocal();
-        }
+        //Scope.loadStorageContainers();
         $('#button_holder').hide();
         $('#file-manager').hide();
         $('#app-preview').hide();
