@@ -6,7 +6,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     Scope.currentServer = CurrentServer;
     Scope.action = "Create";
     setCurrentApp('applications');
-    Scope.app = {is_url_external: "0", requires_fullscreen: '0', roles: [], storage_service_id: null};
+    Scope.app = {is_url_external: "0", allow_fullscreen_toggle:0, requires_fullscreen: '0', roles: [], storage_service_id: null};
     $('#update_button').hide();
     $('.external').hide();
 
