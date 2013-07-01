@@ -78,8 +78,6 @@ $(document).ready(function() {
 // UI Building
 
 function printLocation(path) {
-
-
     var display = '';
     if (path && path != '') {
         var builder = '/';
@@ -147,10 +145,7 @@ function buildItem(path,icon,name,type,editor,extra) {
 
 function allowEdit(mime) {
 
-    if(mime.indexOf('text/') > -1 || mime == "application/javascript" || mime == "application/xml") {
-        return true;
-    }
-    return false;
+    return true;
 }
 
 function buildEditor(mime,path) {
@@ -169,6 +164,10 @@ function buildFolderControl(path) {
 
 function buildListingUI(json, svc) {
 
+    var container;
+    if(json.container){
+        container = json.container;
+    }
     var html = '';
     if (json.folder) {
         for (var i in json.folder) {
@@ -176,7 +175,7 @@ function buildListingUI(json, svc) {
             if (name != '.') {
                 var path = json.folder[i].path;
                 if (svc != '') {
-                    path = svc + '/' + path;
+                    path = svc + '/' +  container + '/' + path;
                 }
                 path = '/' + path;
                 var ctrl = buildFolderControl(path);

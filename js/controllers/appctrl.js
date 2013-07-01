@@ -61,6 +61,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
                     data.resource.forEach(function (container) {
                         if(service.api_name =="app"){
                             Scope.app.storage_service_id = service.id;
+                            Scope.defaultStorageID = service.id;
                             Scope.app.storage_container = "applications";
                             Scope.storageContainers[service.id].options.push({name: container.name});
                             Scope.storageContainers[service.id].name = service.api_name;
@@ -230,7 +231,16 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         $('#create_button').hide();
         $('#update_button').hide();
         $("#file-manager").show();
-        $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/app/' + this.app.api_name + '/&allowroot=false').show();
+        var container;
+        if(this.app.storage_service_id){
+            container = this.app.storage_container || null;
+            container = container? this.app.storage_container + "/" : '';
+            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/' + Scope.storageContainers[this.app.storage_service_id].name +' /' + container + this.app.api_name + '/&allowroot=false').show();
+        }else{
+            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/app/applications/' + this.app.api_name + '/&allowroot=false').show();
+        }
+
+
     };
     Scope.showAppPreview = function (appUrl) {
 
