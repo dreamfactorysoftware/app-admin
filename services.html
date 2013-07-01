@@ -151,61 +151,80 @@
                     <div class=" well sub-section azure_info" ng-show="service.storage_type =='couchdb'">
                         <p>Connection String</p>
                         <input ng-model="service.dsn" type="text"/>
-                    </div>
-                </div>
-                <div class="section storage_type">
-                    <p>Storage Type</p>
-                    <select ng-options="option.value as option.name for option in remoteOptions" ng-model="service.storage_type" type="text"></select>
-                    <div class=" well sub-section aws_info" ng-show="service.storage_type=='aws s3'">
-                        <label>Access Key</label><input type="text" ng-model="aws.access_key"/>
-                        <label>Secret Key</label><input type="text" ng-model="aws.secret_key"/>
-                    </div>
-                    <div class=" well sub-section azure_info" ng-show="service.storage_type =='azure blob'">
-                        <label>Account Name</label><input type="text" ng-model="azure.account_name"/>
-                        <label>Account Key</label><input type="text" ng-model="azure.account_key"/>
+
+                        <p>Username</p>
+                        <input ng-model="service.user" type="text"/>
+
+                        <p>Password</p>
+                        <input ng-model="service.pwd" type="password"/>
+
 
                     </div>
-                    <div class=" well sub-section " ng-show="service.storage_type =='rackspace cloudfiles'">
-                        <label>Username</label><input type="text" ng-model="rackspace.username"/>
-                        <label>API Key</label><input type="text" ng-model="rackspace.api_key"/>
-                        <label>Tenant Name</label><input type="text" ng-model="rackspace.tenant_name"/>
-                        <label>Region</label>
-                        <select ng-change = "changeUrl()" ng-options = "option.value as option.name for option in rackspaceRegions" ng-model = "rackspace.region"></select>
-                        <label>URL/Endpoint</label><input ng-disabled = "!rackspace.region" type="text" ng-model="rackspace.url"/>
-                    </div>
-                    <div class=" well sub-section" ng-show="service.storage_type =='openstack object storage'">
+                    <div class=" well sub-section azure_info" ng-show="service.storage_type =='mongodb'">
+                        <p>Connection String</p>
+                        <input ng-model="service.dsn" type="text"/>
 
-                        <label>Username</label><input type="text" ng-model="openstack.username"/>
-                        <label>API Key</label><input type="text" ng-model="openstack.api_key"/>
-                        <label>Tenant Name</label><input type="text" ng-model="openstack.tenant_name"/>
-                        <label>Region</label><input type="text" ng-model="openstack.region"/>
-                        <label>URL/Endpoint</label><input type="text" ng-model="openstack.url"/>
+                        <p>Username</p>
+                        <input ng-model="service.username" type="text"/>
+
+                        <p>Password</p>
+                        <input ng-model="service.pwd" type="password"/>
+
+
                     </div>
-                </div>
-                <div class="section credentials">
-                    <p>Credentials</p>
-                    <input ng-model="service.credentials" type="text"/>
-                </div>
-                <div class="section native_format">
-                    <p>Native Format</p>
-                    <input ng-model="service.native_format" type="text"/>
-                </div>
-                <div ng-class="{'alert alert-success': service.is_active}" class="section" >
-                    <input  ng-checked="service.is_active" type="checkbox" ng-model="service.is_active"/>&nbsp;Active
-                </div>
-                <div id="button_holder">
-                    <a id="save_button" ng-click="create()" class="btn btn-primary">
-                        <li class="icon-save"></li>
-                        &nbsp;Save</a>
-                    <a id="update_button" ng-click="save()" class="btn btn-primary">
-                        <li class="icon-save"></li>
-                        &nbsp;Update</a>
+                    <div class="section storage_type">
+                        <p>Storage Type</p>
+                        <select ng-options="option.value as option.name for option in remoteOptions" ng-model="service.storage_type" type="text"></select>
+                        <div class=" well sub-section aws_info" ng-show="service.storage_type=='aws s3'">
+                            <label>Access Key</label><input type="text" ng-model="aws.access_key"/>
+                            <label>Secret Key</label><input type="text" ng-model="aws.secret_key"/>
+                        </div>
+                        <div class=" well sub-section azure_info" ng-show="service.storage_type =='azure blob'">
+                            <label>Account Name</label><input type="text" ng-model="azure.account_name"/>
+                            <label>Account Key</label><input type="text" ng-model="azure.account_key"/>
+
+                        </div>
+                        <div class=" well sub-section " ng-show="service.storage_type =='rackspace cloudfiles'">
+                            <label>Username</label><input type="text" ng-model="rackspace.username"/>
+                            <label>API Key</label><input type="text" ng-model="rackspace.api_key"/>
+                            <label>Tenant Name</label><input type="text" ng-model="rackspace.tenant_name"/>
+                            <label>Region</label>
+                            <select ng-change = "changeUrl()" ng-options = "option.value as option.name for option in rackspaceRegions" ng-model = "rackspace.region"></select>
+                            <label>URL/Endpoint</label><input ng-disabled = "!rackspace.region" type="text" ng-model="rackspace.url"/>
+                        </div>
+                        <div class=" well sub-section" ng-show="service.storage_type =='openstack object storage'">
+
+                            <label>Username</label><input type="text" ng-model="openstack.username"/>
+                            <label>API Key</label><input type="text" ng-model="openstack.api_key"/>
+                            <label>Tenant Name</label><input type="text" ng-model="openstack.tenant_name"/>
+                            <label>Region</label><input type="text" ng-model="openstack.region"/>
+                            <label>URL/Endpoint</label><input type="text" ng-model="openstack.url"/>
+                        </div>
+                    </div>
+                    <div class="section credentials">
+                        <p>Credentials</p>
+                        <input ng-model="service.credentials" type="text"/>
+                    </div>
+                    <div class="section native_format">
+                        <p>Native Format</p>
+                        <input ng-model="service.native_format" type="text"/>
+                    </div>
+                    <div ng-class="{'alert alert-success': service.is_active}" class="section" >
+                        <input  ng-checked="service.is_active" type="checkbox" ng-model="service.is_active"/>&nbsp;Active
+                    </div>
+                    <div id="button_holder">
+                        <a id="save_button" ng-click="create()" class="btn btn-primary">
+                            <li class="icon-save"></li>
+                            &nbsp;Save</a>
+                        <a id="update_button" ng-click="save()" class="btn btn-primary">
+                            <li class="icon-save"></li>
+                            &nbsp;Update</a>
+                    </div>
+
                 </div>
 
             </div>
-
         </div>
-    </div>
 
 </td>
 </tr>

@@ -71,7 +71,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Amazon DynamoDB", value:"aws dynamodb"},
         {name:"Amazon SimpleDB", value:"aws simpledb"},
         {name:"Windows Azure Tables", value:"azure tables"},
-        {name:"CouchDB", value:"couchdb"}
+        {name:"CouchDB", value:"couchdb"},
+        {name:"MongoDB", value:"mongodb"}
     ];
     Scope.service.storage_type = "aws s3";
     Scope.serviceOptions = [
@@ -227,6 +228,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
                     break;
 
+                case "couchdb":
+                    Scope.service.credentials = {username:Scope.service.username, password:Scope.service.username, dsn: Scope.service.dsn};
+                    break;
+                case "mongodb":
+                    Scope.service.credentials = {username:Scope.service.username, password:Scope.service.username, dsn: Scope.service.dsn};
+                    break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
@@ -447,7 +454,13 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         break;
                     case "couchdb":
                         Scope.service.dsn = fString.dsn;
-                        Scope.azure.account_key = fString.account_key;
+                        Scope.service.username = fString.username;
+                        Scope.service.passsword = fString.password;
+                        break;
+                    case "mongodb":
+                        Scope.service.dsn = fString.dsn;
+                        Scope.service.username = fString.username;
+                        Scope.service.passsword = fString.password;
                         break;
                 }
             }
