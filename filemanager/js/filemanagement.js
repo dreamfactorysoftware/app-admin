@@ -192,7 +192,7 @@ function buildListingUI(json, svc) {
         for(var i in json.file) {
             var path = json.file[i].path;
             if (svc != '') {
-                path = svc + '/' + path;
+                path = svc + '/' +  container + '/' + path;
             }
             path = '/' + path;
             var editor = buildEditor(json.file[i].contentType, path);
@@ -246,7 +246,7 @@ function buildListingUI(json, svc) {
             if(type == 'folder') {
                 loadFolder(target);
             } else {
-                window.location.href = CurrentServer + '/rest' + target +"?app_name=admin&download=true";
+                window.location.href = CurrentServer + '/rest'+ target +"?app_name=admin&download=true";
             }
         });
 
