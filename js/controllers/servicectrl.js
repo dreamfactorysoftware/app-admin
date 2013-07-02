@@ -146,7 +146,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
                     break;
                 case "couchdb":
-                    Scope.service.credentials = {dsn:Scope.service.dsn};
+                    Scope.service.credentials = {dsn:Scope.couchdb.service.dsn, user: Scope.couchdb.service.user, pwd: Scope.couchdb.service.pwd};
+                    break;
+                case "mongodb":
+                    Scope.service.credentials = {dsn:Scope.mongodb.service.dsn, user: Scope.mongodb.service.user, pwd: Scope.couchdb.service.pwd};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -229,10 +232,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     break;
 
                 case "couchdb":
-                    Scope.service.credentials = {username:Scope.service.username, password:Scope.service.username, dsn: Scope.service.dsn};
+                    Scope.service.credentials = {username:Scope.couchdb.service.username, password:Scope.couchdb.service.username, dsn: Scope.couchdb.service.dsn};
                     break;
                 case "mongodb":
-                    Scope.service.credentials = {username:Scope.service.username, password:Scope.service.username, dsn: Scope.service.dsn};
+                    Scope.service.credentials = {username:Scope.mongodb.service.username, password:Scope.mongodb.service.username, dsn: Scope.mongodb.service.dsn};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -435,6 +438,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         if (Scope.service.type == "NoSQL DB") {
             Scope.aws = {};
             Scope.azure = {};
+            Scope.couchdb = {service:{}};
+            Scope.mongodb = {service:{}};
             if (Scope.service.credentials) {
                 var fString = Scope.service.credentials;
                 switch (Scope.service.storage_type) {
@@ -453,14 +458,14 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         Scope.azure.account_key = fString.account_key;
                         break;
                     case "couchdb":
-                        Scope.service.dsn = fString.dsn;
-                        Scope.service.username = fString.username;
-                        Scope.service.passsword = fString.password;
+                        Scope.couchdb.service.dsn = fString.dsn;
+                        Scope.couchdb.service.user = fString.user;
+                        Scope.couchdb.service.pwd = fString.pwd;
                         break;
                     case "mongodb":
-                        Scope.service.dsn = fString.dsn;
-                        Scope.service.username = fString.username;
-                        Scope.service.passsword = fString.password;
+                        Scope.mongodb.service.dsn = fString.dsn;
+                        Scope.mongodb.service.user = fString.user;
+                        Scope.mongodb.service.pwd = fString.pwd;
                         break;
                 }
             }

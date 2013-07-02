@@ -150,25 +150,25 @@
                     </div>
                     <div class=" well sub-section azure_info" ng-show="service.storage_type =='couchdb'">
                         <p>Connection String</p>
-                        <input ng-model="service.dsn" type="text"/>
+                        <input ng-model="couchdb.service.dsn" type="text"/>
 
                         <p>Username</p>
-                        <input ng-model="service.user" type="text"/>
+                        <input ng-model="couchdb.service.user" type="text"/>
 
                         <p>Password</p>
-                        <input ng-model="service.pwd" type="password"/>
+                        <input ng-model="couchdb.service.pwd" type="password"/>
 
 
                     </div>
                     <div class=" well sub-section azure_info" ng-show="service.storage_type =='mongodb'">
                         <p>Connection String</p>
-                        <input ng-model="service.dsn" type="text"/>
+                        <input ng-model="mongodb.service.dsn" type="text"/>
 
                         <p>Username</p>
-                        <input ng-model="service.username" type="text"/>
+                        <input ng-model="mongodb.service.username" type="text"/>
 
                         <p>Password</p>
-                        <input ng-model="service.pwd" type="password"/>
+                        <input ng-model="mongodb.service.pwd" type="password"/>
 
 
                     </div>
