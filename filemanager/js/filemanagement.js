@@ -163,12 +163,30 @@ function buildFolderControl(path) {
 }
 
 function buildListingUI(json, svc) {
-
     var container;
     if(json.container){
         container = json.container;
     }
     var html = '';
+    if (json.resource) {
+        for (var i in json.resource) {
+            var name = json.resource[i].name;
+            if (name != '.') {
+                //var path = json.folder[i].path;
+                if (svc != '') {
+                    path = svc + '/' +  name + '/';
+                }
+                path = '/' + path;
+                var ctrl = buildFolderControl(path);
+                if (currentpath == '/') {
+                    var icon = 'gfx/service.png';
+                } else {
+                    var icon = 'gfx/folder-horizontal-open.png';
+                }
+                html += buildItem(path, icon, name, 'folder',ctrl);
+            }
+        }
+    }
     if (json.folder) {
         for (var i in json.folder) {
             var name = json.folder[i].name;
