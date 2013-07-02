@@ -95,6 +95,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     Scope.promptForNew = function () {
         Scope.action = "Create";
         Scope.app = {is_url_external: '0', requires_fullscreen: '0', roles: []};
+        Scope.app.storage_service_id = Scope.defaultStorageID;
+        Scope.app.storage_container = "applications";
         $('#context-root').show();
         $('#file-manager').hide();
         $('#app-preview').hide();
@@ -260,7 +262,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         Scope.app = {};
         Scope.action = "Update";
         Scope.app = this.app;
-        //Scope.loadStorageContainers();
+        if(!this.app.storage_service_id){
+            Scope.app.storage_service_id = Scope.defaultStorageID;
+            Scope.app.storage_container = "applications";
+        }
+        Scope.loadStorageContainers();
         $('#button_holder').hide();
         $('#file-manager').hide();
         $('#app-preview').hide();
