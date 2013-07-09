@@ -149,7 +149,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {dsn:Scope.couchdb.service.dsn, user: Scope.couchdb.service.user, pwd: Scope.couchdb.service.pwd};
                     break;
                 case "mongodb":
-                    Scope.service.credentials = {dsn:Scope.mongodb.service.dsn, user: Scope.mongodb.service.user, pwd: Scope.couchdb.service.pwd};
+                    Scope.service.credentials = {dsn:Scope.mongodb.service.dsn, user: Scope.mongodb.service.user, pwd: Scope.mongodb.service.pwd, db: Scope.mongodb.service.db};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -235,7 +235,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {username:Scope.couchdb.service.username, password:Scope.couchdb.service.username, dsn: Scope.couchdb.service.dsn};
                     break;
                 case "mongodb":
-                    Scope.service.credentials = {username:Scope.mongodb.service.username, password:Scope.mongodb.service.username, dsn: Scope.mongodb.service.dsn};
+                    Scope.service.credentials = {username:Scope.mongodb.service.username, password:Scope.mongodb.service.username, dsn: Scope.mongodb.service.dsn, db: Scope.mongodb.service.db};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -466,6 +466,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         Scope.mongodb.service.dsn = fString.dsn;
                         Scope.mongodb.service.user = fString.user;
                         Scope.mongodb.service.pwd = fString.pwd;
+                        Scope.mongodb.service.db = fString.db;
                         break;
                 }
             }
