@@ -23,6 +23,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
     ]
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
+    //var inputTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><input class="ngCellText colt{{$index}}" ng-change="enableSave()"/></div>';
     var schemaInputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSchemaSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
@@ -153,8 +154,8 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
             column.field = field.name;
             switch (field.type) {
                 case "boolean":
-                    column.editableCellTemplate = booleanTemplate;
-                    column.enableFocusedCellEdit = true;
+                    column.cellTemplate = booleanTemplate;
+                    //column.enableFocusedCellEdit = true;
                     column.minWidth = '100px';
                     column.width = '50px';
                     break;

@@ -18,7 +18,8 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         {value:"decimal", text: "decimal"},
         {value:"datetime", text: "datetime"},
         {value:"date", text: "date"},
-        {value:"time", text: "time"}
+        {value:"time", text: "time"},
+        {value:"reference", text: "reference"}
     ]
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
@@ -26,94 +27,16 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
     var schemaButtonTemplate = '<div ><button id="add_{{row.rowIndex}}" class="btn btn-small btn-primary" disabled=true ng-show="this.row.entity.new" ng-click="schemaAddField()"><li class="icon-save"></li></button>' +
-        '<button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaSaveRow()"><li class="icon-save"></li></button>' +
+        '<button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaAddField()"><li class="icon-save"></li></button>' +
         '<button class="btn btn-small btn-danger" ng-show="!this.row.entity.new" ng-click="schemaDeleteField()"><li class="icon-remove"></li></button>' +
         '<button class="btn btn-small btn-danger" ng-show="this.row.entity.new" disabled=true ng-click="schemaDeleteField(true)"><li class="icon-remove"></li></button></div>';
     var typeTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in typeOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     Scope.columnDefs = [];
     Scope.browseOptions = {};
-    Scope.browseOptions = {data: 'tableData', canSelectRows: false, displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
+    Scope.browseOptions = {data: 'tableData', enableCellEdit:true, canSelectRows: false, displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
     Scope.Schemas = Schema.get(function (data) {
         Scope.schemaData = data.resource;
     });
-    Scope.showData = function () {
-        $("#grid-container").show();
-        $(".detail-view").show();
-        $("#json_upload").hide();
-        $("#create-form").hide();
-        Scope.currentTable = this.table.name;
-        Scope.browseOptions = {};
-        Scope.tableData = [];
-        Scope.columnDefs = [];
-        Scope.currentSchema = [];
-
-        DB.get({name: Scope.currentTable}, function (data) {
-            if (data.record.length > 0) {
-                Scope.tableData = data.record;
-                Scope.tableData.unshift({});
-            } else {
-                Scope.tableData = [
-                    {"error": "No Data"}
-                ];
-            }
-            Scope.currentSchema = data.meta.schema.field;
-            var columnDefs = [];
-            var saveColumn = {};
-            saveColumn.field = '';
-            saveColumn.cellTemplate = buttonTemplate;
-            saveColumn.width = '70px';
-            columnDefs.push(saveColumn);
-            var column = {};
-            Scope.currentSchema.forEach(function (field) {
-                column.field = field.name;
-                switch (field.type) {
-                    case "boolean":
-                        column.editableCellTemplate = booleanTemplate;
-                        column.enableFocusedCellEdit = true;
-                        column.minWidth = '100px';
-                        column.width = '50px';
-                        break;
-                    case "id":
-                        column.width = '50px';
-                        break;
-                    case "string":
-                        column.editableCellTemplate = inputTemplate;
-                        column.enableFocusedCellEdit = true;
-                        column.width = '100px';
-                        break;
-                    default:
-                        column.editableCellTemplate = inputTemplate;
-                        column.enableFocusedCellEdit = true;
-                        column.width = '100px';
-                }
-                columnDefs.push(column);
-                column = {};
-            });
-
-            Scope.columnDefs = columnDefs;
-            Scope.browseOptions.data = Scope.tableData;
-
-        }, function(response){
-            var code = response.status;
-            if(code == 401){
-                window.top.Actions.doSignInDialog("stay");
-                return;
-            }
-            var error = response.data.error;
-            $.pnotify({
-                title: 'Error' ,
-                type: 'error',
-                hide:false,
-                addclass: "stack-bottomright",
-                text: error[0].message
-            });
-
-        });
-
-        $("tr.info").removeClass('info');
-        $('#row_' + Scope.currentTable).addClass('info');
-
-    };
 
     Scope.showForm = function () {
         $("#grid-container").hide();
@@ -144,14 +67,16 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             var keys  = Object.keys(Scope.tableSchema.field[0]);
             keys.forEach(function (key) {
                     if(key == 'type'){
-                        column.editableCellTemplate = typeTemplate;
+                        column.cellTemplate = typeTemplate;
+
                     }else{
                         column.editableCellTemplate = schemaInputTemplate;
+                        column.enableFocusedCellEdit = true;
                     }
 
 
 
-                    column.enableFocusedCellEdit = true;
+                    //column.enableFocusedCellEdit = true;
                     column.width = '100px';
                     column.field = key;
                     columnDefs.push(column);
@@ -210,7 +135,7 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         var row = this.row.entity;
         $http.put('/rest/schema/' + table + '/?app_name=admin', row).success(function(data){
             Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
-            Scope.tableData.unshift(data);
+            Scope.tableData.unshift(data.field[0]);
             Scope.tableData.unshift({"new":true});
         });
 
@@ -374,6 +299,19 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
                 $("#save_" + index).attr('disabled', true);
             });
         }
+
+
+    }
+    Scope.schemaSaveRow = function () {
+
+
+        var table = this.tableSchema.name;
+        var row = this.row.entity;
+        $http.put('/rest/schema/' + table + '/?app_name=admin', row).success(function(data){
+            Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
+            Scope.tableData.unshift(data);
+            Scope.tableData.unshift({"new":true});
+        });
 
 
     }
