@@ -12,7 +12,7 @@ EditorActions = {
             cache:false,
             processData: false,
             success:function (response) {
-               EditorActions.loadEditor(response);
+                EditorActions.loadEditor(response);
             },
             error:function (response) {
                 if (response.status == 401) {
@@ -34,11 +34,11 @@ EditorActions = {
         $.ajax({
             url:CurrentServer + '/rest' + EditorActions.getQueryParameter('path') + '?&app_name=admin',
             data: Editor.getValue(),
-            type:'MERGE',
+            type:'PUT',
             processData: false,
             cache:false,
             beforeSend: function(xhr) {
-               xhr.setRequestHeader("X-File-Name",EditorActions.getFileName());
+                xhr.setRequestHeader("X-File-Name",EditorActions.getFileName());
             },
             success:function (response) {
                 window.close();
@@ -74,5 +74,5 @@ EditorActions = {
 };
 $(document).ready(function(){
     EditorActions.getFile();
-	
+
 });
