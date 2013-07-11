@@ -35,15 +35,15 @@
         <p>
 
         <div class="btn-group" data-toggle="buttons-radio">
-            <a href="#" type="button" id="file-btn" class="btn btn-primary" name="File"
+            <a  type="button" id="file-btn" class="btn btn-primary" name="File"
                onclick="setMode('file')">File</a>
-            <a href="#" type="button" id="url-btn" class="btn" name="URL" onclick="setMode('url');">URL</a>
+            <a  type="button" id="url-btn" class="btn" name="URL" onclick="setMode('url');">URL</a>
         </div>
         </p
         <p>
 
         <form id="fileImportForm" method="POST" enctype="multipart/form-data" target="fileIframe">
-            <input id="fileInput" type="file" name="files" size="50"></input>
+            <input id="fileInput" type="file" name="files" size="50"/>
         </form>
         <iframe id="fileIframe" style="display: none;" name="fileIframe" src="about:blank" onload="checkResults(this)"></iframe>
         <div id="errorDialog" style="display: none;" title="Oops! An Error Has Occured..." class="cTxtLeft">
@@ -67,8 +67,8 @@
         </p>
     </div>
     <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-        <a href="#" class="btn btn-primary" onclick="importFile()">Import</a>
+        <a  class="btn" data-dismiss="modal">Cancel</a>
+        <a  class="btn btn-primary" onclick="importFile()">Import</a>
     </div>
 </div>
 <div id="main_content" align="left">
@@ -80,13 +80,13 @@
 								<span id="mandatory_tools">
                                    <div class="btn-toolbar">
                                        <div class="btn-group">
-                                           <a id="mkdir" href="#" class="btn btn-small fmActionButton"><i
+                                           <a id="mkdir" class="btn btn-small fmActionButton"><i
                                                    class="icon-folder-close"></i>&nbsp;Create Folder</a>&nbsp;
-                                           <a id="importfile" href="#" class="btn btn-small fmActionButton"><i
+                                           <a id="importfile"  class="btn btn-small fmActionButton"><i
                                                    class="icon-cloud-upload"></i>&nbsp;Upload File</a>&nbsp;
-                                           <a id="exportzip" href="#" class="btn btn-small fmActionButton"><i
+                                           <a id="exportzip"  class="btn btn-small fmActionButton"><i
                                                    class="icon-cloud-download"></i>&nbsp;Download Zip</a>&nbsp;
-                                           <a id="rm" href="#" class="btn btn-small fmActionButton"><i
+                                           <a id="rm" class="btn btn-small fmActionButton"><i
                                                    class="icon-trash"></i>&nbsp;Delete Item(s)</a>
                                        </div>
                                    </div>
