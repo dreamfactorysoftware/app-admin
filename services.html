@@ -16,6 +16,9 @@
                 <td ng-click='showDetails()'>{{service.name}}</td>
                 <td class="no-border">
                     <div class="btn-group pull-right">
+                        <a ng-show="service.type === 'Remote File Storage' || service.type === 'Local File Storage'" class="btn btn-small btn-inverse"
+                           title="Manage service files" ng-click="showFileManager()"><i
+                                class="icon-folder-open"></i></a>
                         <a ng-click="showSwagger()" class="btn btn-small btn-inverse" title="Explore this service"><i
                                 class="icon-book"></i></a>
                         <a ng-hide="service.is_system" class="btn btn-small btn-inverse" title="Delete this service"
@@ -50,8 +53,11 @@
 <div class="detail-view"></div>
 
 <div class="add_new">
-<span class="label label-info">{{action}} service</span>
 
+<span class="label label-info">{{action}} service</span>
+<div id="file-manager">
+    <iframe style="display:none" frameBorder=0 ng-src=""></iframe>
+</div>
 <div ng-include src="'swagger.html'">
 </div>
 <div id="step1">

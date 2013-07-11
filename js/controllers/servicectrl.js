@@ -7,6 +7,7 @@
  */
 var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope = $scope;
+
     Scope.promptForNew = function () {
 
         Scope.action = "Create";
@@ -20,7 +21,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $("tr.info").removeClass('info');
         Scope.service.type = "Remote Web Service";
         Scope.showFields();
-
+        $('#file-manager').hide();
+        $("#button_holder").show();
         Scope.aws = {};
         Scope.azure = {};
         Scope.rackspace = {};
@@ -382,6 +384,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
     Scope.showDetails = function () {
         $('#step1').show();
+        $('#file-manager').hide();
+        $("#button_holder").show();
         $("#swagger, #swagger iframe").hide();
         Scope.service = angular.copy(this.service);
         if (Scope.service.type == "Remote Email Service") {
@@ -571,7 +575,26 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 break;
         }
     }
+    Scope.showFileManager = function () {
+        Scope.action = "Edit Files for this";
+        $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/' + this.service.api_name + '/&allowroot=false').show();
+        $('#step1').hide();
+        $("#button_holder").hide();
+//        $('#app-preview').hide();
+//        $('#create_button').hide();
+//        $('#update_button').hide();
+        $("#file-manager").show();
+//        var container;
+//        if(this.app.storage_service_id){
+//            container = this.app.storage_container || null;
+//            container = container? this.app.storage_container + "/" : '';
+//            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/' + Scope.storageContainers[this.app.storage_service_id].name +' /' + container + this.app.api_name + '/&allowroot=false').show();
+//        }else{
+//            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/app/applications/' + this.app.api_name + '/&allowroot=false').show();
+//        }
 
+
+    };
     $("#param-value").keyup(function (event) {
         if (event.keyCode == 13) {
 
