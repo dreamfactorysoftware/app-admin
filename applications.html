@@ -71,23 +71,23 @@
                         </div>
                         <div class="options">
                             <label><b>Hosting</b></label>
-                            <br/><input type="radio" ng-model="app.is_url_external" value='0'/>&nbsp;&nbsp;Use our default app storage service or one of your own.
+                            <input type="radio" ng-model="app.is_url_external" value='0'/>&nbsp;&nbsp;Use our default app storage service or one of your own.
                             <br/><input type="radio" ng-model="app.is_url_external" value='1'/>&nbsp;&nbsp;I will just supply a URL to point to my application.
 
 
-                            <br/><input ng-show="app.is_url_external ==1" placeholder="http://www.myserver.com/"
+                            <br/><br/><input ng-show="app.is_url_external==1" placeholder="http://www.myserver.com/"
                                         name="app_path" type="text"
                                         ng-model="app.url">
 
                             <div ng-show="app.is_url_external==1" class="alert alert-success">Your URL will be:
                                 {{app.url}}
-                            </div><br/>
+                            </div>
                             <p ng-hide="app.is_url_external==1" id="remote_storage">Choose where you want your files for this app stored.  The app service is our default storage service.</p>
-                            <label ng-hide="app.is_url_external==1"><b>Storage Service</b></label>
+                            <label ng-hide="app.is_url_external==1">Storage Service</label>
                             <select ng-change="loadStorageContainers()" ng-hide="app.is_url_external==1" ng-model="app.storage_service_id">
                                 <option ng-selected = "service.id == app.storage_service_id" value = "{{service.id}}"  ng-repeat = "service in storageServices">{{service.api_name}}</option>
                             </select>
-                            <label ng-hide=" app.is_url_external==1"><b>Storage Container</b></label>
+                            <label ng-hide=" app.is_url_external==1">Storage Container</label>
                             <select ng-hide="app.is_url_external==1" id="storage_options" ng-model="app.storage_container"
                                     ng-options="option.name as option.name for option in storageOptions">
                             </select>
