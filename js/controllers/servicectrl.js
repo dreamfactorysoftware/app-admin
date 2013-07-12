@@ -118,7 +118,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
         }
         if (Scope.service.type == "Email Service") {
-            if(Scope.emailOptions == "SMTP"){
+            if(Scope.email_type == "SMTP"){
                 Scope.service.storage_type = "smtp";
                 Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
                 Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -205,7 +205,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.storage_type = null;
                     break;
                 case "Server Command":
-                    Scope.service.storage_type = null;
+                    //Scope.service.storage_type = null;
                     break;
                 case "SMTP":
 
