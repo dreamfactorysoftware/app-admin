@@ -69,12 +69,12 @@
     </div>
     <div class="section" ng-show="action!='Update'">
         <span>Type:</span>
-        <select ng-init="showFields()" ng-change="showFields()" ng-model="service.type"
+        <select ng-change="showFields()" ng-model="service.type"
                 ng-options="option.name as option.name for option in serviceCreateOptions"></select>
     </div>
     <div class="section" ng-show="service.type == 'Email Service'">
         <span>Provider:</span>
-        <select ng-init ="showEmailFields()" ng-change = "showEmailFields()" ng-model="email_type" ng-options = "option.name as option.name for option in emailOptions"></select>
+        <select ng-change = "showEmailFields()" ng-model="email_type" ng-options = "option.name as option.name for option in emailOptions"></select>
     </div>
     <div class="section">
         <span>Service Name</span>

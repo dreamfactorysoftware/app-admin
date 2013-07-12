@@ -341,20 +341,11 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".user, .host, .security,.command,  .port, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".storage_name, .storage_type").show();
                 break;
-            case "Email Service":
-                $(".base_url, .user, .pwd,.host,.port,.command,  .security, .headers,.dsn ,.storage_name, .parameters, .storage_type, .credentials, .native_format, .nosql_type").hide();
-                //$("").show();
-                break;
-            case "Local Email Service":
-                $(".base_url, .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
-                $(".command, .parameters").show();
-                break;
+
             case "NoSQL DB":
                 $(".base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".nosql_type").show();
                 break;
-            default:
-                $(".base_url, .command, .host, .security, .port, .user, .pwd, .dsn ,.parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
         }
     };
     Scope.showSwagger = function () {
@@ -363,6 +354,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $('#step1').hide();
     };
     Scope.showEmailFields = function(){
+
         switch (Scope.email_type) {
             case "Server Default":
                 Scope.service.storage_type = null;
@@ -375,6 +367,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".command").show();
                 break;
             case "SMTP":
+
                 Scope.service.storage_type = "smtp";
                 $(".user, .pwd,.host,.port,.command,  .security, .parameters,.base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
                 $(".user, .pwd,.host,.port,  .security, .parameters").show();
@@ -446,7 +439,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 Scope.email_type = "Server Default";
             }
 
-
+            Scope.showEmailFields();
         }
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {
@@ -529,7 +522,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $('#save_button').hide();
         $('#update_button').show();
         Scope.showFields();
-        Scope.showEmailFields();
+
         Scope.tableData = Scope.service.parameters;
         Scope.headerData = Scope.service.headers;
         $("tr.info").removeClass('info');
@@ -662,4 +655,5 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.promptForNew();
     });
     $("#swagger, #swagger iframe").hide();
+    Scope.promptForNew();
 };
