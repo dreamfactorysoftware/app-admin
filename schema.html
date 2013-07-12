@@ -63,7 +63,7 @@
                         <div class="section">
                             <span>Field Name:</span><input ng-disabled="!schema.table.name"  type="text" ng-model="schema.table.field.name"/>
                             <br/>
-                            <span>Field Type:</span><select  ng-disabled="!schema.table.name" ng-model="schema.table.field.type">
+                            <span>Field Type:</span><select  ng-disabled="!schema.table.name || !schema.table.field.name" ng-model="schema.table.field.type">
                             <option value="id">ID / Primary Key</option>
                             <option value="string">String</option>
                             <option value="integer">Integer</option>
@@ -80,10 +80,10 @@
 
                         </select>
                             <br/>
-                            <span>Field Size:</span><input ng-disabled="!schema.table.name" type="text" ng-model="schema.table.field.size"/>
+                            <span>Field Size:</span><input ng-disabled="!schema.table.name || !schema.table.field.name || !schema.table.field.type" type="text" ng-model="schema.table.field.size"/>
                             <br/>
-                            <span>Allow Null:</span><input ng-disabled="!schema.table.name"type="checkbox" ng-model="schema.table.field.allow_null"/><br/>
-                            <div><button ng-disabled="!schema.table.name" class="btn btn-success" ng-click="addField()">
+                            <span>Allow Null:</span><input ng-disabled="!schema.table.name || !schema.table.field.name || !schema.table.field.type"type="checkbox" ng-model="schema.table.field.allow_null"/><br/>
+                            <div><button ng-disabled="!schema.table.name || !schema.table.field.name || !schema.table.field.type" class="btn btn-success" ng-click="addField()">
                                 <li class="icon-plus-sign-alt"></li>
                                 &nbsp;Add Field</button></div>
                         </div>
@@ -110,7 +110,7 @@
 
                             </tbody>
                         </table>
-                        <div><button ng-disabled = "areFieldsDefined() && !schema.table.name" class="btn btn-primary" ng-click="create()">
+                        <div><button ng-disabled = "!newTable.table.field.length"  class="btn btn-primary" ng-click="create()">
                             <li class="icon-save"></li>
                             &nbsp;Create Table</button></div>
                     </div>
