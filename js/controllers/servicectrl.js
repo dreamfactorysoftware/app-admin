@@ -29,6 +29,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.openstack = {};
         Scope.service.is_active=true;
         $(window).scrollTop(0);
+        Scope.email_type = "Server Default";
     };
 
 
@@ -57,7 +58,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.service = {};
     Scope.Services = Service.get();
     Scope.action = "Create";
-
+    Scope.emailOptions = [
+        {name: "Server Default"},
+        {name: "Server Command"},
+        {name: "SMTP"}
+    ];
+    Scope.email_type = "Server Default";
     Scope.remoteOptions = [
         {name:"Amazon S3", value:"aws s3"},
         {name:"Windows Azure Storage", value:"azure blob"},
@@ -86,8 +92,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"NoSQL DB"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
-        {name:"Local Email Service"},
-        {name:"Remote Email Service"}
+        {name:"Email Service"}
     ];
     Scope.serviceCreateOptions = [
         {name:"Remote Web Service"},
@@ -96,8 +101,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"NoSQL DB"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
-        {name:"Local Email Service"},
-        {name:"Remote Email Service"}
+        {name:"Email Service"}
+
 
     ];
     Scope.securityOptions = [
@@ -112,11 +117,13 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
 
         }
-        if (Scope.service.type == "Remote Email Service") {
+        if (Scope.service.type == "Email Service") {
+            if(Scope.emailOptions == "SMTP"){
+                Scope.service.storage_type = "smtp";
+                Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
+                Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+            }
 
-            Scope.service.storage_type = "smtp";
-            Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
-            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
 
         }
         if (Scope.service.type == "Remote File Storage") {
@@ -191,11 +198,25 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.create = function () {
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
-        if (Scope.service.type == "Remote Email Service") {
+        if (Scope.service.type == "Email Service") {
 
-            Scope.service.storage_type = "smtp";
-            Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
-            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+            switch (Scope.email_type) {
+                case "Server Default":
+                    Scope.service.storage_type = null;
+                    break;
+                case "Server Command":
+                    Scope.service.storage_type = null;
+                    break;
+                case "SMTP":
+
+                    Scope.service.storage_type = "smtp";
+                    Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
+                    Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+                    break;
+            }
+
+
+
 
         }
         if (Scope.service.type == "Remote SQL DB") {
@@ -320,9 +341,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".user, .host, .security,.command,  .port, .pwd,.base_url, .parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".storage_name, .storage_type").show();
                 break;
-            case "Remote Email Service":
-                $(".base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
-                $(".user, .pwd,.host,.port, .security, .parameters").show();
+            case "Email Service":
+                $(".base_url, .user, .pwd,.host,.port,.command,  .security, .headers,.dsn ,.storage_name, .parameters, .storage_type, .credentials, .native_format, .nosql_type").hide();
+                //$("").show();
                 break;
             case "Local Email Service":
                 $(".base_url, .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
@@ -341,6 +362,25 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.action = "Explore ";
         $('#step1').hide();
     };
+    Scope.showEmailFields = function(){
+        switch (Scope.email_type) {
+            case "Server Default":
+                Scope.service.storage_type = null;
+                $(".user, .pwd,.host,.port,.command,  .security, .parameters, .base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
+                //$(".user, .pwd,.host,.port,.command,  .security, .parameters").show();
+                break;
+            case "Server Command":
+                Scope.service.storage_type = null;
+                $(".user, .pwd,.host,.port,.command,  .security, .parameters,.base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
+                $(".command").show();
+                break;
+            case "SMTP":
+                Scope.service.storage_type = "smtp";
+                $(".user, .pwd,.host,.port,.command,  .security, .parameters,.base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
+                $(".user, .pwd,.host,.port,  .security, .parameters").show();
+                break;
+        }
+    }
     Scope.delete = function () {
         var which = this.service.name;
         if (!which || which == '') {
@@ -388,15 +428,25 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $("#button_holder").show();
         $("#swagger, #swagger iframe").hide();
         Scope.service = angular.copy(this.service);
-        if (Scope.service.type == "Remote Email Service") {
-            if (Scope.service.credentials) {
-                var cString = Scope.service.credentials;
-                Scope.service.host = cString.host;
-                Scope.service.port = cString.port;
-                Scope.service.security = cString.security;
-                Scope.service.user = cString.user;
-                Scope.service.pwd = cString.pwd;
+        if (Scope.service.type == "Email Service") {
+            if (Scope.service.storage_type == "smtp"){
+                if (Scope.service.credentials) {
+                    var cString = Scope.service.credentials;
+                    Scope.service.host = cString.host;
+                    Scope.service.port = cString.port;
+                    Scope.service.security = cString.security;
+                    Scope.service.user = cString.user;
+                    Scope.service.pwd = cString.pwd;
+
+                }
+                Scope.email_type = "SMTP";
+            }else if(Scope.service.storage_type != null){
+                Scope.email_type = "Server Command";
+            }else{
+                Scope.email_type = "Server Default";
             }
+
+
         }
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {
@@ -479,6 +529,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $('#save_button').hide();
         $('#update_button').show();
         Scope.showFields();
+        Scope.showEmailFields();
         Scope.tableData = Scope.service.parameters;
         Scope.headerData = Scope.service.headers;
         $("tr.info").removeClass('info');
