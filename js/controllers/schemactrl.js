@@ -27,7 +27,7 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
     var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
     var schemaButtonTemplate = '<div ><button id="add_{{row.rowIndex}}" class="btn btn-small btn-primary" disabled=true ng-show="this.row.entity.new" ng-click="schemaAddField()"><li class="icon-save"></li></button>' +
-        '<button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaAddField()"><li class="icon-save"></li></button>' +
+        '<button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaUpdateField()"><li class="icon-save"></li></button>' +
         '<button class="btn btn-small btn-danger" ng-show="!this.row.entity.new" ng-click="schemaDeleteField()"><li class="icon-remove"></li></button>' +
         '<button class="btn btn-small btn-danger" ng-show="this.row.entity.new" disabled=true ng-click="schemaDeleteField(true)"><li class="icon-remove"></li></button></div>';
     var typeTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in typeOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
@@ -137,6 +137,15 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
             Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
             Scope.tableData.unshift(data.field[0]);
             Scope.tableData.unshift({"new":true});
+        });
+
+    };
+    Scope.schemaUpdateField = function(){
+        var table = this.tableSchema.name;
+        var row = this.row.entity;
+        var index = this.row.rowIndex;
+        $http.put('/rest/schema/' + table + '/?app_name=admin', row).success(function(data){
+            $("#save_" + index).attr('disabled', true);
         });
 
     };
