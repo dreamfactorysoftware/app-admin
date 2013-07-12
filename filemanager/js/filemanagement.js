@@ -193,7 +193,7 @@ function buildListingUI(json, svc) {
             if (name != '.') {
                 var path = json.folder[i].path;
                 if (svc != '') {
-                    path = svc + '/' +  container + '/' + path;
+                    path = svc + '/' + path;
                 }
                 path = '/' + path;
                 var ctrl = buildFolderControl(path);
@@ -210,7 +210,7 @@ function buildListingUI(json, svc) {
         for(var i in json.file) {
             var path = json.file[i].path;
             if (svc != '') {
-                path = svc + '/' +  container + '/' + path;
+                path = svc  + '/' + path;
             }
             path = '/' + path;
             var editor = buildEditor(json.file[i].contentType, path);
