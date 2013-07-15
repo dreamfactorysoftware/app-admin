@@ -536,8 +536,13 @@ function deleteSelected() {
             if (folders.length > 0) {
                 data.folder = folders;
             }
+
             if (files.length > 0) {
                 data.file = files;
+            }
+            if(typeof window.Container == 'undefined'){
+                data = {};
+                data.container = folders;
             }
             data = JSON.stringify(data);
             $.ajax({
