@@ -421,7 +421,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $("#button_holder").show();
         $("#swagger, #swagger iframe").hide();
         Scope.service = angular.copy(this.service);
-        if (Scope.service.type == "Email Service") {
+        if (Scope.service.type.indexOf("Email Service") != -1) {
+            Scope.service.type = "Email Service";
             if (Scope.service.storage_type == "smtp"){
                 if (Scope.service.credentials) {
                     var cString = Scope.service.credentials;
