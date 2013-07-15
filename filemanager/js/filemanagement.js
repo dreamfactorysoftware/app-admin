@@ -299,7 +299,12 @@ function updateButtons() {
         $('#mkdir').addClass("disabled");
         $('#importfile').addClass("disabled");
         $('#exportzip').addClass("disabled");
-    } else {
+    }else if(typeof window.Container == 'undefined'){
+        $('#mkdir').removeClass("disabled");
+        $('#importfile').addClass("disabled");
+        $('#exportzip').addClass("disabled");
+        $('#rm').addClass("disabled");
+    }else{
         $('#mkdir').removeClass("disabled");
         $('#importfile').removeClass("disabled");
         $('#exportzip').removeClass("disabled");
@@ -309,6 +314,7 @@ function updateButtons() {
     } else {
         $('#rm').removeClass("disabled");
     }
+
 }
 
 // drag and drop
