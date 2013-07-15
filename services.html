@@ -117,6 +117,14 @@
         <span>Command</span> <input class="input-large" ng-value="" type="text" ng-model="service.storage_type"
                                     placeholder="e.g. /usr/sbin/sendmail -bs"/>
     </div>
+    <div class="section user">
+        <p>Username</p>
+        <input ng-model="service.user" type="text"/>
+    </div>
+    <div class="section pwd">
+        <p>Password</p>
+        <input ng-model="service.pwd" type="password"/>
+    </div>
     <div class="section parameters">
         <p>Parameters</p>
 
@@ -136,14 +144,7 @@
         <p>Connection String</p>
         <input ng-model="service.dsn" type="text"/>
     </div>
-    <div class="section user">
-        <p>Username</p>
-        <input ng-model="service.user" type="text"/>
-    </div>
-    <div class="section pwd">
-        <p>Password</p>
-        <input ng-model="service.pwd" type="password"/>
-    </div>
+
     <div class="section headers">
         <p>Headers</p>
 
