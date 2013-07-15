@@ -193,7 +193,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
                     $.pnotify({
                         title: 'Roles',
                         type: 'success',
-                        text: 'Service access granted.'
+                        text: 'Added below, press save/update to finalize'
                     });
 
                 }
@@ -203,7 +203,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
                 $.pnotify({
                     title: 'Roles',
                     type: 'success',
-                    text: 'Service access granted.'
+                    text: 'Added below, press save/update to finalize'
                 });
 
             }
@@ -214,7 +214,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
             $.pnotify({
                 title: 'Roles',
                 type: 'success',
-                text: 'Service access granted.'
+                text: 'Added below, press save/update to finalize'
             });
         }
     }
