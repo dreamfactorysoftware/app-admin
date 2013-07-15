@@ -274,6 +274,8 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
         angular.element(":checkbox").attr('checked', false);
         Scope.action = "Create new";
         Scope.actioned = "Created";
+        Scope.service = {service_id: null, access: "Full Access", component: "*"};
+        Scope.selectServices = {};
         Scope.role = {users: [], apps: [], role_service_accesses: []};
         $('#save_button').show();
         $('#update_button').hide();
