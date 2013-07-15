@@ -352,6 +352,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $rootScope.loadSwagger(this.service.api_name)
         Scope.action = "Explore ";
         $('#step1').hide();
+        $('#file-manager').hide();
     };
     Scope.showEmailFields = function(){
 
