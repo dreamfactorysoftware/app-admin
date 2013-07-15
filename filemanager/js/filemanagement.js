@@ -163,10 +163,32 @@ function buildFolderControl(path) {
 }
 
 function buildListingUI(json, svc) {
-    var container;
-    if(json.container){
-        container = json.container;
-    }
+    window.Container = json.container;
+//    var container;
+//    if(!json.container){
+//        $("mkdir").unbind('click');
+//        $("#mkdir").bind('click', function() {
+//            if ($(this).hasClass("disabled")) {
+//                return false;
+//            }
+//            var name = prompt("Enter name for new container");
+//            if(name) {
+//                createContainer(currentpath, name);
+//            }
+//        });
+//    }else{
+//        $("mkdir").off('click');
+//        $("#mkdir").click(function() {
+//            if ($(this).hasClass("disabled")) {
+//                return false;
+//            }
+//            var name = prompt("Enter name for new folder");
+//            if(name) {
+//                createFolder(currentpath, name);
+//            }
+//        });
+//    }
+
     var html = '';
     if (json.resource) {
         for (var i in json.resource) {
@@ -273,7 +295,7 @@ function buildListingUI(json, svc) {
 
 function updateButtons() {
 
-    if (currentpath == '/' || currentpath == '/app/') {
+    if (currentpath == '/') {
         $('#mkdir').addClass("disabled");
         $('#importfile').addClass("disabled");
         $('#exportzip').addClass("disabled");
@@ -282,7 +304,7 @@ function updateButtons() {
         $('#importfile').removeClass("disabled");
         $('#exportzip').removeClass("disabled");
     }
-    if (currentpath == '/'  || currentpath == '/app/' || countSelectedItems() == 0) {
+    if (currentpath == '/' || countSelectedItems() == 0) {
         $('#rm').addClass("disabled");
     } else {
         $('#rm').removeClass("disabled");
@@ -444,17 +466,42 @@ function createFile(target, file) {
 }
 
 function createFolder(target, name) {
+    if(typeof window.Container != 'undefined'){
+
+
+        $.ajax({
+            beforeSend: function(request) {
+                request.setRequestHeader("X-Folder-Name", name);
+            },
+            dataType:'json',
+            type :'POST',
+            url:CurrentServer + '/rest' + target + '?app_name=admin',
+            data: '',
+            cache:false,
+            processData: false,
+            success:function (response) {
+                loadFolder(target);
+            },
+            error:function (response) {
+                alertErr(response);
+                loadFolder(target);
+            }
+        });
+    }else{
+        createContainer(target, name);
+
+
+    }
+}
+function createContainer(target, name) {
 
     $.ajax({
-        beforeSend: function(request) {
-            request.setRequestHeader("X-Folder-Name", name);
-        },
+
         dataType:'json',
         type :'POST',
         url:CurrentServer + '/rest' + target + '?app_name=admin',
-        data: '',
+        data:JSON.stringify({name: name}),
         cache:false,
-        processData: false,
         success:function (response) {
             loadFolder(target);
         },
@@ -464,7 +511,6 @@ function createFolder(target, name) {
         }
     });
 }
-
 function deleteSelected() {
 
     var sel = getSelectedItems();
