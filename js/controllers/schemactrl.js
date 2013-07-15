@@ -15,6 +15,7 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         {value:"binary", text: "binary"},
         {value:"blob", text: "blob"},
         {value:"float", text: "float"},
+        {value:"double", text: "double"},
         {value:"decimal", text: "decimal"},
         {value:"datetime", text: "datetime"},
         {value:"date", text: "date"},
