@@ -1,9 +1,5 @@
-= DreamFactory Services Platform(tm) Admin Application =
+# app-admin
 
-This is the DreamFactory Services Platform&amp;trade; Admin Application
+## DreamFactory Services Platform(tm) Admin Application
 
-== Info ==
-== Help ==
-== Etc. ==
-
-Bitbucket test
+Please see our (site)[http://dreamfactorysoftware.github.io] for full documentation.
