@@ -76,8 +76,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name: "Dallas / Fort Worth", value:"DFW"}
     ];
     Scope.NoSQLOptions = [
-        {name:"Amazon DynamoDB", value:"aws dynamodb"},
-        {name:"Amazon SimpleDB", value:"aws simpledb"},
+//        {name:"Amazon DynamoDB", value:"aws dynamodb"},
+//        {name:"Amazon SimpleDB", value:"aws simpledb"},
         {name:"Windows Azure Tables", value:"azure tables"},
         {name:"CouchDB", value:"couchdb"},
         {name:"MongoDB", value:"mongodb"}
