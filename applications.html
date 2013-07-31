@@ -68,16 +68,19 @@
                     <div id="step1">
                         <div id="context-root" class="local">
                             <label><b>App Name</b></label> <input ng-disabled="action=='Update'" type="text" ng-model="app.api_name">
+                            <div class="alert alert-info">This is your API KEY (X-DreamFactory-Application-Name)</div>
                         </div>
-                        <div class="options">
+                        <input type="checkbox" ng-model = "app.native"/>My application's files are on a native device / client.
+                        <br/><br/>
+                        <div class="options" ng-hide="app.native">
                             <label><b>Hosting</b></label>
                             <input type="radio" ng-model="app.is_url_external" value='0'/>&nbsp;&nbsp;Use our default app storage service or one of your own.
                             <br/><input type="radio" ng-model="app.is_url_external" value='1'/>&nbsp;&nbsp;I will just supply a URL to point to my application.
 
 
                             <br/><br/><input ng-show="app.is_url_external==1" placeholder="http://www.myserver.com/"
-                                        name="app_path" type="text"
-                                        ng-model="app.url">
+                                             name="app_path" type="text"
+                                             ng-model="app.url">
 
                             <div ng-show="app.is_url_external==1" class="alert alert-success">Your URL will be:
                                 {{app.url}}
@@ -95,15 +98,15 @@
                         </div>
 
 
-                        <div>
+                        <div ng-hide="app.native">
                             <p><b>Public name on LaunchPad</b></p>
                             <input type="text" ng-model="app.name">
                         </div>
-                        <div>
+                        <div ng-hide="app.native">
                             <p><b>Public description on LaunchPad</b></p>
                             <input name="app_desc" type="text" ng-model="app.description" style="width:75%;">
                         </div>
-                        <div ng-show="app.is_url_external==0">
+                        <div ng-show="app.is_url_external==0 && !app.native">
                             <p><b>Default Path</b></p>
 
                             <div class="alert alert-info local">
@@ -121,11 +124,11 @@
                             </div>
 
                         </div>
-                        <div class="form-inline">
+                        <div class="form-inline" ng-hide="app.native">
                             <input type="checkbox" ng-checked="app.requires_fullscreen == 1"
                                    ng-model="app.requires_fullscreen">&nbsp;Run Full Screen
                         </div><br/>
-                        <div class="form-inline">
+                        <div class="form-inline" ng-hide="app.native">
                             <input type="checkbox" ng-checked="app.allow_fullscreen_toggle == 1"
                                    ng-model="app.allow_fullscreen_toggle">&nbsp;Show Full Screen Toggle
                         </div>

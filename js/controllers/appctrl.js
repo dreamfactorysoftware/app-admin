@@ -6,7 +6,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     Scope.currentServer = CurrentServer;
     Scope.action = "Create";
     setCurrentApp('applications');
-    Scope.app = {is_url_external: "0", allow_fullscreen_toggle:0, requires_fullscreen: '0', roles: [], storage_service_id: null};
+    Scope.app = {is_url_external:0, native:true, allow_fullscreen_toggle:0, requires_fullscreen: '0', roles: [], storage_service_id: null};
     $('#update_button').hide();
     $('.external').hide();
 
@@ -94,7 +94,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     };
     Scope.promptForNew = function () {
         Scope.action = "Create";
-        Scope.app = {is_url_external: '0', requires_fullscreen: '0', roles: []};
+        Scope.app = {is_url_external: '0',native:true, requires_fullscreen: '0', roles: []};
         Scope.app.storage_service_id = Scope.defaultStorageID;
         Scope.app.storage_container = "applications";
         $('#context-root').show();
@@ -107,7 +107,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         $(window).scrollTop(0);
     };
     Scope.save = function () {
-
+        if(Scope.app.native){
+            Scope.app.storage_service_id = null;
+            Scope.app.storage_container = null;
+            Scope.app.name = Scope.app.api_name;
+        }
         var id = Scope.app.id;
         AppsRelated.update({id: id}, Scope.app, function () {
                 updateByAttr(Scope.Apps.record, 'id', id, Scope.app);
@@ -145,7 +149,12 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         $location.path('/import');
     }
     Scope.create = function () {
+        if(Scope.app.native){
+            Scope.app.storage_service_id = null;
+            Scope.app.storage_container = null;
+            Scope.app.name = Scope.app.api_name;
 
+        }
         AppsRelated.save(Scope.app, function (data) {
                 Scope.Apps.record.push(data);
                 //Scope.app.id = data.id;
@@ -157,7 +166,9 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
                     text: 'Created Successfully'
                 });
                 Scope.promptForNew();
-                Scope.showAppPreview(data.launch_url);
+                if(!Scope.app.native){
+                    Scope.showAppPreview(data.launch_url);
+                }
             },
             function (response) {
                 var code = response.status;
@@ -266,7 +277,12 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
             Scope.app.storage_service_id = Scope.defaultStorageID;
             Scope.app.storage_container = "applications";
         }
+
+
         Scope.loadStorageContainers();
+        if(!Scope.app.launch_url){
+            Scope.app.native = true;
+        }
         $('#button_holder').hide();
         $('#file-manager').hide();
         $('#app-preview').hide();
