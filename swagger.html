@@ -1,32 +1,3 @@
 <div  ng-controller = "SwaggerCtrl" id="swagger" class="well" style="display:none">
-    <div class="alert alert-info"><b>Important Notes</b>
-        <p>
-            Use of our API requires SSL3.  If you plan on making requests from Curl, or your Native SDK, make sure you are using version 3.
-            <br/>
-            For example, in curl: <b>curl - 3 url</b>
-        </p>
-        <p>
-            <b>Your API Key</b><br/>
-            Your “api key” to talk to our API is your App Name as defined in the Administration App,
-            For each request, you can :
-        <ol>
-            <li>
-                Append app_name=yourappname to the querystring or
-            </li>
-            <li>
-                Send a request header called <b>X-DreamFactory-Application-Name</b> with the value of your app name.
-            </li>
-        </ol>
-        </p>
-        <p><b>Authentication</b>
-            <br/>
-            If your application is not part of the guest user’s role, then access to any service or data components will require authentication.
-            <br/>
-            To authenticate a user, simply POST a JSON string to /user/session that takes on the following format: ‘{“email”:”email_value”, “password”:”password_value”}’
-            <br/>
-            If successful, in the response, you’ll see a session_id has been created.<br/>
-            <b>Very Important</b> : For all future requests to the API, you’ll need to pass the session_id as a new request header called <b>X-DreamFactory-Session-Token</b> 
-
-    </div>
     <iframe style="display:none" frameBorder=0 src=""></iframe>
 </div> 

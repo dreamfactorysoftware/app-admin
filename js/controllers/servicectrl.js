@@ -353,6 +353,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.action = "Explore ";
         $('#step1').hide();
         $('#file-manager').hide();
+        $("#button_holder").hide();
     };
     Scope.showEmailFields = function(){
 

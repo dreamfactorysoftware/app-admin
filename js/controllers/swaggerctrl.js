@@ -7,11 +7,11 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
         if (hash) {
             appendURL = "/#!/" + hash;
         }
-        $("#swagger").css('height', $(window).height()).css('width', '100%').show();
+
 
         $timeout(function () {
-            $("#swagger, #swagger iframe").css('height', $(window).height()).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
-
+            $("#swagger iframe").css('height', $(window).height()).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
+            $("#swagger").css('height', $(window).height()).css('width', '100%').show();
         }, 1000);
 
         $(window).resize(function () {
