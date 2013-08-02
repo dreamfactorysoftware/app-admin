@@ -111,10 +111,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
             Scope.app.storage_service_id = null;
             Scope.app.storage_container = null;
             Scope.app.name = Scope.app.api_name;
+            Scope.app.launch_url = "";
         }
         var id = Scope.app.id;
-        AppsRelated.update({id: id}, Scope.app, function () {
-                updateByAttr(Scope.Apps.record, 'id', id, Scope.app);
+        AppsRelated.update({id: id}, Scope.app, function (data) {
+                updateByAttr(Scope.Apps.record, 'id', id, data);
 
                 window.top.Actions.updateSession("update");
 
@@ -153,6 +154,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
             Scope.app.storage_service_id = null;
             Scope.app.storage_container = null;
             Scope.app.name = Scope.app.api_name;
+            Scope.app.launch_url = "";
 
         }
         AppsRelated.save(Scope.app, function (data) {
@@ -282,6 +284,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         Scope.loadStorageContainers();
         if(!Scope.app.launch_url){
             Scope.app.native = true;
+            Scope.app.storage_service_id = null;
+            Scope.app.storage_container = null;
         }
         $('#button_holder').hide();
         $('#file-manager').hide();

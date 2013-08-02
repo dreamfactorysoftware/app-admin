@@ -31,10 +31,10 @@
                         <td ng-click="showDetails()">{{app.name}}</td>
                         <td class="no-border">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-small btn-inverse" title="Preview this app"
+                                <a ng-show="app.launch_url !=''" class="btn btn-small btn-inverse" title="Preview this app"
                                    ng-click="showAppPreview(app.launch_url)"><i
                                         class="icon-eye-open"></i></a>
-                                <a ng-show="app.is_url_external == 0" class="btn btn-small btn-inverse"
+                                <a ng-hide="!app.storage_container" class="btn btn-small btn-inverse"
                                    title="Manage app files" ng-click="showFileManager()"><i
                                         class="icon-folder-open"></i></a>
                                 <a class="btn btn-small btn-inverse" title="Delete this app" ng-click="delete()"><i
@@ -70,10 +70,11 @@
                             <label><b>App Name</b></label> <input ng-disabled="action=='Update'" type="text" ng-model="app.api_name">
                             <div class="alert alert-info">This is your API KEY (X-DreamFactory-Application-Name)</div>
                         </div>
-                        <input type="checkbox" ng-model = "app.native"/>My application's files are on a native device / client.
+                        <label><i class="icon-mobile-phone icon-2x"></i>&nbsp;<b>Native?</b></label>
+                        <input type="checkbox" ng-model = "app.native"/>&nbsp;&nbsp;My application's files are on a native device / client.
                         <br/><br/>
                         <div class="options" ng-hide="app.native">
-                            <label><b>Hosting</b></label>
+                            <label><i class="icon-hdd icon-2x"></i>&nbsp;<b>Hosted?</b></label>
                             <input type="radio" ng-model="app.is_url_external" value='0'/>&nbsp;&nbsp;Use our default app storage service or one of your own.
                             <br/><input type="radio" ng-model="app.is_url_external" value='1'/>&nbsp;&nbsp;I will just supply a URL to point to my application.
 
