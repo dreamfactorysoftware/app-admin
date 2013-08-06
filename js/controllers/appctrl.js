@@ -282,8 +282,12 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
 
 
         Scope.loadStorageContainers();
-        if(!Scope.app.launch_url){
+        if(!Scope.app.launch_url ){
             Scope.app.native = true;
+            Scope.app.storage_service_id = null;
+            Scope.app.storage_container = null;
+        }
+        if(Scope.app.is_url_external == 1){
             Scope.app.storage_service_id = null;
             Scope.app.storage_container = null;
         }
