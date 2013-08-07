@@ -166,15 +166,18 @@
     <div class="section nosql_type">
         <p>NoSQL Type</p>
         <select ng-options="option.value as option.name for option in NoSQLOptions"
-                ng-model="service.storage_type" type="text"></select>
+                ng-model="service.storage_type"></select>
 
         <div class=" well sub-section aws_info" ng-show="service.storage_type=='aws dynamodb'">
             <label>Access Key</label><input type="text" ng-model="aws.access_key"/>
             <label>Secret Key</label><input type="text" ng-model="aws.secret_key"/>
+            <label>Region</label>
+            <select ng-options="region.value as region.name for region in awsRegions" ng-model="aws.region"></select>
         </div>
         <div class=" well sub-section aws_info" ng-show="service.storage_type=='aws simpledb'">
             <label>Access Key</label><input type="text" ng-model="aws.access_key"/>
             <label>Secret Key</label><input type="text" ng-model="aws.secret_key"/>
+            <select ng-options="region.value as region.name for region in awsRegions" ng-model="aws.region"></select>
         </div>
         <div class=" well sub-section azure_info" ng-show="service.storage_type =='azure tables'">
             <label>Account Name</label><input type="text" ng-model="azure.account_name"/>

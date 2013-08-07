@@ -75,8 +75,18 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name: "Chicago", value: "ORD"},
         {name: "Dallas / Fort Worth", value:"DFW"}
     ];
+    Scope.awsRegions = [
+        {name:"US EAST (N Virgina)", value:"us-east-1"},
+        {name:"US WEST (N California)", value:"us-west-1"},
+        {name:"US WEST (Oregon)", value:"us-west-2"},
+        {name:"EU WEST (Ireland)", value:"eu-west-1"},
+        {name:"Asia Pacific (Singapore)", value:"ap-southeast-1"},
+        {name:"Asia Pacific (Sydney)", value:"ap-southeast-2"},
+        {name:"Asia Pacific (Tokyo)", value:"ap-northeast-1"},
+        {name:"South America (Sao Paulo)", value:"sa-east-1"},
+    ];
     Scope.NoSQLOptions = [
-       {name:"Amazon DynamoDB", value:"aws dynamodb"},
+        {name:"Amazon DynamoDB", value:"aws dynamodb"},
         {name:"Amazon SimpleDB", value:"aws simpledb"},
         {name:"Windows Azure Tables", value:"azure tables"},
         {name:"CouchDB", value:"couchdb"},
@@ -146,10 +156,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         if (Scope.service.type == "NoSQL DB") {
             switch (Scope.service.storage_type) {
                 case "aws dynamodb":
-                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name, region:Scope.aws.region};
                     break;
                 case "aws simpledb":
-                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name, region:Scope.aws.region};
                     break;
                 case "azure tables":
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
@@ -245,10 +255,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         if (Scope.service.type == "NoSQL DB") {
             switch (Scope.service.storage_type) {
                 case "aws dynamodb":
-                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name, region:Scope.aws.region};
                     break;
                 case "aws simpledb":
-                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name};
+                    Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name, region:Scope.aws.region};
                     break;
                 case "azure tables":
                     Scope.service.credentials = {account_name:Scope.azure.account_name, account_key:Scope.azure.account_key};
@@ -450,6 +460,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 Scope.service.dsn = cString.dsn;
                 Scope.service.user = cString.user;
                 Scope.service.pwd = cString.pwd;
+                Scope.service.region = cString.region;
             }
         }
         if (Scope.service.type == "Remote File Storage") {
@@ -496,12 +507,14 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     case "aws dynamodb":
                         Scope.aws.access_key = fString.access_key;
                         Scope.aws.secret_key = fString.secret_key;
+                        Scope.aws.region = fString.region;
                         //Scope.aws.bucket_name = fString.bucket_name;
                         break;
                     case "aws simpledb":
                         Scope.aws.access_key = fString.access_key;
                         Scope.aws.secret_key = fString.secret_key;
                         //Scope.aws.bucket_name = fString.bucket_name;
+                        Scope.aws.region = fString.region;
                         break;
                     case "azure tables":
                         Scope.azure.account_name = fString.account_name;
