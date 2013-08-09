@@ -30,9 +30,8 @@
 	"license":           ["Apache2.0"],
 	"support":           {
 		"email":  "support@dreamfactory.com",
-		"issues": "https://bitbucket.org/dreamfactory/app-admin/issues",
-		"wiki":   "https://bitbucket.org/dreamfactory/app-admin/wiki",
-		"source": "https://bitbucket.org/dreamfactory/app-admin/src"
+		"issues": "https://github.com/dreamfactorysoftware/app-admin/issues",
+		"wiki":   "https://github.com/dreamfactorysoftware/app-admin/wiki"
 	},
 	"minimum-stability": "dev",
 	"require":           {
