@@ -27,7 +27,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.azure = {};
         Scope.rackspace = {};
         Scope.openstack = {};
-        Scope.mongo = {};
+        Scope.mongodb = {};
         Scope.couch = {};
 
         Scope.service.is_active=true;
