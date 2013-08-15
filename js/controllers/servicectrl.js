@@ -27,6 +27,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.azure = {};
         Scope.rackspace = {};
         Scope.openstack = {};
+        Scope.mongo = {};
+        Scope.couch = {};
+
         Scope.service.is_active=true;
         $(window).scrollTop(0);
         Scope.email_type = "Server Default";
@@ -265,10 +268,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     break;
 
                 case "couchdb":
-                    Scope.service.credentials = {username:Scope.couchdb.service.username, password:Scope.couchdb.service.username, dsn: Scope.couchdb.service.dsn};
+                    Scope.service.credentials = {user:Scope.couchdb.service.username, pwd:Scope.couchdb.service.username, dsn: Scope.couchdb.service.dsn};
                     break;
                 case "mongodb":
-                    Scope.service.credentials = {username:Scope.mongodb.service.username, password:Scope.mongodb.service.username, dsn: Scope.mongodb.service.dsn, db: Scope.mongodb.service.db};
+                    Scope.service.credentials = {user:Scope.mongodb.service.user, pwd:Scope.mongodb.service.pwd, dsn: Scope.mongodb.service.dsn, db: Scope.mongodb.service.db};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
