@@ -38,7 +38,7 @@
             </div>
             <div class="alert alert-info">
                 <li class="icon-info-sign"></li>
-                Roles provide a way to grant or deny access to specific applications and services on a per-user basis.
+                Roles provide a way to grant or deny API access to specific services or simply access to specific apps.
             </div>
             <form novalidate class="css-form" name="roleform">
                 <div>
@@ -105,6 +105,9 @@
                                 <div class="alert alert-info">
                                     <li class="icon-info-sign"></li>
                                     Use the controls below to add service access to this role.
+                                </div>
+                                <div ng-show="service.service_id == 0" class="alert alert-danger">
+                                    This allows system access via the API, use caution.
                                 </div>
                                 <span class="access">Service :</span> <select ng-change="loadComponents()"
                                                                               ng-model="service.service_id"
