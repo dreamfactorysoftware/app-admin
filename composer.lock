@@ -3,20 +3,21 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c90d25dbb36854f4877634bf055c345d",
+    "hash": "420da437055846d00579f30ac410deca",
     "packages": [
         {
             "name": "dreamfactory/lib-platform-installer",
             "version": "dev-master",
+            "target-dir": "DreamFactory/Composer/Utility",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/lib-platform-installer.git",
-                "reference": "fd0bd8b6e3aac78b5791b4405e03420e62d472c5"
+                "reference": "351d55351329519a4fdea394039f70fb66fb505a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/lib-platform-installer/zipball/fd0bd8b6e3aac78b5791b4405e03420e62d472c5",
-                "reference": "fd0bd8b6e3aac78b5791b4405e03420e62d472c5",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/lib-platform-installer/zipball/351d55351329519a4fdea394039f70fb66fb505a",
+                "reference": "351d55351329519a4fdea394039f70fb66fb505a",
                 "shasum": ""
             },
             "require": {
@@ -24,50 +25,34 @@
             },
             "type": "composer-installer",
             "extra": {
-                "class": "DreamFactory\\Platform\\Utility\\PlatformInstaller"
+                "class": "DreamFactory\\Composer\\Utility\\PlatformInstaller"
             },
             "autoload": {
                 "psr-0": {
-                    "DreamFactory\\Platform\\Utility": "src/"
+                    "DreamFactory\\Composer\\Utility": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-3.0",
-                "proprietary"
+                "Apache-2.0"
             ],
             "authors": [
                 {
                     "name": "Ablan, Jerry",
                     "email": "jerryablan@dreamfactory.com",
-                    "role": "Black Ops"
-                },
-                {
-                    "name": "Sykes, Jason",
-                    "email": "jasonsykes@dreamfactory.com",
-                    "role": "Lead Engineer, client-side"
-                },
-                {
-                    "name": "Hicks, Lee",
-                    "email": "leehicks@dreamfactory.com",
-                    "role": "Lead Engineer, server-side"
-                },
-                {
-                    "name": "Appleton, Todd",
-                    "email": "toddappleton@dreamfactory.com",
-                    "role": "Lead Engineer, client-side; UX/QA"
+                    "role": "Sr. Software Engineer"
                 }
             ],
-            "description": "DreamFactory Services Platform(tm) Package Installer",
-            "homepage": "http://dreamfactorybeta.com/",
+            "description": "DreamFactory Services Platform(tm) JetPack/FuelCell Installer",
+            "homepage": "http://dreamfactory.com/",
             "keywords": [
                 "cloud",
                 "dreamfactory",
                 "dsp",
-                "dsp-core",
-                "dsp-lib"
+                "fuelcell",
+                "jetpack"
             ],
-            "time": "2013-05-15 15:12:17"
+            "time": "2013-07-17 14:23:11"
         },
         {
             "name": "kisma/kisma",
@@ -75,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lucifurious/kisma.git",
-                "reference": "2024afab4a7136d079ca2b2dac107f4c57e75c38"
+                "reference": "0.1.3.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lucifurious/kisma/zipball/2024afab4a7136d079ca2b2dac107f4c57e75c38",
-                "reference": "2024afab4a7136d079ca2b2dac107f4c57e75c38",
+                "url": "https://api.github.com/repos/lucifurious/kisma/zipball/0.1.3.2",
+                "reference": "0.1.3.2",
                 "shasum": ""
             },
             "require": {
@@ -97,7 +82,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "GPL3"
             ],
             "authors": [
                 {
@@ -105,16 +90,15 @@
                     "email": "getkisma@gmail.com"
                 }
             ],
-            "description": "A Fun-Sized PHP Framework",
+            "description": "PHP Utility Belt",
             "homepage": "https://github.com/kisma/kisma",
             "keywords": [
-                "framework",
-                "mvc",
+                "library",
                 "php",
                 "php5",
-                "rest"
+                "utility"
             ],
-            "time": "2013-06-11 17:18:07"
+            "time": "2013-08-16 17:21:30"
         }
     ],
     "packages-dev": [
