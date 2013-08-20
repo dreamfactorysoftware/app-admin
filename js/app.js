@@ -51,7 +51,7 @@ AdminApp.factory('Role', function ($resource) {
     } });
 });
 AdminApp.factory('RolesRelated', function ($resource) {
-    return $resource('/rest/system/role/:id/?app_name=admin&fields=*&related=users,apps,role_service_accesses', {}, { update:{ method:'PUT' }, query:{
+    return $resource('/rest/system/role/:id/?app_name=admin&fields=*&related=users,apps,role_service_accesses,role_system_accesses', {}, { update:{ method:'PUT' }, query:{
         method:'GET',
         isArray:false
     } });
