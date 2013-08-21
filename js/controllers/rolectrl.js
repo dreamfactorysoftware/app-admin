@@ -50,7 +50,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
 
         });
 
-        Scope.role.role_service_accesses=Scope.role.role_service_accesses.filter(function(itm){return !itm.service_id});
+        Scope.role.role_service_accesses=Scope.role.role_service_accesses.filter(function(itm){return itm.service_id !== "0"});
         var id = this.role.id;
         RolesRelated.update({id: id}, Scope.role, function () {
             updateByAttr(Scope.Roles.record, 'id', id, Scope.role);
@@ -90,7 +90,7 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
 
         });
 
-        Scope.role.role_service_accesses=Scope.role.role_service_accesses.filter(function(itm){return !itm.service_id});
+        Scope.role.role_service_accesses=Scope.role.role_service_accesses.filter(function(itm){return itm.service_id !== "0"});
 
         RolesRelated.save(Scope.role, function (data) {
             Scope.Roles.record.push(data);
