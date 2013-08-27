@@ -93,7 +93,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Amazon SimpleDB", value:"aws simpledb"},
         {name:"Windows Azure Tables", value:"azure tables"},
         {name:"CouchDB", value:"couchdb"},
-        {name:"MongoDB", value:"mongodb"}
+        {name:"MongoDB", value:"mongodb"},
+		{name:"MongoHQ", value:"mongohq"}
     ];
     Scope.service.storage_type = "aws s3";
     Scope.serviceOptions = [
@@ -171,6 +172,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {dsn:Scope.couchdb.service.dsn, user: Scope.couchdb.service.user, pwd: Scope.couchdb.service.pwd};
                     break;
                 case "mongodb":
+				case "mongohq":
                     Scope.service.credentials = {dsn:Scope.mongodb.service.dsn, user: Scope.mongodb.service.user, pwd: Scope.mongodb.service.pwd, db: Scope.mongodb.service.db};
                     break;
             }
@@ -271,6 +273,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {user:Scope.couchdb.service.username, pwd:Scope.couchdb.service.username, dsn: Scope.couchdb.service.dsn};
                     break;
                 case "mongodb":
+				case "mongohq":
                     Scope.service.credentials = {user:Scope.mongodb.service.user, pwd:Scope.mongodb.service.pwd, dsn: Scope.mongodb.service.dsn, db: Scope.mongodb.service.db};
                     break;
             }
@@ -528,7 +531,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         Scope.couchdb.service.user = fString.user;
                         Scope.couchdb.service.pwd = fString.pwd;
                         break;
-                    case "mongodb":
+					case "mongodb":
+					case "mongohq":
                         Scope.mongodb.service.dsn = fString.dsn;
                         Scope.mongodb.service.user = fString.user;
                         Scope.mongodb.service.pwd = fString.pwd;
