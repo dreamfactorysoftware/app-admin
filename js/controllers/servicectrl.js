@@ -651,7 +651,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 //        if(this.app.storage_service_id){
 //            container = this.app.storage_container || null;
 //            container = container? this.app.storage_container + "/" : '';
-//            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/' + Scope.storageContainers[this.app.storage_service_id].name +' /' + container + this.app.api_name + '/&allowroot=false').show();
+//            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/' + Scope.storageContainers[this.app.storage_service_id].name + '/' + container + this.app.api_name + '/&allowroot=false').show();
 //        }else{
 //            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/app/applications/' + this.app.api_name + '/&allowroot=false').show();
 //        }
