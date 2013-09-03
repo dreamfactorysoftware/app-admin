@@ -86,7 +86,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Asia Pacific (Singapore)", value:"ap-southeast-1"},
         {name:"Asia Pacific (Sydney)", value:"ap-southeast-2"},
         {name:"Asia Pacific (Tokyo)", value:"ap-northeast-1"},
-        {name:"South America (Sao Paulo)", value:"sa-east-1"},
+        {name:"South America (Sao Paulo)", value:"sa-east-1"}
     ];
     Scope.NoSQLOptions = [
         {name:"Amazon DynamoDB", value:"aws dynamodb"},
@@ -94,7 +94,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Windows Azure Tables", value:"azure tables"},
         {name:"CouchDB", value:"couchdb"},
         {name:"MongoDB", value:"mongodb"},
-		{name:"MongoHQ", value:"mongohq"}
+		{name:"MongoHQ", value:"mongodb"}
     ];
     Scope.service.storage_type = "aws s3";
     Scope.serviceOptions = [
