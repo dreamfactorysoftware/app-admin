@@ -86,14 +86,15 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Asia Pacific (Singapore)", value:"ap-southeast-1"},
         {name:"Asia Pacific (Sydney)", value:"ap-southeast-2"},
         {name:"Asia Pacific (Tokyo)", value:"ap-northeast-1"},
-        {name:"South America (Sao Paulo)", value:"sa-east-1"},
+        {name:"South America (Sao Paulo)", value:"sa-east-1"}
     ];
     Scope.NoSQLOptions = [
         {name:"Amazon DynamoDB", value:"aws dynamodb"},
         {name:"Amazon SimpleDB", value:"aws simpledb"},
         {name:"Windows Azure Tables", value:"azure tables"},
         {name:"CouchDB", value:"couchdb"},
-        {name:"MongoDB", value:"mongodb"}
+        {name:"MongoDB", value:"mongodb"},
+		{name:"MongoHQ", value:"mongodb"}
     ];
     Scope.service.storage_type = "aws s3";
     Scope.serviceOptions = [
@@ -171,6 +172,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {dsn:Scope.couchdb.service.dsn, user: Scope.couchdb.service.user, pwd: Scope.couchdb.service.pwd};
                     break;
                 case "mongodb":
+				case "mongohq":
                     Scope.service.credentials = {dsn:Scope.mongodb.service.dsn, user: Scope.mongodb.service.user, pwd: Scope.mongodb.service.pwd, db: Scope.mongodb.service.db};
                     break;
             }
@@ -271,6 +273,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {user:Scope.couchdb.service.username, pwd:Scope.couchdb.service.username, dsn: Scope.couchdb.service.dsn};
                     break;
                 case "mongodb":
+				case "mongohq":
                     Scope.service.credentials = {user:Scope.mongodb.service.user, pwd:Scope.mongodb.service.pwd, dsn: Scope.mongodb.service.dsn, db: Scope.mongodb.service.db};
                     break;
             }
@@ -528,7 +531,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         Scope.couchdb.service.user = fString.user;
                         Scope.couchdb.service.pwd = fString.pwd;
                         break;
-                    case "mongodb":
+					case "mongodb":
+					case "mongohq":
                         Scope.mongodb.service.dsn = fString.dsn;
                         Scope.mongodb.service.user = fString.user;
                         Scope.mongodb.service.pwd = fString.pwd;
