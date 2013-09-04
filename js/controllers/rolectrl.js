@@ -18,7 +18,6 @@ var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
     Scope.service = {service_id: null, access: "Full Access", component: "*"};
     Scope.selectServices = {};
     Scope.Services = Service.get(function (data) {
-        console.log(data);
         var services = data.record;
         services.unshift({id: null, name: "All", type: ""});
         services.unshift({id: "0", name: "System", type: "System", api_name:"system"});
