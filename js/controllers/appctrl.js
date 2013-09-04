@@ -59,7 +59,6 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
                 $http.get('/rest/' + service.api_name + '?app_name=admin').success(function (data) {
 
                     Scope.storageContainers[service.id] = {options: []};
-                    console.log(data);
                     if (data.resource) {
                         data.resource.forEach(function (container) {
                             if (service.api_name == "app") {
