@@ -15,11 +15,11 @@
                     <tr ng-repeat="user in Users.record" id="row_{{user.id}}">
                         <td ng-click="showDetails()">{{user.display_name}}</td>
                         <td class="no-border">
-                            <div ng-show="user.confirm_code!='y'" class="btn-group pull-right">
+                            <div ng-show="user.user_source == 0 && user.confirm_code != 'y'" class="btn-group pull-right">
                                 <a class="btn btn-small btn-inverse" title="Reinvite unconfirmed user" ng-click="invite(false)"><i class="icon-envelope"></i></a>
                                 <a class="btn btn-small btn-inverse" title="Delete this user" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
-                            <div ng-show="user.confirm_code=='y'" class="btn-group pull-right">
+                            <div ng-show="user.user_source > 0 || (user.user_source == 0 && user.confirm_code == 'y')" class="btn-group pull-right">
                                 <a class="btn btn-small btn-inverse" title="Delete this user" ng-click="delete()"><i class="icon-trash"></i></a>
                             </div>
                         </td>
@@ -50,12 +50,12 @@
                         <div id="step1">
                             <div class="section">
                                 Email :  <input ng-model="user.email" type="email" required/>
-                           <br/>
+                                <br/>
                                 First Name : <input class="input-small" ng-model="user.first_name" type="text" required/>
                                 Last Name :  <input class="input-small" ng-model="user.last_name" type="text" required/>
-                           <br/>
+                                <br/>
                                 Display Name : <input ng-model="user.display_name" type="text"/>
-                            <br/>
+                                <br/>
                                 Phone : <input ng-model="user.phone" type="tel"/>
                             </div>
                             <div class="section" ng-class="{'alert alert-success': user.is_sys_admin}">
@@ -78,7 +78,7 @@
                         <div class="section" ng-class="{'alert alert-success': user.is_active}">
                             <input ng-checked="user.is_active" type="checkbox" ng-model="user.is_active"/>&nbsp;Active
                         </div>
-                        <div class="section">
+                        <div class="section" ng-hide="user.user_source > 0">
                             <div ng-show="action=='Create'">
                                 <input ng-checked="passwordEdit" type="checkbox" ng-model="passwordEdit"/>&nbsp;Skip email confirmation and set password manually
                             </div>
