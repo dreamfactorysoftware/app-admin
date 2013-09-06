@@ -140,7 +140,7 @@ var UserCtrl = function ($scope, Config, User, Role) {
         $.ajax({
             dataType: 'json',
             type: 'POST',
-            url: CurrentServer + '/rest/Email/?app_name=admin&method=POST',
+            url: CurrentServer + '/rest/email/?app_name=admin&method=POST',
             data: JSON.stringify(data),
             cache: false,
             success: info.success,

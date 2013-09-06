@@ -26,7 +26,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
     //var inputTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><input class="ngCellText colt{{$index}}" ng-change="enableSave()"/></div>';
     var schemaInputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSchemaSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
-    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
+    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="this.row.entity.new == true"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
     var schemaButtonTemplate = '<div ><button id="add_{{row.rowIndex}}" class="btn btn-small btn-primary" disabled=true ng-show="this.row.entity.new" ng-click="schemaAddField()"><li class="icon-save"></li></button>' +
         '<button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaSaveRow()"><li class="icon-save"></li></button>' +
         '<button class="btn btn-small btn-danger" ng-show="!this.row.entity.new" ng-click="schemaDeleteField()"><li class="icon-remove"></li></button>' +
@@ -118,7 +118,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         $http({method: 'GET', url: '/rest/db' + related_url}).
             success(function(data, status, headers, config) {
                 Scope.tableData = data.record;
-                Scope.tableData.unshift({"new":true});
+                Scope.tableData.unshift({"dfnew":true});
                 Scope.currentSchema = data.meta.schema.field;
                 Scope.buildColumns();
                 $("tr.info").removeClass('info');
@@ -341,9 +341,11 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
     Scope.saveRow = function () {
 
         var index = this.row.rowIndex;
+
         var newRecord = this.row.entity;
 
-        if (newRecord.new) {
+        if (newRecord.dfnew) {
+            delete newRecord.dfnew;
             DB.save({name: Scope.currentTable}, newRecord, function (data) {
                 $("#save_" + index).attr('disabled', true);
                 Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
@@ -389,6 +391,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
 
     }
     Scope.deleteRow = function () {
+        console.log(this.row);
         var id = this.row.entity.id;
         DB.delete({name: Scope.currentTable}, {id: id});
         Scope.tableData = removeByAttr(Scope.tableData, 'id', id);
