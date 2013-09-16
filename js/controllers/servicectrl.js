@@ -106,7 +106,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Remote SQL DB Schema"},
         {name:"NoSQL DB"},
         {name:"MongoHQ"},
-        {name:"SalesForce"},
+        {name:"Salesforce"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
         {name:"Email Service"}
@@ -117,7 +117,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Remote SQL DB Schema"},
         {name:"NoSQL DB"},
         {name:"MongoHQ"},
-        {name:"SalesForce"},
+        {name:"Salesforce"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
         {name:"Email Service"}
@@ -162,7 +162,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
-        if (Scope.service.type =="SalesForce"){
+        if (Scope.service.type =="Salesforce"){
             Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
@@ -224,7 +224,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.create = function () {
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
-        if(Scope.service.type =="SalesForce"){
+        if(Scope.service.type =="Salesforce"){
             Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
@@ -389,7 +389,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 Scope.service.storage_type = "mongodb";
                 $(".nosql_type").show();
                 break;
-            case "SalesForce":
+            case "Salesforce":
                 $(".nosql_type , .base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
 
                 break;
@@ -491,7 +491,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
             Scope.showEmailFields();
         }
-        if(Scope.service.type=="SalesForce"){
+        if(Scope.service.type=="Salesforce"){
             var cString = Scope.service.credentials;
             Scope.salesforce.username = cString.username;
             Scope.salesforce.password = cString.password;
