@@ -30,7 +30,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.mongodb = {};
         Scope.couch = {};
         Scope.salesforce = {};
-        Scope.mongohq = {};
+
 
         Scope.service.is_active=true;
         $(window).scrollTop(0);
@@ -95,7 +95,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Amazon SimpleDB", value:"aws simpledb"},
         {name:"Windows Azure Tables", value:"azure tables"},
         {name:"CouchDB", value:"couchdb"},
-        {name:"MongoDB", value:"mongodb"}
+        {name:"MongoDB", value:"mongodb"},
+        {name:"MongoHQ", value:"mongohq"}
+
     ];
     Scope.service.storage_type = "aws s3";
     Scope.serviceOptions = [
@@ -105,7 +107,6 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Local SQL DB Schema"},
         {name:"Remote SQL DB Schema"},
         {name:"NoSQL DB"},
-        {name:"MongoHQ"},
         {name:"Salesforce"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
@@ -116,7 +117,6 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         {name:"Remote SQL DB"},
         {name:"Remote SQL DB Schema"},
         {name:"NoSQL DB"},
-        {name:"MongoHQ"},
         {name:"Salesforce"},
         {name:"Local File Storage"},
         {name:"Remote File Storage"},
@@ -166,10 +166,8 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
-        if (Scope.service.type == "NoSQL DB" || Scope.service.type=="MongoHQ") {
-            if(Scope.service.type=="MongoHQ"){
-                Scope.service.storage_type ="mongodb";
-            }
+        if (Scope.service.type == "NoSQL DB" ) {
+
             switch (Scope.service.storage_type) {
                 case "aws dynamodb":
                     Scope.service.credentials = {access_key:Scope.aws.access_key, secret_key:Scope.aws.secret_key, bucket_name:Scope.aws.bucket_name, region:Scope.aws.region};
@@ -185,6 +183,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     break;
                 case "mongodb":
                     Scope.service.credentials = {dsn:Scope.mongodb.service.dsn, user: Scope.mongodb.service.user, pwd: Scope.mongodb.service.pwd, db: Scope.mongodb.service.db};
+                    break;
+                case "mongohq":
+                    Scope.service.credentials = {dsn:Scope.mongohq.service.dsn, user: Scope.mongohq.service.user, pwd: Scope.mongohq.service.pwd, db: Scope.mongodb.service.db};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -228,10 +229,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
-        if (Scope.service.type == "MongoHQ") {
-            Scope.service.credentials = {user:Scope.mongodb.service.user, pwd:Scope.mongodb.service.pwd, dsn: Scope.mongodb.service.dsn, db: Scope.mongodb.service.db};
-            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
-        }
+
 
 
         if (Scope.service.type == "Email Service") {
@@ -296,6 +294,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     break;
                 case "mongodb":
                     Scope.service.credentials = {user:Scope.mongodb.service.user, pwd:Scope.mongodb.service.pwd, dsn: Scope.mongodb.service.dsn, db: Scope.mongodb.service.db};
+                    break;
+                case "mongohq":
+                    Scope.service.credentials = {user:Scope.mongohq.service.user, pwd:Scope.mongohq.service.pwd, dsn: Scope.mongohq.service.dsn, db: Scope.mongohq.service.db};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -384,11 +385,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".nosql_type").show();
                 break;
-            case "MongoHQ":
-                $(".base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
-                Scope.service.storage_type = "mongodb";
-                $(".nosql_type").show();
-                break;
+
             case "Salesforce":
                 $(".nosql_type , .base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
 
@@ -539,14 +536,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 }
             }
         }
-        if (Scope.service.type == "NoSQL DB" || Scope.service.type =="MongoHQ") {
+        if (Scope.service.type == "NoSQL DB" ) {
             Scope.aws = {};
             Scope.azure = {};
             Scope.couchdb = {service:{}};
             Scope.mongodb = {service:{}};
-            if(Scope.service.type =="MongoHQ"){
-                Scope.service.storage_type = "mongodb";
-            }
+
             if (Scope.service.credentials) {
                 var fString = Scope.service.credentials;
                 switch (Scope.service.storage_type) {
@@ -576,6 +571,12 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         Scope.mongodb.service.user = fString.user;
                         Scope.mongodb.service.pwd = fString.pwd;
                         Scope.mongodb.service.db = fString.db;
+                        break;
+                    case "mongodb":
+                        Scope.mongohq.service.dsn = fString.dsn;
+                        Scope.mongohq.service.user = fString.user;
+                        Scope.mongohq.service.pwd = fString.pwd;
+                        Scope.mongohq.service.db = fString.db;
                         break;
                 }
             }

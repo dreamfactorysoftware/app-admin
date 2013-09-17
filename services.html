@@ -222,6 +222,21 @@
 
 
     </div>
+    <div class=" well sub-section" ng-show="service.storage_type =='mongohq'">
+        <p>Connection String</p>
+        <input style="width:80%;" ng-model="mongohq.service.dsn" type="text"/>
+        <div class="alert alert-info"><li class="icon-info-sign"></li>&nbsp;&nbsp;The connection string can include authentication credentials as well as database name. If they contain special characters, please enter them below.</div>
+        <p>Database</p>
+        <input ng-model="mongohq.service.db" type="text"/>
+
+        <p>Username</p>
+        <input ng-model="mongohq.service.user" type="text"/>
+
+        <p>Password</p>
+        <input ng-model="mongohq.service.pwd" type="password"/>
+
+
+    </div>
 </div>
 <div class="section storage_type">
     <p>Storage Type</p>
