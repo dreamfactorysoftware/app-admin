@@ -784,7 +784,7 @@
             if (queryParams !== "") {
               queryParams += "&";
             }
-            queryParams += encodeURIComponent(param.name) + '=' + encodeURIComponent(args[param.name]);
+            queryParams += encodeURIComponent(param.name) + '=' + encodeURIComponent(args[param.name].replace(/%20/g," "));
           }
         }
       }
