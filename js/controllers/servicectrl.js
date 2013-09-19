@@ -185,7 +185,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {dsn:Scope.mongodb.service.dsn, user: Scope.mongodb.service.user, pwd: Scope.mongodb.service.pwd, db: Scope.mongodb.service.db};
                     break;
                 case "mongohq":
-                    Scope.service.credentials = {dsn:Scope.mongohq.service.dsn, user: Scope.mongohq.service.user, pwd: Scope.mongohq.service.pwd, db: Scope.mongodb.service.db};
+                    Scope.service.credentials = {dsn:Scope.mongohq.service.dsn, user: Scope.mongohq.service.user, pwd: Scope.mongohq.service.pwd, db: Scope.mongohq.service.db};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
