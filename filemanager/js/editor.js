@@ -12,6 +12,11 @@ EditorActions = {
             cache:false,
             processData: false,
             success:function (response) {
+                var filename = EditorActions.getFileName();
+                if(filename.indexOf(".json") != -1){
+                    response = JSON.stringify(response);
+                }
+
                 EditorActions.loadEditor(response);
             },
             error:function (response) {
