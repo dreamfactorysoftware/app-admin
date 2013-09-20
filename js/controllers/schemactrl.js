@@ -1,5 +1,8 @@
 var SchemaCtrl = function ($scope, Schema, DB, $http) {
     $("#grid-container").hide();
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     Scope = $scope;
     Scope.tableData = [];
     Scope.booleanOptions = [

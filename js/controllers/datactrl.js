@@ -1,4 +1,7 @@
 var DataCtrl = function ($scope, Schema, DB, $http) {
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];

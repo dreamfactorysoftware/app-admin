@@ -1,4 +1,7 @@
 var RoleCtrl = function ($scope, RolesRelated, User, App, Service, $http) {
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     Scope = $scope;
     Scope.role = {users: [], apps: [], role_service_accesses: [], role_system_accesses:[]};
     Scope.action = "Create new ";

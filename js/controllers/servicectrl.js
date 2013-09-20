@@ -6,6 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 var ServiceCtrl = function ($scope, Service, $rootScope) {
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     Scope = $scope;
 
     Scope.promptForNew = function () {

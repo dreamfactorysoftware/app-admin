@@ -6,6 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 var PackageCtrl = function ($scope, AppsRelatedToService, Service, $http) {
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     Scope = $scope;
     $scope.Apps = AppsRelatedToService.get();
     Scope.schemaData = {};
