@@ -1,4 +1,7 @@
 var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $timeout) {
+    $scope.$on('$routeChangeSuccess', function () {
+    $(window).resize();
+    });
 
     $('#alert_container').empty();
     Scope = $scope;
@@ -330,6 +333,6 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     Scope.reload = function () {
         Scope.Apps = AppsRelated.get();
     }
-    $(window).resize();
+
 };
 

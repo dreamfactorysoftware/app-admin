@@ -6,6 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 var ServiceCtrl = function ($scope, Service, $rootScope) {
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     Scope = $scope;
 
     Scope.promptForNew = function () {
@@ -185,7 +188,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                     Scope.service.credentials = {dsn:Scope.mongodb.service.dsn, user: Scope.mongodb.service.user, pwd: Scope.mongodb.service.pwd, db: Scope.mongodb.service.db};
                     break;
                 case "mongohq":
-                    Scope.service.credentials = {dsn:Scope.mongohq.service.dsn, user: Scope.mongohq.service.user, pwd: Scope.mongohq.service.pwd, db: Scope.mongodb.service.db};
+                    Scope.service.credentials = {dsn:Scope.mongohq.service.dsn, user: Scope.mongohq.service.user, pwd: Scope.mongohq.service.pwd, db: Scope.mongohq.service.db};
                     break;
             }
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -541,6 +544,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.azure = {};
             Scope.couchdb = {service:{}};
             Scope.mongodb = {service:{}};
+            Scope.mongohq = {service:{}};
 
             if (Scope.service.credentials) {
                 var fString = Scope.service.credentials;
@@ -572,7 +576,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                         Scope.mongodb.service.pwd = fString.pwd;
                         Scope.mongodb.service.db = fString.db;
                         break;
-                    case "mongodb":
+                    case "mongohq":
                         Scope.mongohq.service.dsn = fString.dsn;
                         Scope.mongohq.service.user = fString.user;
                         Scope.mongohq.service.pwd = fString.pwd;

@@ -1,5 +1,7 @@
 var UserCtrl = function ($scope, Config, User, Role) {
-
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     Scope = $scope;
     Scope.Config = Config.get();
     Scope.Users = User.get();

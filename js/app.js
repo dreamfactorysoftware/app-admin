@@ -99,3 +99,10 @@ AdminApp.factory('EmailTemplates', function ($resource) {
     return $resource('/rest/system/email_template/:id/?app_name=admin&fields=*', {}, { update:{ method:'PUT' }
     });
 });
+window.onresize = resize;
+window.onload = resize;
+function resize()
+{
+    $("#grid-table").css('height', $(window).height() -60);
+}
+
