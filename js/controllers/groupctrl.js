@@ -6,6 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 var GroupCtrl = function ($scope, Group, App, $timeout) {
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     Scope = $scope;
     Scope.group = {apps:[]};
     Scope.Groups = Group.get();

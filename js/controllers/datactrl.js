@@ -1,4 +1,7 @@
 var DataCtrl = function ($scope, Schema, DB, $http) {
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     $("#grid-container").hide();
     Scope = $scope;
     Scope.tableData = [];
@@ -8,46 +11,46 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         {value: false, text: 'false'}
     ];
     Scope.typeOptions = [
-        {value:"id", text: "id"},
-        {value:"string", text: "string"},
-        {value:"integer", text: "integer"},
-        {value:"text", text: "text"},
-        {value:"boolean", text: "boolean"},
-        {value:"binary", text: "binary"},
-        {value:"blob", text: "blob"},
-        {value:"float", text: "float"},
-        {value:"decimal", text: "decimal"},
-        {value:"datetime", text: "datetime"},
-        {value:"date", text: "date"},
-        {value:"time", text: "time"}
+        {value: "id", text: "id"},
+        {value: "string", text: "string"},
+        {value: "integer", text: "integer"},
+        {value: "text", text: "text"},
+        {value: "boolean", text: "boolean"},
+        {value: "binary", text: "binary"},
+        {value: "blob", text: "blob"},
+        {value: "float", text: "float"},
+        {value: "decimal", text: "decimal"},
+        {value: "datetime", text: "datetime"},
+        {value: "date", text: "date"},
+        {value: "time", text: "time"}
     ]
     var booleanTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in booleanOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     var inputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSave()" />';
     //var inputTemplate = '<div class="ngCellText" ng-class="col.colIndex()"><input class="ngCellText colt{{$index}}" ng-change="enableSave()"/></div>';
     var schemaInputTemplate = '<input class="ngCellText colt{{$index}}" ng-model="row.entity[col.field]" ng-change="enableSchemaSave()" />';
     var customHeaderTemplate = '<div class="ngHeaderCell">&nbsp;</div><div ng-style="{\'z-index\': col.zIndex()}" ng-repeat="col in visibleColumns()" class="ngHeaderCell col{{$index}}" ng-header-cell></div>';
-    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="!this.row.entity.id"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
-    var schemaButtonTemplate = '<div ><button id="add_{{row.rowIndex}}" class="btn btn-small btn-primary" disabled=true ng-show="this.row.entity.new" ng-click="schemaAddField()"><li class="icon-save"></li></button>' +
-        '<button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.new" class="btn btn-small btn-inverse" disabled=true ng-click="schemaSaveRow()"><li class="icon-save"></li></button>' +
-        '<button class="btn btn-small btn-danger" ng-show="!this.row.entity.new" ng-click="schemaDeleteField()"><li class="icon-remove"></li></button>' +
-        '<button class="btn btn-small btn-danger" ng-show="this.row.entity.new" disabled=true ng-click="schemaDeleteField(true)"><li class="icon-remove"></li></button></div>';
+    var buttonTemplate = '<div><button id="save_{{row.rowIndex}}" class="btn btn-small btn-inverse" disabled=true ng-click="saveRow()"><li class="icon-save"></li></button><button class="btn btn-small btn-danger" ng-disabled="this.row.entity.dfnew == true"ng-click="deleteRow()"><li class="icon-remove"></li></button></div>';
+    var schemaButtonTemplate = '<div ><button id="add_{{row.rowIndex}}" class="btn btn-small btn-primary" disabled=true ng-show="this.row.entity.dfnew" ng-click="schemaAddField()"><li class="icon-save"></li></button>' +
+        '<button id="save_{{row.rowIndex}}" ng-show="!this.row.entity.dfnew" class="btn btn-small btn-inverse" disabled=true ng-click="schemaSaveRow()"><li class="icon-save"></li></button>' +
+        '<button class="btn btn-small btn-danger" ng-show="!this.row.entity.dfnew" ng-click="schemaDeleteField()"><li class="icon-remove"></li></button>' +
+        '<button class="btn btn-small btn-danger" ng-show="this.row.entity.dfnew" disabled=true ng-click="schemaDeleteField(true)"><li class="icon-remove"></li></button></div>';
     var typeTemplate = '<select class="ngCellText colt{{$index}}" ng-options="option.value as option.text for option in typeOptions" ng-model="row.entity[col.field]" ng-change="enableSave()"></select>';
     Scope.columnDefs = [];
     Scope.browseOptions = {};
-    Scope.browseOptions = {data: 'tableData',enableCellSelection: true,selectedItems: Scope.selectedRow, enableCellEdit:true, multiSelect:false,displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
+    Scope.browseOptions = {data: 'tableData', enableCellSelection: true, selectedItems: Scope.selectedRow, enableCellEdit: true, multiSelect: false, displaySelectionCheckbox: false, columnDefs: 'columnDefs'};
     Scope.Schemas = Schema.get(function (data) {
         Scope.schemaData = data.resource;
-    }, function(response){
+    }, function (response) {
         var code = response.status;
-        if(code == 401){
+        if (code == 401) {
             window.top.Actions.doSignInDialog("stay");
             return;
         }
         var error = response.data.error;
         $.pnotify({
-            title: 'Error' ,
+            title: 'Error',
             type: 'error',
-            hide:false,
+            hide: false,
             addclass: "stack-bottomright",
             text: error[0].message
         });
@@ -68,24 +71,25 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         DB.get({name: Scope.currentTable}, function (data) {
 
             Scope.tableData = data.record;
-            Scope.tableData.unshift({"new":true});
+            Scope.tableData.unshift({"dfnew": true});
 
 
             Scope.relatedOptions = data.meta.schema.related;
             Scope.currentSchema = data.meta.schema.field;
+            Scope.currentIdentity = data.meta.schema.primary_key;
             Scope.buildColumns();
 
-        }, function(response){
+        }, function (response) {
             var code = response.status;
-            if(code == 401){
+            if (code == 401) {
                 window.top.Actions.doSignInDialog("stay");
                 return;
             }
             var error = response.data.error;
             $.pnotify({
-                title: 'Error' ,
+                title: 'Error',
                 type: 'error',
-                hide:false,
+                hide: false,
                 addclass: "stack-bottomright",
                 text: error[0].message
             });
@@ -103,10 +107,10 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         var type = this.option.type;
 
         var related_url;
-        if(type=="has_many"){
+        if (type == "has_many") {
             related_url = "/" + ref_table + "?app_name=admin&include_schema=true&filter=" + ref_field + "=" + Scope.selectedRow[0][field]
-        }else if(type=="belongs_to"){
-            related_url = "/" + ref_table + "?filter=" + ref_field + "=" +  Scope.selectedRow[0][field] +"&app_name=admin&include_schema=true";
+        } else if (type == "belongs_to") {
+            related_url = "/" + ref_table + "?filter=" + ref_field + "=" + Scope.selectedRow[0][field] + "&app_name=admin&include_schema=true";
         }
         Scope.currentTable = ref_table;
         Scope.browseOptions = {};
@@ -116,25 +120,25 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         Scope.relatedOptions = null;
 
         $http({method: 'GET', url: '/rest/db' + related_url}).
-            success(function(data, status, headers, config) {
+            success(function (data, status, headers, config) {
                 Scope.tableData = data.record;
-                Scope.tableData.unshift({"new":true});
+                Scope.tableData.unshift({"dfnew": true});
                 Scope.currentSchema = data.meta.schema.field;
                 Scope.buildColumns();
                 $("tr.info").removeClass('info');
                 $('#row_' + Scope.currentTable).addClass('info');
             }).
-            error(function(data, status, headers, config) {
+            error(function (data, status, headers, config) {
                 var code = data.status;
-                if(code == 401){
+                if (code == 401) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
                 var error = data.data.error;
                 $.pnotify({
-                    title: 'Error' ,
+                    title: 'Error',
                     type: 'error',
-                    hide:false,
+                    hide: false,
                     addclass: "stack-bottomright",
                     text: error[0].message
                 });
@@ -142,7 +146,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
 
 
     };
-    Scope.buildColumns = function(){
+    Scope.buildColumns = function () {
         var columnDefs = [];
         var saveColumn = {};
         saveColumn.field = '';
@@ -200,17 +204,17 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         Scope.newTable.table.field = removeByAttr(Scope.newTable.table.field, 'name', this.field.name);
 
     };
-    Scope.schemaAddField = function(){
+    Scope.schemaAddField = function () {
         var table = this.tableSchema.name;
         var row = this.row.entity;
-        $http.put('/rest/schema/' + table + '/?app_name=admin', row).success(function(data){
-            Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
+        $http.put('/rest/schema/' + table + '/?app_name=admin', row).success(function (data) {
+            Scope.tableData = removeByAttr(Scope.tableData, 'dfnew', true);
             Scope.tableData.unshift(data);
-            Scope.tableData.unshift({"new":true});
+            Scope.tableData.unshift({"dfnew": true});
         });
 
     };
-    Scope.schemaDeleteField = function(gridOnly){
+    Scope.schemaDeleteField = function (gridOnly) {
         var table = this.tableSchema.name;
         var name = this.row.entity.name;
         which = name;
@@ -222,7 +226,7 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         if (!confirm("Are you sure you want to delete " + which)) {
             return;
         }
-        if(!gridOnly){
+        if (!gridOnly) {
             $http.delete('/rest/schema/' + table + '/' + name + '?app_name=admin');
         }
         Scope.tableData = removeByAttr(Scope.tableData, 'name', name);
@@ -240,17 +244,17 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
             Scope.showForm();
             //window.top.Actions.showStatus("Created Successfully");
             Scope.schemaData.push(Scope.newTable.table);
-        }, function(response){
+        }, function (response) {
             var code = response.status;
-            if(code == 401){
+            if (code == 401) {
                 window.top.Actions.doSignInDialog("stay");
                 return;
             }
             var error = response.data.error;
             $.pnotify({
-                title: 'Error' ,
+                title: 'Error',
                 type: 'error',
-                hide:false,
+                hide: false,
                 addclass: "stack-bottomright",
                 text: error[0].message
             });
@@ -277,17 +281,17 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
             Scope.showForm();
             //window.top.Actions.showStatus("Deleted Successfully");
             $("#row_" + name).fadeOut();
-        }, function(response){
+        }, function (response) {
             var code = response.status;
-            if(code == 401){
+            if (code == 401) {
                 window.top.Actions.doSignInDialog("stay");
                 return;
             }
             var error = response.data.error;
             $.pnotify({
-                title: 'Error' ,
+                title: 'Error',
                 type: 'error',
-                hide:false,
+                hide: false,
                 addclass: "stack-bottomright",
                 text: error[0].message
             });
@@ -330,36 +334,38 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
     }
     Scope.enableSave = function () {
         $("#save_" + this.row.rowIndex).attr('disabled', false);
-        //console.log(this);
+
     };
     Scope.enableSchemaSave = function () {
         $("#add_" + this.row.rowIndex).attr('disabled', false);
         $("#delete_" + this.row.rowIndex).attr('disabled', false);
         $("#save_" + this.row.rowIndex).attr('disabled', false);
-        //console.log(this);
+
     };
     Scope.saveRow = function () {
 
         var index = this.row.rowIndex;
+
         var newRecord = this.row.entity;
 
-        if (newRecord.new) {
+        if (newRecord.dfnew) {
+            delete newRecord.dfnew;
             DB.save({name: Scope.currentTable}, newRecord, function (data) {
                 $("#save_" + index).attr('disabled', true);
-                Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
+                Scope.tableData = removeByAttr(Scope.tableData, 'dfnew', true);
                 Scope.tableData.unshift(data);
-                Scope.tableData.unshift({"new":true});
-            }, function(response){
+                Scope.tableData.unshift({"dfnew": true});
+            }, function (response) {
                 var code = response.status;
-                if(code == 401){
+                if (code == 401) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
                 var error = response.data.error;
                 $.pnotify({
-                    title: 'Error' ,
+                    title: 'Error',
                     type: 'error',
-                    hide:false,
+                    hide: false,
                     addclass: "stack-bottomright",
                     text: error[0].message
                 });
@@ -368,17 +374,17 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
         } else {
             DB.update({name: Scope.currentTable}, newRecord, function () {
                 $("#save_" + index).attr('disabled', true);
-            }, function(response){
+            }, function (response) {
                 var code = response.status;
-                if(code == 401){
+                if (code == 401) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
                 var error = response.data.error;
                 $.pnotify({
-                    title: 'Error' ,
+                    title: 'Error',
                     type: 'error',
-                    hide:false,
+                    hide: false,
                     addclass: "stack-bottomright",
                     text: error[0].message
                 });
@@ -389,9 +395,13 @@ var DataCtrl = function ($scope, Schema, DB, $http) {
 
     }
     Scope.deleteRow = function () {
-        var id = this.row.entity.id;
-        DB.delete({name: Scope.currentTable}, {id: id});
-        Scope.tableData = removeByAttr(Scope.tableData, 'id', id);
+        var id = this.row.entity[Scope.currentIdentity];
+        $http.delete('/rest/db/' + Scope.currentTable + '/' + id + '?app_name=admin').success(function () {
+            //Scope.tableData = DB.get({name: Scope.currentTable});
+            Scope.tableData = removeByAttr(Scope.tableData, Scope.currentIdentity, id);
+
+        });//
+
 
     }
 };

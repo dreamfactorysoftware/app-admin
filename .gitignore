@@ -2,3 +2,5 @@
 .idea/tasks.xml
 composer.lock
 vendor
+
+.idea/dictionaries/jablan.xml

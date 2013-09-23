@@ -1,97 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Swagger UI</title>
-    <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
-    <link href='css/hightlight.default.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-    <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
-    <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
-    <script src='lib/handlebars-1.0.rc.1.js' type='text/javascript'></script>
-    <script src='lib/underscore-min.js' type='text/javascript'></script>
-    <script src='lib/backbone-min.js' type='text/javascript'></script>
-    <script src='lib/swagger.js' type='text/javascript'></script>
-    <script src='swagger-ui.js' type='text/javascript'></script>
-    <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
+  <title>Swagger UI</title>
+  <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+  <link href='css/highlight.default.css' media='screen' rel='stylesheet' type='text/css'/>
+  <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+  <script src='lib/shred.bundle.js' type='text/javascript'></script>
+  <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
+  <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
+  <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
+  <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
+  <script src='lib/handlebars-1.0.0.js' type='text/javascript'></script>
+  <script src='lib/underscore-min.js' type='text/javascript'></script>
+  <script src='lib/backbone-min.js' type='text/javascript'></script>
+  <script src='lib/swagger.js' type='text/javascript'></script>
+  <script src='swagger-ui.js' type='text/javascript'></script>
+  <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
+  <script type="text/javascript">
+    $(function () {
+      window.swaggerUi = new SwaggerUi({
+      url: location.protocol + "//" + location.host + "/rest/api_docs",
+      dom_id: "swagger-ui-container",
+      supportedSubmitMethods: ['get', 'post', 'put', 'patch', 'merge', 'delete'],
+      onComplete: function(swaggerApi, swaggerUi){
+        if(console) {
+          console.log("Loaded SwaggerUI")
+        }
+        $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+      },
+      onFailure: function(data) {
+        if(console) {
+          console.log("Unable to Load SwaggerUI");
+          console.log(data);
+        }
+      },
+      docExpansion: "none"
+    });
 
-    <script type="text/javascript">
-        $(function () {
-            window.swaggerUi = new SwaggerUi({
-                discoveryUrl:location.protocol + "//" + location.host + "/rest/",
-                apiKeyName:"swagger_app_name",
-                apiKey:"admin",
-                dom_id:"swagger-ui-container",
-                supportHeaderParams: true,
-                headers: { "X-DreamFactory-Application-Name": "admin" },
-                supportedSubmitMethods: ['get', 'post', 'put', 'merge', 'delete', 'patch'],
-                onComplete: function(swaggerApi, swaggerUi){
-                    if(console) {
-                        console.log("Loaded SwaggerUI")
-                        console.log(swaggerApi);
-                        console.log(swaggerUi);
-                    }
-                    $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
-                },
-                onFailure: function(data) {
-                    if(console) {
-                        console.log("Unable to Load SwaggerUI");
-                        console.log(data);
-                    }
-                },
-                docExpansion: "none"
-            });
+	window.authorizations.add("X-DreamFactory-Application-Name", new ApiKeyAuthorization("X-DreamFactory-Application-Name", "admin", "header"));
+    window.swaggerUi.load();
+  });
 
-            window.swaggerUi.load();
-        });
-
-    </script>
+  </script>
 </head>
 
-<body style="background-color:#F5F5F5;margin:0;padding:0">
-<br/>
-<div style="width:100%;text-align:center">DreamFactory LIVE API Documentation, built with Swagger.
-
-</div>
+<body>
 
 <div id="message-bar" class="swagger-ui-wrap">
-    &nbsp;
+  &nbsp;
 </div>
-<div class="alert alert-info"><b>Important Notes</b>
-    <p style="font-size:12px">
-        Use of our API requires SSL3.  If you plan on making requests from Curl, or your Native SDK, make sure you are using version 3.
-        <br/>
-        For example, in curl: <b>curl - 3 url</b>
-    </p>
-    <p>
-        <b>Your API Key</b><br/>
-            <span style="font-size:12px">Your “api key” to talk to our API is your App Name as defined in the Administration App,
-            For each request, you can :
-            <ol style="font-size:12px">
-                <li>
-                    Append app_name=yourappname to the querystring or
-                </li>
-                <li>
-                    Send a request header called <b>X-DreamFactory-Application-Name</b> with the value of your app name.
-                </li>
-            </ol></span>
-    </p>
-    <p><b>Authentication</b>
-        <br/>
-             <span style="font-size:12px">
-            If your application is not part of the guest user’s role, then access to any service or data components will require authentication.
-            <br/>
-            To authenticate a user, simply POST a JSON string to /user/session that takes on the following format: ‘{“email”:”email_value”, “password”:”password_value”}’
-            <br/>
-            If successful, in the response, you’ll see a session_id has been created.<br/>
 
-            </span>
-    </p>
-    <div class="alert alert-danger"><b>Very Important</b> : For all future requests to the API, you’ll need to pass the session_id as a new request header called <b>X-DreamFactory-Session-Token</b> </div>
-
-</div>
 <div id="swagger-ui-container" class="swagger-ui-wrap">
 
 </div>
