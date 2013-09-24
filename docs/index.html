@@ -14,7 +14,7 @@
 <body>
   <div class="header">
     <div class="top-bar">
-      <h1 id="logo"><a class="logo" href="index.html"><span>Dreamfactory</span><span class="light">&nbsp;SDK Reference</span></a></h1>
+      <h1 id="logo"><a class="logo" href="index.html"><span>DreamFactory</span><span class="light">&nbsp;SDK Reference</span></a></h1>
     </div>
   </div>
   <div class="model-container"></div>
@@ -170,6 +170,16 @@
         <div class="alert alert-info"><h3>Welcome.</h3> Choose a method on the left to begin exploring.
 
           This SDK or Seed App will grab all of the services available on your DSP, and give you access to them through a dom object (df currently in app.js).
+          <br/><br/>
+          If you still have the following lines in your index.html, you'll need to put in your dsp and app information :
+            <code>
+                <pre>
+//replace this dsp_url with yours ( leave the /rest/api_docs part )
+var dsp_url = "https://_your_dsp_hostname_here_/rest/api_docs";
+//replace this app_name with yours
+var app_name = "_your_app_api_name_here_";
+                </pre>
+            </code>
 
           Lets look at Authentication and CRUD examples to get you started.
         </div>
