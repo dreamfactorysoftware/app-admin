@@ -15,7 +15,7 @@ var AdminApp = angular.module("AdminApp", ["ngResource", "ngGrid"]).
         $routeProvider.when('/service', { controller:ServiceCtrl, templateUrl:'services.html' });
         $routeProvider.when('/import', { controller:FileCtrl, templateUrl:'import.html' });
         $routeProvider.when('/file', { controller:FileCtrl, templateUrl:'files.html' });
-        $routeProvider.when('/api', { controller:SwaggerCtrl, templateUrl:'swagger.html' });
+        $routeProvider.when('/api', { templateUrl:'swagger.html' });
         $routeProvider.when('/package', { controller:PackageCtrl, templateUrl:'package.html' });
         $routeProvider.when('/config', { controller:ConfigCtrl, templateUrl:'config.html' });
         $routeProvider.when('/data', { controller:DataCtrl, templateUrl:'data.html' });
