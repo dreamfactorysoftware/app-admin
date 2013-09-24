@@ -80,5 +80,16 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
         $rootScope.loadSDK();
     }
 
+    else {
+
+
+
+        $('#swagbar').hide();
+        $('#swagtabs').hide();
+        $('#swagctrl').removeClass('well');
+
+
+    }
+
 
 };
