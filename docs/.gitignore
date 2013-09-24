@@ -1,0 +1,6 @@
+
+*.xml
+
+.idea/.name
+
+.idea/sdk-docs.iml
