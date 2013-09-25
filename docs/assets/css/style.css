@@ -57,7 +57,7 @@
   background-color: white;
   opacity: 0.99;
   z-index: 1;
-  overflow: scroll;
+  overflow: auto;
   width: 400px;
 }
 
