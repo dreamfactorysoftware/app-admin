@@ -2094,3 +2094,8 @@ span.label{
     max-height:300px;
     overflow:auto;
 }
+#swagger {
+    margin:10px;
+    border:1px solid #cccccc;
+    background-color:white;
+}
