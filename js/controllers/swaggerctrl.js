@@ -15,10 +15,7 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
     $("#swagger, #swagger iframe").css('display', 'none');
     $rootScope.loadSwagger = function (hash) {
 
-        $('#swagger').css({
-            "width" : $(window).width() * .96
-        });
-        
+
         $("#swagger iframe").attr('src', '');
 
         var appendURL = "";
@@ -29,12 +26,18 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
         $timeout(function () {
             $("#swagger iframe").css('height', $(window).height() -40).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
-            $("#swagger").css('height', $(window).height()).css('width', '100%').show();
+            $("#swagger").css({
+                'height': $(window).height(),
+                'width': '95%'
+            }).show();
         }, 1000);
 
         $(window).resize(function () {
-            $('#swagger').css('height', $(window).height()).css('width', '100%').css('width', '100%');
-            $("#swagger iframe").css('height', $(window).height() -40).css('width', '100%');
+            $('#swagger').css({
+                "height" : $(window).height(),
+                "width" : '95%'
+            });
+            $("#swagger iframe").css('height', $(window).height() -40).css('width', '96%');
         });
     }
 
