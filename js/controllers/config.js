@@ -69,7 +69,7 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
     };
     Scope.upgrade = function () {
 
-        window.top.location = CurrentServer + '/site/upgrade';
+        window.top.location = CurrentServer + '/web/upgrade';
     }
     Scope.removeHost = function () {
         var index = this.$index;

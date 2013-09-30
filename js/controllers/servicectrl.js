@@ -363,6 +363,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.user, .pwd, .dsn,.nosql_type").hide();
                 // $(".user, .pwd, .dsn").show();
                 break;
+            case "Local SQL DB Schema":
+                $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.user, .pwd, .dsn,.nosql_type").hide();
+                // $(".user, .pwd, .dsn").show();
+                break;
             case "Remote SQL DB":
                 $(".base_url,.host, .command, .security, .port, .parameters, .headers, .storage_name, .storage_type, .credentials, .native_format,.nosql_type").hide();
                 $(".user, .pwd, .dsn").show();
@@ -388,7 +392,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 $(".base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
                 $(".nosql_type").show();
                 break;
-
+            case "Email Service":
+                $(".nosql_type , .base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
+                Scope.showEmailFields();
+                break;
             case "Salesforce":
                 $(".nosql_type , .base_url, .command, .parameters , .user, .pwd,.host,.port, .security.parameters, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format").hide();
 
@@ -407,18 +414,19 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         switch (Scope.email_type) {
             case "Server Default":
                 Scope.service.storage_type = null;
-                $(".user, .pwd,.host,.port,.command,  .security, .parameters, .base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
+                $(".user, .pwd,.host,.port,.command,  .security, .base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
                 //$(".user, .pwd,.host,.port,.command,  .security, .parameters").show();
+                $(".parameters").show();
                 break;
             case "Server Command":
                 Scope.service.storage_type = null;
-                $(".user, .pwd,.host,.port,.command,  .security, .parameters,.base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
-                $(".command").show();
+                $(".user, .pwd,.host,.port,.command,  .security,.base_url, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
+                $(".command, .parameters").show();
                 break;
             case "SMTP":
 
                 Scope.service.storage_type = "smtp";
-                $(".user, .pwd,.host,.port,.command,  .security, .parameters,.base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
+                $(".user, .pwd,.host,.port,.command,  .security,.base_url, .parameters, .command, .headers,.dsn ,.storage_name, .storage_type, .credentials, .native_format, .nosql_type").hide();
                 $(".user, .pwd,.host,.port,  .security, .parameters").show();
                 break;
         }

@@ -1,4 +1,44 @@
-<div  ng-controller = "SwaggerCtrl" id="swagger" class="well" style="display:none">
-    <a href="https://github.com/dreamfactorysoftware/javascript-sdk" target="_new"><div class="btn btn-success">Download our SDK!</div></a><br/><br/>
-    <iframe style="display:none" frameBorder=0 src=""></iframe>
-</div> 
+<div id="swagctrl" class="well" ng-controller="SwaggerCtrl">
+    <div class="navbar" id="swagbar">
+        <div class="navbar-inner">
+            <div class="brand">API / SDK</div>
+        </div>
+    </div>
+
+
+    <ul class="nav nav-tabs" id="swagtabs">
+        <li data-ng-class="swagger={true: 'active', false: ''}[currentTab=='swagger-pane']"><a href="javascript:void(0)" data-ng-click="showTab('swagger-pane')"
+                                                                                               data-toggle="tab">Live API</a></li>
+        <li data-ng-class="sdk={true: 'active', false: ''}[currentTab=='sdk-pane']"><a href="javascript:void(0)" data-ng-click="showTab('sdk-pane')"
+                                                                                       data-toggle="tab">SDK</a></li>
+    </ul>
+    <div class="tab-content">
+        <div data-ng-class="swagger" class="tab-pane active" id="swagger-pane">
+            <div id="swagger" class="well" style="display:none">
+                <!-- <a href="https://github.com/dreamfactorysoftware/javascript-sdk" target="_new"><div class="btn btn-success">Download our SDK!</div></a><br/><br/>-->
+                <iframe style="display:none" frameBorder=0 src=""></iframe>
+            </div>
+        </div>
+        <div data-ng-class="sdk" class="tab-pane" id="sdk-pane">
+
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <a href="https://github.com/dreamfactorysoftware/javascript-sdk/archive/master.zip" class="btn btn-success">Download SDK</a>
+                    <a href="https://github.com/dreamfactorysoftware/javascript-sdk" target="blank" class="btn btn-inverse">View on Github</a>
+                </div>
+            </div>
+
+
+            <div id="docs" class="well" style="display:none">
+                <iframe style="display:none" frameBorder=0 src=""></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
