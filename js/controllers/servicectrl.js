@@ -166,7 +166,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
         if (Scope.service.type =="Salesforce"){
-            Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token};
+            Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token,version: Scope.salesforce.version};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
         if (Scope.service.type == "NoSQL DB" ) {
@@ -229,7 +229,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
         if(Scope.service.type =="Salesforce"){
-            Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token};
+            Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token,version: Scope.salesforce.version};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
 
@@ -504,6 +504,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.salesforce.username = cString.username;
             Scope.salesforce.password = cString.password;
             Scope.salesforce.security_token = cString.security_token;
+            Scope.salesforce.version = cString.version;
         }
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {
