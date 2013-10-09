@@ -258,10 +258,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         }
 
         if (Scope.service.type == "Remote SQL DB") {
-            if (Scope.service.credentials) {
-                Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
-                Scope.service.credentials = JSON.stringify(Scope.service.credentials);
-            }
+
+            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+
         }
         if (Scope.service.type == "Remote File Storage") {
             switch (Scope.service.storage_type) {
