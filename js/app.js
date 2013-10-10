@@ -7,6 +7,7 @@
  */
 var AdminApp = angular.module("AdminApp", ["ngResource", "ngGrid"]).
     config(function ($routeProvider) {
+        $routeProvider.when('/', { controller:QuickStartCtrl, templateUrl:'quick-start.html' });
         $routeProvider.when('/app', { controller:AppCtrl, templateUrl:'applications.html' });
         $routeProvider.when('/user', { controller:UserCtrl, templateUrl:'users.html' });
         $routeProvider.when('/role', { controller:RoleCtrl, templateUrl:'roles.html' });

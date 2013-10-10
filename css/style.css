@@ -276,7 +276,7 @@ a:hover {
     /*background-image: url("../img/glyphicons-halflings-white.png");*/
     margin-top:     2px;
     opacity:        0.5;
-    vertical-align: top;
+
 }
 
 #user-nav > ul > li > a:hover > i, #user-nav > ul > li.open > a > i {
@@ -2098,4 +2098,15 @@ span.label{
     margin:10px;
     border:1px solid #cccccc;
     background-color:white;
+}
+.well.main{
+    margin-right:10px;
+}
+#native-list{
+    clear:none;
+}
+#native-list li{
+  list-style:none;
+  margin:3px;
+
 }
