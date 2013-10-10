@@ -19,6 +19,9 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
         }
         $scope.step = step;
     }
+    $scope.downloadSDK = function(){
+        $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + $scope.app.id + '?sdk=true')
+    }
     $scope.create = function () {
         if ($scope.app.native == '1') {
             $scope.app.storage_service_id = null;
@@ -32,12 +35,10 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
         }
         $scope.app.name = $scope.app.api_name;
         App.save($scope.app, function (data) {
-                //Scope.Apps.record.push(data);
-                //Scope.app.id = data.id;
-                //Scope.app = data;
-            if(window.top.Actions){
-                window.top.Actions.updateSession("update");
-            }
+                $scope.app.id = data.id;
+                if(window.top.Actions){
+                    window.top.Actions.updateSession("update");
+                }
                 $.pnotify({
                     title: $scope.app.api_name,
                     type: 'success',
@@ -52,8 +53,8 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
                 var code = response.status;
                 if (code == 401) {
                     if(window.top.Actions){
-                    window.top.Actions.doSignInDialog("stay");
-                    return;
+                        window.top.Actions.doSignInDialog("stay");
+                        return;
                     }
                 }
                 var error = response.data.error;
