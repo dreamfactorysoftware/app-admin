@@ -155,14 +155,14 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
     $(function(){
         var height = $(window).height();
         var width = window.innerWidth - 300;
-        $('#app-preview').css('height', height - 300).css('width', width);
+        //$('#app-preview').css('height', height - 300).css('width', width);
         $('.well.main').css('height', height);
     });
 
     $(window).resize(function(){
         var height = $(window).height();
         var width = window.innerWidth - 300;
-        $('#app-preview').css('height', height - 300).css('width', width);
+        //$('#app-preview').css('height', height - 300).css('width', width);
         $('.well.main').css('height', height);
 
     });
