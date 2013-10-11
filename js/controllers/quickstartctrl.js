@@ -17,11 +17,11 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
             $scope.create();
             return;
         }
-        if(step == 4 && $scope.app.native !='1' && $scope.app.storage_service_id != null){
-            $("#app-preview").attr("src", location.protocol + '//' + location.host + '/rest/app/applications/' + $scope.app.api_name+ '/index.html');
 
-        }
         $scope.step = step;
+    }
+    $scope.launchApp = function(){
+        window.open(location.protocol + '//' + location.host + '/rest/app/applications/' + $scope.app.api_name+ '/index.html', "df-new");
     }
     $scope.downloadSDK = function(){
         $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + $scope.app.id + '?sdk=true')
