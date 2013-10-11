@@ -31,6 +31,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.rackspace = {};
         Scope.openstack = {};
         Scope.mongodb = {};
+        Scope.mongohq = {};
         Scope.couch = {};
         Scope.salesforce = {};
 
