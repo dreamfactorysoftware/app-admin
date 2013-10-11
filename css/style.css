@@ -2094,6 +2094,17 @@ span.label{
     max-height:300px;
     overflow:auto;
 }
+.cors-list label{
+    display:inline-block;
+    font-size:9px;
+    position:relative;
+    bottom:4px;
+    margin:3px;
+}
+.cors-list{
+    max-height:300px;
+    overflow:auto;
+}
 #swagger {
     margin:10px;
     border:1px solid #cccccc;
@@ -2106,7 +2117,7 @@ span.label{
     clear:none;
 }
 #native-list li{
-  list-style:none;
-  margin:3px;
+    list-style:none;
+    margin:3px;
 
 }

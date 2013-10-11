@@ -17,9 +17,10 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
         if(step == 2 && Scope.app.native =='1'){
             Scope.step = 4;
             Scope.create();
+            var height = $(window).height();
+            $('.well.main').css('height', height + 400);
             return;
         }
-
         Scope.step = step;
     }
     Scope.launchApp = function(){

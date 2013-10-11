@@ -116,15 +116,57 @@
             <br/>
             If successful, in the response, you’ll see a session_id has been created.<br/>
             <b>Very Important</b> : For all future requests to the API, you’ll need to pass the session_id as a new request header called <b>X-DreamFactory-Session-Token</b> 
+            <br/>
+        <div   data-ng-show="app.native==1">
+            If you plan on communicating with the REST API from a device or other remote client, you'll need to modify the CORS configuration accordingly.<br/>
+            (Typically "*" or "servername:port" are used here)
+        </div>
+        <br/>
+        <div class="section"  data-ng-show="app.native==1">
 
 
-            <!--<div data-ng-show="app.native != '1' && app.storage_service_id != null">-->
-            <!--<h3>Here is your app.</h3>-->
-            <!--<h5>Click on the Files link in the left nav to start editing.</h5>-->
-            <!--<iframe id="app-preview" src="" frameBorder="0"></iframe>-->
-            <!--</div>-->
-            <br/>New content regarding dev and deployment<br/><br/>
-            <button class="btn btn-success" data-ng-click="launchApp()" data-ng-show="app.native != 1 && app.storage_service_id != null">Launch My App</button>
+            <h5>CORS Access</h5>
+            <label>Choose which hosts have cross domain access to your DSP</label>
+            <button ng-click="promptForNew()" class="btn btn-success"><li class="icon-add"></li> Add New Host</button>
+            <br/><br/>
+            <table class="cors-list" class="table table-hover table-striped">
+
+                <tbody>
+                <tr>
+                    <th></th>
+                    <th>Host</th>
+                    <th>Allowed Verbs</th>
+                    <th>Enabled</th>
+
+                </tr>
+
+                <tr ng-repeat="host in Config.allowed_hosts">
+                    <td>
+                        <li ng-click="removeHost()" class="btn btn-danger icon-remove"></li>
+                    </td>
+                    <td><input placeholder="Enter Host Name" type="text" ng-model="host.host"/></td>
+                    <td>
+                        <label><input ng-click="selectAll($event)"  ng-checked="host.verbs.length == allVerbs.length" type="checkbox"/>&nbsp;ALL</li></label>
+                        <label ng-repeat = "verb in allVerbs"><input ng-click="toggleVerb()" ng-disabled="host.verbs.length == allVerbs.length" ng-checked="host.verbs.indexOf(verb) != -1 " type="checkbox"/>&nbsp;{{verb}}</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" ng-model="host.is_enabled"/>
+                    </td>
+
+                </tr>
+            </table>
+
+
+            <!--<input type="text" placeholder="Enter Host Name" ng-model="CORS.host.name"/>-->
+            <br/><button class="btn btn-primary" ng-click="saveConfig()">Save CORS Configuration</button>
+        </div>
+        <!--<div data-ng-show="app.native != '1' && app.storage_service_id != null">-->
+        <!--<h3>Here is your app.</h3>-->
+        <!--<h5>Click on the Files link in the left nav to start editing.</h5>-->
+        <!--<iframe id="app-preview" src="" frameBorder="0"></iframe>-->
+        <!--</div>-->
+        <br/>New content regarding dev and deployment<br/><br/>
+        <button class="btn btn-success" data-ng-click="launchApp()" data-ng-show="app.native != 1 && app.storage_service_id != null">Launch My App</button>
     </div>
     <iframe style="display:none" id="sdk-download" src=""></iframe>
 </div>
