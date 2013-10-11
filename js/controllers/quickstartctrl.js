@@ -20,11 +20,15 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
             var height = $(window).height();
             $('.well.main').css('height', height + 400);
             return;
+        }else if(step == 3 && Scope.app.storage_service_id != null){
+            Scope.step = 4;
+            return;
         }
+
         Scope.step = step;
     }
     Scope.launchApp = function(){
-        window.open(location.protocol + '//' + location.host + '/rest/app/applications/' + Scope.app.api_name+ '/index.html', "df-new");
+        window.open(location.protocol + '//' + location.host + '/app/applications/' + Scope.app.api_name+ '/index.html', "df-new");
     }
     Scope.downloadSDK = function(){
         $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + Scope.app.id + '?sdk=true')
@@ -69,11 +73,11 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
     }
     Scope.saveConfig = function () {
         Config.update(Scope.Config, function () {
-                $.pnotify({
-                    title: 'Configuration',
-                    type: 'success',
-                    text: 'Updated Successfully'
-                });
+//                $.pnotify({
+//                    title: 'Configuration',
+//                    type: 'success',
+//                    text: 'Updated Successfully'
+//                });
             },
             function (response) {
                 var code = response.status;
@@ -131,6 +135,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
 //                }
             },
             function (response) {
+                Scope.setStep(1);
                 var code = response.status;
                 if (code == 401) {
                     if(window.top.Actions){
@@ -146,6 +151,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
                     addclass: "stack-bottomright",
                     text: error[0].message
                 });
+
 
 
             });

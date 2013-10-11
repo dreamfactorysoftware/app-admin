@@ -26,9 +26,9 @@
     </div>
     <div ng-show="step == 2">
         Where do you intend on developing?
-        <br/></br>
+        <br/>
         <input type="radio" value=0 data-ng-model="app.storage_service_id"> In my local environment<br/>
-        <input type="radio" value=1 data-ng-model="app.storage_service_id"> Here on the DSP<br/>
+        <input type="radio" value=1 data-ng-model="app.storage_service_id"> Here on the DSP<br/><br/>
         <div data-ng-show="app.storage_service_id == 0" class="alert alert-info">If you plan to work locally, make sure your CORS settings are set accordingly. ( *
             for the file system, or your server name.)
         </div>
