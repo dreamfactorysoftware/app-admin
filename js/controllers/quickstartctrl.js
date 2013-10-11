@@ -31,7 +31,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
         window.open(location.protocol + '//' + location.host + '/app/applications/' + Scope.app.api_name+ '/index.html', "df-new");
     }
     Scope.downloadSDK = function(){
-        $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + Scope.app.id + '?sdk=true')
+        $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + Scope.app.id + '?sdk=true&app_name=admin')
     }
     Scope.addHost = function () {
         Scope.Config.allowed_hosts.push(Scope.CORS.host);
