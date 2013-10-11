@@ -22,14 +22,15 @@
 
         <br/><br/>
 
-        <button class="btn btn-success" data-ng-click="setStep(2)">Next</button>
+        <button class="btn btn-success" data-ng-disabled="!app.api_name" data-ng-click="setStep(2)">Next</button>
     </div>
     <div ng-show="step == 2">Step 2
         Where do you intend on developing?
         <br/>
-        <input type="radio" data-ng-model="app.storage_service_id"> In my local environment<br/>
+        <input type="radio" value=0 data-ng-model="app.storage_service_id"> In my local environment<br/>
         <input type="radio" value=1 data-ng-model="app.storage_service_id"> Here on the DSP
-        <div class="alert alert-info">If you plan to work locally, make sure your CORS settings are set accordingly.  * for the file system, or your server name.
+        <div class="alert alert-info">If you plan to work locally, make sure your CORS settings are set accordingly. *
+            for the file system, or your server name.
         </div>
         <div class="btn-group">
             <button class="btn" data-ng-click="setStep(1)">Previous</button>
@@ -37,23 +38,33 @@
         </div>
     </div>
     <div ng-show="step == 3">Step 3
-        <div ng-show ="!app.native">Download the javascript-sdk<br/>
+        <div ng-show="!app.native">Download the javascript-sdk<br/>
+
             <p>
-                If you'd like to use our javascript-sdk, which we've just created for this DSP and app, click the download button below.
+                If you'd like to use our javascript-sdk, which we've just created for this DSP and app, click the
+                download button below.
                 <br/>
 
             </p></div>
         <br/>
+
         <div class="btn-group">
-            <button class="btn" data-ng-click="setStep(2)">Previous</button><button data-ng-click="setStep(4)" class="btn btn-primary">Download SDK</button><button class="btn btn-success" data-ng-click="setStep(4)">Skip To Development Info</button>
+            <button class="btn" data-ng-click="setStep(2)">Previous</button>
+            <button data-ng-click="downloadSDK();setStep(4)" class="btn btn-primary">Download SDK</button>
+            <button class="btn btn-success" data-ng-click="setStep(4)">Skip To Development Info</button>
         </div>
     </div>
-    <div ng-show="step == 4">Step 4
+    <div ng-show="step == 4">
+        <div data-ng-show="app.native != '1' && app.storage_service_id != null">
+            <h3>Here is your app.</h3>
+            <h5>Click on the Files link in the left nav to start editing.</h5>
+            <iframe id="app-preview" src="" frameBorder="0"></iframe>
+        </div>
         <br/>New content regarding dev and deployment
         <div class="btn-group">
             <button class="btn" data-ng-click="setStep(3)" data-ng-show="app.native != 1">Previous</button>
         </div>
     </div>
-    <iframe style="display:none" id="sdkDownload" src=""></iframe>
+    <iframe style="display:none" id="sdk-download" src=""></iframe>
 </div>
 

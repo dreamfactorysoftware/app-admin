@@ -1,5 +1,5 @@
 var QuickStartCtrl = function ($scope, App, Config, Service) {
-    Scope = $scope;
+    setCurrentApp('getting_started');
     $scope.Config = Config.get();
     $scope.Services = Service.get(function(){
 
@@ -17,17 +17,26 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
             $scope.create();
             return;
         }
+        if(step == 4 && $scope.app.native !='1' && $scope.app.storage_service_id != null){
+            $("#app-preview").attr("src", location.protocol + '//' + location.host + '/rest/app/applications/' + $scope.app.api_name+ '/index.html');
+
+        }
         $scope.step = step;
     }
     $scope.downloadSDK = function(){
         $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + $scope.app.id + '?sdk=true')
     }
     $scope.create = function () {
+
         if ($scope.app.native == '1') {
             $scope.app.storage_service_id = null;
             $scope.app.storage_container = null;
             $scope.app.launch_url = "";
+            console.log($scope.app);
 
+        }else if($scope.app.storage_service_id == 0){
+            $scope.app.storage_service_id = null;
+            $scope.app.storage_container = null;
 
         }else{
             $scope.app.storage_service_id = $scope.defaultStorageID;
@@ -35,7 +44,9 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
         }
         $scope.app.name = $scope.app.api_name;
         App.save($scope.app, function (data) {
+                //Scope.Apps.record.push(data);
                 $scope.app.id = data.id;
+                //Scope.app = data;
                 if(window.top.Actions){
                     window.top.Actions.updateSession("update");
                 }
@@ -71,4 +82,18 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
 
 
     };
+    $(function(){
+        var height = $(window).height();
+        var width = window.innerWidth - 300;
+        $('#app-preview').css('height', height - 300).css('width', width);
+        $('.well.main').css('height', height);
+    });
+
+    $(window).resize(function(){
+        var height = $(window).height();
+        var width = window.innerWidth - 300;
+        $('#app-preview').css('height', height - 300).css('width', width);
+        $('.well.main').css('height', height);
+
+    });
 };
