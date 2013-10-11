@@ -30,11 +30,47 @@
         <input type="radio" value=0 data-ng-model="app.storage_service_id"> In my local environment<br/>
         <input type="radio" value=1 data-ng-model="app.storage_service_id"> Here on the DSP
         <div class="alert alert-info">If you plan to work locally, make sure your CORS settings are set accordingly. *
-            for the file system, or your server name.
+            for the file system, or your server name.<button class="btn btn-primary" data-ng-click="showCORS()">Show CORS Config</button>
+        </div>
+        <div class="section" id="cors-section" style="display:none">
+            <h5>CORS Access</h5>
+            <label>Choose which hosts have cross domain access to your DSP</label>
+            <button ng-click="promptForNew()" class="btn btn-success"><li class="icon-add"></li> Add New Host</button>
+            <br/><br/>
+            <table id="cors-list" class="table table-hover table-striped">
+
+                <tbody>
+                <tr>
+                    <th></th>
+                    <th>Host</th>
+                    <th>Allowed Verbs</th>
+                    <th>Enabled</th>
+
+                </tr>
+
+                <tr ng-repeat="host in Config.allowed_hosts">
+                    <td>
+                        <li ng-click="removeHost()" class="btn btn-danger icon-remove"></li>
+                    </td>
+                    <td><input placeholder="Enter Host Name" type="text" ng-model="host.host"/></td>
+                    <td>
+                        <label><input ng-click="selectAll($event)"  ng-checked="host.verbs.length == allVerbs.length" type="checkbox"/>&nbsp;ALL</li></label>
+                        <label ng-repeat = "verb in allVerbs"><input ng-click="toggleVerb()" ng-disabled="host.verbs.length == allVerbs.length" ng-checked="host.verbs.indexOf(verb) != -1 " type="checkbox"/>&nbsp;{{verb}}</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" ng-model="host.is_enabled"/>
+                    </td>
+
+                </tr>
+            </table>
+
+
+            <!--<input type="text" placeholder="Enter Host Name" ng-model="CORS.host.name"/>-->
+            <!--<button cls="btn btn-primary" ng-click="addHost()">Add Host</button>-->
         </div>
         <div class="btn-group">
             <button class="btn" data-ng-click="setStep(1)">Previous</button>
-            <button class="btn btn-success" data-ng-click="create();setStep(3)">Next</button>
+            <button data-ng-disabled = "!app.storage_service_id" class="btn btn-success" data-ng-click="saveConfig();create();setStep(3)">Next</button>
         </div>
     </div>
     <div ng-show="step == 3">Step 3
