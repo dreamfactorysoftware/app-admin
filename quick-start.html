@@ -114,7 +114,7 @@
 
         <p><b>Authentication</b>
             <br/>
-            If your application is not part of the guest user’s role, then access to any service or data components will require authentication.
+            If your application is not launched from LaunchPad or part of the guest user’s role (if guest users are active) , then access to any service or data components will require authentication.
             <br/>
             To authenticate a user, simply POST a JSON string to /user/session that takes on the following format: ‘{“email”:”email_value”, “password”:”password_value”}’
             <br/>
