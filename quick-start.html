@@ -82,7 +82,7 @@
             <p style="font-size:2em">What's in the SDK?</p>
             <p>This SDK is a convenience wrapper for all the methods you can use with our REST API.  It's also a LIVE API, meaning any changes you make to the
                 Services on your DSP will be available the next time your application is loaded. We've created a version for you with your endpoint and api key already inside, so no configuration needed, just download and start coding.
-                <p>You can see the df object in your debugger, and underneath df.apis are all the resources and methods available to you by opening up the DOM inspection tab and scrolling down to the df object. It's a global object so its attached to the window object.  This means, using Chrome's DevTools, you can simply open the console and start typing "window.df.apis" and its typeahead will show all the methods and properties.</p></p>
+            <p>You can see the df object in your debugger, and underneath df.apis are all the resources and methods available to you by opening up the DOM inspection tab and scrolling down to the df object. It's a global object so its attached to the window object.  This means, using Chrome's DevTools, you can simply open the console and start typing "window.df.apis" and its typeahead will show all the methods and properties.</p></p>
             <p>
                 If you'd like to use our javascript-sdk, which we've just created for this DSP and app, click the
                 download button below.
@@ -168,7 +168,11 @@
 
 
             <!--<input type="text" placeholder="Enter Host Name" ng-model="CORS.host.name"/>-->
-            <br/><button class="btn btn-primary" ng-click="saveConfig()">Save CORS Configuration</button>
+            <br/>
+            <div class="btn-group">
+                <button class="btn btn-primary" ng-click="saveConfig();goToApps();">Save CORS Configuration</button>
+                <button class="btn btn-primary" ng-click="goToApps();">Go to Apps List</button>
+            </div>
         </div>
         <!--<div data-ng-show="app.native != '1' && app.storage_service_id != null">-->
         <!--<h3>Here is your app.</h3>-->
@@ -176,7 +180,10 @@
         <!--<iframe id="app-preview" src="" frameBorder="0"></iframe>-->
         <!--</div>-->
         <br/>
-        <button class="btn btn-success" data-ng-click="launchApp()" data-ng-show="app.native != 1 && app.storage_service_id != null">Launch My App</button>
+        <div class="btn-group">
+            <button class="btn btn-success" data-ng-click="launchApp();goToApps();" data-ng-show="app.native != 1 && app.storage_service_id != null">Launch My App</button>
+            <button class="btn btn-primary" ng-click="goToApps();">Go to Apps List</button>
+        </div>
     </div>
     <iframe style="display:none" id="sdk-download" src=""></iframe>
 </div>

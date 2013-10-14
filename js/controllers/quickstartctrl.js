@@ -1,4 +1,4 @@
-var QuickStartCtrl = function ($scope, App, Config, Service) {
+var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
     setCurrentApp('getting_started');
     Scope = $scope;
     Scope.Config = Config.get();
@@ -72,6 +72,9 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
         var height = $(window).height();
         $('.well.main').css('height', height + 400);
     }
+    Scope.goToApps = function(){
+        $location.path('/app');
+    };
     Scope.saveConfig = function () {
         Config.update(Scope.Config, function () {
 //                $.pnotify({
