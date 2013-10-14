@@ -4,9 +4,11 @@
             <div class="brand">QuickStart</div>
         </div>
     </div>
-    <div class="alert alert-warning">This is the fastest way to get started building an app.  You can always click on the apps tab to the left to view or modify the details of your app.
-    </div>
-    <div ng-show="step == 1">Give your app a name :&nbsp;
+
+    <div ng-show="step == 1">
+        <div class="alert alert-warning">This is the fastest way to get started building an app.  You can always click on the apps tab to the left to view or modify the details of your app.
+        </div><br/>
+        Give your app a name :&nbsp;
         <input type="text" class="input-large" data-ng-model="app.api_name">
 
         <div class="alert alert-info">This is your API KEY. Pass as header : X-DreamFactory-Application-Name, or as

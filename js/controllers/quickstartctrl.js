@@ -12,6 +12,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service) {
 
         });
     });
+    Scope.app ={native:0};
     Scope.step = 1;
     Scope.setStep = function(step){
         if(step == 2 && Scope.app.native =='1'){
