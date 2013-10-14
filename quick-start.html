@@ -8,20 +8,20 @@
     <div ng-show="step == 1">
         <div class="alert alert-warning">This is the fastest way to get started building an app.  You can always click on the apps tab to the left to view or modify the details of your app.
         </div><br/>
-        Give your app a name :&nbsp;
+        <span style="font-size:2em">Give your app a name :&nbsp;
         <input type="text" class="input-large" data-ng-model="app.api_name">
-
+        </span>
         <div class="alert alert-info">This is your API KEY. Pass as header : X-DreamFactory-Application-Name, or as
             app_name in your querystring on each request.
         </div>
         <br/>
-        What kind of app are you building?<br>
-        <input type="radio" value=0 data-ng-model="app.native">&nbsp;HTML 5 / Javascript<br/>
-        <input type="radio" value=1 data-ng-model="app.native">&nbsp;Native
+        <div style="font-size:2em">What kind of app are you building?</div><br/>
+        <input type="radio" value=0 data-ng-model="app.native">&nbsp;&nbsp;<b>Web</b><img src="img/hcj.png"/><br/><br/>
+        <input style="margin-top:11px;display:inline-block" type="radio" value=1 data-ng-model="app.native">&nbsp;&nbsp;<b>Native</b>
        <span id="native-list">
-           <span class="icon icon-apple"></span>
-           <span class="icon icon-android"></span>
-           <span class="icon icon-windows"></span>
+           <span class="icon icon-2x icon-apple"></span>
+           <span style="color:#98C022" class="icon icon-2x icon-android"></span>
+           <span style="color:#0DB3F1" class="icon icon-2x icon-windows"></span>
        </span>
 
         <br/><br/>
@@ -29,7 +29,7 @@
         <button class="btn btn-success" data-ng-disabled="!app.api_name" data-ng-click="setStep(2)">Next</button>
     </div>
     <div ng-show="step == 2">
-        Where do you intend on developing?
+        <div style="font-size:2em">Where do you intend on developing?</div>
         <br/>
         <input type="radio" value=0 data-ng-model="app.storage_service_id"> In my local environment<br/>
         <input type="radio" value=1 data-ng-model="app.storage_service_id"> Here on the DSP<br/><br/>
