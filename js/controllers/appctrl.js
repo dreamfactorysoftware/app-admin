@@ -1,6 +1,6 @@
-var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $timeout) {
+var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
     $scope.$on('$routeChangeSuccess', function () {
-    $(window).resize();
+        $(window).resize();
     });
 
     $('#alert_container').empty();
@@ -10,7 +10,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     Scope.action = "Create";
     setCurrentApp('applications');
     Scope.app = {is_url_external: 0, native: true, allow_fullscreen_toggle: 0, requires_fullscreen: '0', roles: [], storage_service_id: null};
-    $('#update_button').hide();
+    //$('#update_button').hide();
     $('.external').hide();
 
     Scope.storageOptions = [];
@@ -87,9 +87,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
 
         });
     })
-
     Scope.loadStorageContainers = function () {
-        Scope.storageOptions = [];
+
         Scope.storageOptions = Scope.storageContainers[Scope.app.storage_service_id].options;
 
 
@@ -106,23 +105,30 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         $('#file-manager').hide();
         $('#app-preview').hide();
         $('#step1').show();
-        $('#create_button').show();
-        $('#update_button').hide();
+//        $('#create_button').show();
+//        $('#update_button').hide();
         $("tr.info").removeClass('info');
         $(window).scrollTop(0);
     };
     Scope.save = function () {
-        if (Scope.app.native) {
+        if (Scope.app.is_url_external == -1) {
             Scope.app.storage_service_id = null;
             Scope.app.storage_container = null;
             Scope.app.name = Scope.app.api_name;
             Scope.app.launch_url = "";
+            Scope.app.is_url_external = 0;
+        }
+        if(Scope.app.is_url_external == 1){
+            Scope.app.storage_service_id = null;
+            Scope.app.storage_container = null;
         }
         var id = Scope.app.id;
         AppsRelated.update({id: id}, Scope.app, function (data) {
                 updateByAttr(Scope.Apps.record, 'id', id, data);
 
-                window.top.Actions.updateSession("update");
+                if(window.top.Actions){
+                    window.top.Actions.updateSession("update");
+                }
 
                 $.pnotify({
                     title: Scope.app.name,
@@ -155,18 +161,27 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         $location.path('/import');
     }
     Scope.create = function () {
-        if (Scope.app.native) {
+        if (Scope.app.is_url_external == -1) {
             Scope.app.storage_service_id = null;
             Scope.app.storage_container = null;
             Scope.app.name = Scope.app.api_name;
             Scope.app.launch_url = "";
+            Scope.app.is_url_external = 0;
 
+        }
+        if(Scope.app.is_url_external == 1){
+            Scope.app.name = Scope.app.api_name;
+            Scope.app.storage_service_id = null;
+            Scope.app.storage_container = null;
         }
         AppsRelated.save(Scope.app, function (data) {
                 Scope.Apps.record.push(data);
                 //Scope.app.id = data.id;
                 //Scope.app = data;
-                window.top.Actions.updateSession("update");
+                if(window.top.Actions){
+                    window.top.Actions.updateSession("update");
+                }
+
                 $.pnotify({
                     title: Scope.app.name,
                     type: 'success',
@@ -279,14 +294,17 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     Scope.showDetails = function () {
         Scope.app = {};
         Scope.action = "Update";
-        Scope.app = this.app;
-        if (!this.app.storage_service_id) {
-            Scope.app.storage_service_id = Scope.defaultStorageID;
-            Scope.app.storage_container = "applications";
+        Scope.app = angular.copy(this.app);
+        Scope.app.storage_service_id = this.app.storage_service_id || Scope.defaultStorageID;
+
+        if (!this.app.storage_service_id && !this.app.is_url_external) {
+            Scope.app.is_url_external = -1;
         }
-
-
         Scope.loadStorageContainers();
+
+
+
+
         if (!Scope.app.launch_url) {
             Scope.app.native = true;
             Scope.app.storage_service_id = null;
@@ -300,8 +318,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         $('#file-manager').hide();
         $('#app-preview').hide();
         $('#step1').show();
-        $('#create_button').hide();
-        $('#update_button').show();
+        // $('#create_button').hide();
+        // $('#update_button').show();
         $("tr.info").removeClass('info');
         $('#row_' + Scope.app.id).addClass('info');
     }

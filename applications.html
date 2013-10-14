@@ -32,10 +32,10 @@
                         <td ng-click="showDetails()">{{app.name}}</td>
                         <td class="no-border">
                             <div class="btn-group pull-right">
-                                <a ng-show="app.launch_url !=''" class="btn btn-small btn-inverse" title="Preview this app"
+                                <a ng-show="app.launch_url != null && app.launch_url !=''" class="btn btn-small btn-inverse" title="Preview this app"
                                    ng-click="showAppPreview(app.launch_url)"><i
                                         class="icon-eye-open"></i></a>
-                                <a ng-hide="!app.storage_container" class="btn btn-small btn-inverse"
+                                <a ng-hide="!app.storage_service_id" class="btn btn-small btn-inverse"
                                    title="Manage app files" ng-click="showFileManager()"><i
                                         class="icon-folder-open"></i></a>
                                 <a class="btn btn-small btn-inverse" title="Delete this app" ng-click="delete()"><i
@@ -71,12 +71,13 @@
                             <label><b>App Name</b></label> <input ng-disabled="action=='Update'" type="text" ng-model="app.api_name">
                             <div class="alert alert-info">This is your API KEY (X-DreamFactory-Application-Name)</div>
                         </div>
-                        <label><i class="icon-mobile-phone icon-2x"></i>&nbsp;<b>Native?</b></label>
-                        <input type="checkbox" ng-model = "app.native"/>&nbsp;&nbsp;My application's files are on a native device / client.
-                        <br/><br/>
-                        <div class="options" ng-hide="app.native">
-                            <label><i class="icon-hdd icon-2x"></i>&nbsp;<b>Hosted?</b></label>
+                        <!--<label><i class="icon-mobile-phone icon-2x"></i>&nbsp;<b>Native?</b></label>-->
+                        <!--<input type="checkbox" ng-model = "app.native"/>&nbsp;&nbsp;My application's files are on a native device / client.-->
+                        <!--<br/><br/>-->
+                        <div class="options">
+                            <label><i class="icon-hdd icon-2x"></i>&nbsp;<b>Where will this app live?</b></label>
                             <input type="radio" ng-model="app.is_url_external" value='0'/>&nbsp;&nbsp;Use our default app storage service or one of your own.
+                            <br/><input type="radio" ng-model="app.is_url_external" value='-1'/>&nbsp;&nbsp;On a native device / other remote client(desktop).
                             <br/><input type="radio" ng-model="app.is_url_external" value='1'/>&nbsp;&nbsp;I will just supply a URL to point to my application.
 
 
@@ -84,31 +85,31 @@
                                              name="app_path" type="text"
                                              ng-model="app.url">
 
-                            <div ng-show="app.is_url_external==1" class="alert alert-success">Your URL will be:
+                            <div ng-show="app.is_url_external == 1" class="alert alert-success">Your URL will be:
                                 {{app.url}}
                             </div>
-                            <p ng-hide="app.is_url_external==1" id="remote_storage">Choose where you want your files for this app stored.  The app service is our default storage service.</p>
-                            <label ng-hide="app.is_url_external==1">Storage Service</label>
-                            <select ng-change="loadStorageContainers()" ng-hide="app.is_url_external==1" ng-model="app.storage_service_id">
+                            <p ng-hide="app.is_url_external!=0" id="remote_storage">Choose where you want your files for this app stored.  The app service is our default storage service.</p>
+                            <label ng-hide="app.is_url_external!=0">Storage Service</label>
+                            <select ng-change="loadStorageContainers()" ng-hide="app.is_url_external!=0" ng-model="app.storage_service_id">
                                 <option ng-selected = "service.id == app.storage_service_id" value = "{{service.id}}"  ng-repeat = "service in storageServices">{{service.api_name}}</option>
                             </select>
-                            <label ng-hide=" app.is_url_external==1">Storage Container</label>
-                            <select ng-hide="app.is_url_external==1" id="storage_options" ng-model="app.storage_container"
+                            <label ng-hide="app.is_url_external != 0">Storage Container</label>
+                            <select ng-hide="app.is_url_external != 0" id="storage_options" ng-model="app.storage_container"
                                     ng-options="option.name as option.name for option in storageOptions">
                             </select>
 
                         </div>
 
 
-                        <div ng-hide="app.native">
+                        <div ng-hide="app.is_url_external != 0">
                             <p><b>Public name on LaunchPad</b></p>
                             <input type="text" ng-model="app.name">
                         </div>
-                        <div ng-hide="app.native">
+                        <div ng-hide="app.is_url_external != 0">
                             <p><b>Public description on LaunchPad</b></p>
                             <input name="app_desc" type="text" ng-model="app.description" style="width:75%;">
                         </div>
-                        <div ng-show="app.is_url_external==0 && !app.native">
+                        <div ng-show="app.is_url_external==0 && app.is_url_external != 0">
                             <p><b>Default Path</b></p>
 
                             <div class="alert alert-info local">
@@ -126,13 +127,13 @@
                             </div>
 
                         </div>
-                        <div class="form-inline" ng-hide="app.native">
+                        <div class="form-inline" ng-hide="app.is_url_external != 0">
                             <input type="checkbox" ng-checked="app.requires_fullscreen == 1"
-                                   ng-model="app.requires_fullscreen">&nbsp;Run Full Screen
+                                   ng-model="app.requires_fullscreen">&nbsp;Run Full Screen without Toggle
                         </div><br/>
-                        <div class="form-inline" ng-hide="app.native">
+                        <div class="form-inline" ng-hide="app.is_url_external != 0">
                             <input type="checkbox" ng-checked="app.allow_fullscreen_toggle == 1"
-                                   ng-model="app.allow_fullscreen_toggle">&nbsp;Show Full Screen Toggle
+                                   ng-model="app.allow_fullscreen_toggle">&nbsp;Show Full Screen with Toggle
                         </div>
                         <div ><br/>
                             <p><b>Assign this app to a role(s).</b></p>
@@ -168,10 +169,10 @@
                         </div>
                     </div>
 
-                    <div id="create_button"><a ng-click="create()" class="btn btn-primary">
+                    <div data-ng-show="action=='Create'" id="create_button"><a ng-click="create()" class="btn btn-primary">
                         <li class="icon-circle-arrow-right"></li>
                         &nbsp;Create Application</a></div>
-                    <div id="update_button"><a ng-click="save()" class="btn btn-primary">
+                    <div id="update_button" data-ng-show="action=='Update'"><a ng-click="save()" class="btn btn-primary">
                         <li class="icon-save"></li>
                         &nbsp;Update Application</a></div>
 
