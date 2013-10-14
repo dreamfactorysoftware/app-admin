@@ -97,6 +97,9 @@
     <div ng-show="step == 4">
         <div class="alert alert-info"><b>Important Notes</b></div>
         <p>
+            Check out your customized LIVE REST API documentation <a href="javascript:window.open( CurrentServer + '/public/admin/swagger/?app_name=admin', 'df-docs');">HERE.</a>
+        </p>
+        <p>
             Use of our API requires SSL3.  If you plan on making requests from Curl, or your Native SDK, make sure you are using version 3.
             <br/>
             For example, in curl: <b>curl - 3 url</b>
@@ -171,7 +174,7 @@
         <!--<h5>Click on the Files link in the left nav to start editing.</h5>-->
         <!--<iframe id="app-preview" src="" frameBorder="0"></iframe>-->
         <!--</div>-->
-        <br/>New content regarding dev and deployment<br/><br/>
+        <br/>
         <button class="btn btn-success" data-ng-click="launchApp()" data-ng-show="app.native != 1 && app.storage_service_id != null">Launch My App</button>
     </div>
     <iframe style="display:none" id="sdk-download" src=""></iframe>
