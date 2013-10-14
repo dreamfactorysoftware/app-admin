@@ -31,7 +31,7 @@
     <div ng-show="step == 2">
         <div style="font-size:2em">Where do you intend on developing?</div>
         <br/>
-        <input type="radio" value=0 data-ng-model="app.storage_service_id"> In my local environment<br/>
+        <input type="radio" value=0 data-ng-model="app.storage_service_id"> In my local environment (Desktop, IDE)<br/>
         <input type="radio" value=1 data-ng-model="app.storage_service_id"> Here on the DSP<br/><br/>
         <div data-ng-show="app.storage_service_id == 0" class="alert alert-info">If you plan to work locally, make sure your CORS settings are set accordingly. ( *
             for the file system, or your server name.)
@@ -78,8 +78,10 @@
         </div>
     </div>
     <div ng-show="step == 3">
-        <div ng-show="!app.native">Download the javascript-sdk<br/>
-
+        <div ng-show="!app.native"><h3>The DreamFactory Javascript SDK</h3><br/>
+            <p style="font-size:2em">What's in the SDK?</p>
+            <p>This SDK is a convenience wrapper for all the methods you can use with our REST API.  It's also a LIVE API, meaning any changes you make to the
+                Services on your DSP will be available the next time your application is loaded. We've created a version for you with your endpoint and api key already inside, so no configuration needed, just download and start coding.  You can see the df object in your debugger, and underneath df.apis are all the resources and methods available to you.</p>
             <p>
                 If you'd like to use our javascript-sdk, which we've just created for this DSP and app, click the
                 download button below.
