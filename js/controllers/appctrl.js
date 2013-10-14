@@ -160,6 +160,9 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
     Scope.goToImport = function () {
         $location.path('/import');
     }
+    Scope.downloadSDK = function(){
+        $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + Scope.app.id + '?sdk=true&app_name=admin')
+    }
     Scope.create = function () {
         if (Scope.app.is_url_external == -1) {
             Scope.app.storage_service_id = null;

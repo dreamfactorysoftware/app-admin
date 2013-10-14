@@ -53,7 +53,11 @@
             <div class="alert alert-info" ng-show="action=='Create' || action=='Update'">
                 <li class="icon-info-sign"></li>
                 DreamFactory makes it easy to build and deploy applications by providing all the back-end
-                infrastructure. Use this tab to manage your apps.
+                infrastructure. Use this tab to manage your apps. You may also download a Javascript SDK by clicking the button below.<br/>
+                <a data-ng-show = "action == 'Update'" data-ng-click="downloadSDK()" class="btn btn-small">
+                    <li class="icon-download-alt"></li>
+                    Download JS SDK
+                </a>
             </div>
             <h3>{{action}} application</h3>
 
@@ -183,4 +187,4 @@
         </td>
     </tr>
 </table>
-
+<iframe style="display:none" id="sdk-download" src=""></iframe>
