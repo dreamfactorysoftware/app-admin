@@ -1,6 +1,8 @@
 var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
-
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
 
     // Tabbable Nav Current Tab indicator
     $scope.currentTab = 'swagger-pane';
@@ -25,19 +27,19 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
 
         $timeout(function () {
-            $("#swagger iframe").css('height', $(window).height() -40).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
+            $("#swagger iframe").css('height', $('.main').height() - 200).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
             $("#swagger").css({
-                'height': $(window).height(),
+                'height': $('.main').height() - 200,
                 'width': '95%'
             }).show();
         }, 1000);
 
         $(window).resize(function () {
             $('#swagger').css({
-                "height" : $(window).height(),
+                "height" : $('.main').height() - 200,
                 "width" : '95%'
             });
-            $("#swagger iframe").css('height', $(window).height() -40).css('width', '96%');
+            $("#swagger iframe").css('height', $(window).height() -200).css('width', '96%');
         });
     }
 
@@ -60,7 +62,7 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
         $timeout(function() {
             $('#docs iframe').css({
-                "height" : $(window).height() - 40,
+                "height" : $('.main').height() - 200,
                 "width" : "100%",
                 "display" : "block"
             }).attr({
@@ -70,12 +72,12 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
         $(window).resize(function() {
             $('#docs').css({
-                "height" : $(window).height(),
+                "height" : $('.main').height() - 200,
                 "width" : "100%",
             });
 
             $('#docs iframe').css({
-                "height" : $(window).height() -40,
+                "height" : $('.main').height() - 200,
                 "width" : "100%"
             });
         });
@@ -99,5 +101,37 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
     }
 
+    $(function(){
+        var height = $(window).height();
 
+
+        $('.main').css({'height' :height - 40 , 'margin-bottom': 0, 'padding-bottom':0});
+        var mainheight = $('.main').height();
+        $('#docs').css({
+            "height" : $('.main').height() - 220,
+            "width" : "100%",
+        });
+
+        $('#docs iframe').css({
+            "height" :$('.main').height() - 220,
+            "width" : "100%"
+        });
+    });
+
+    $(window).resize(function(){
+        var height = $(window).height();
+
+        $('.main').css({'height' :height - 40, 'margin-bottom': 0, 'padding-bottom':0});
+
+        $('#docs').css({
+            "height" : $('.main').height() - 220,
+            "width" : "100%",
+        });
+
+        $('#docs iframe').css({
+            "height" : $('.main').height() - 220,
+            "width" : "100%"
+        });
+
+    });
 };
