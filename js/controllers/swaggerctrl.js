@@ -14,7 +14,7 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
 
 
-    $("#swagger, #swagger iframe").css('display', 'none');
+    $("#swagctrl, #swagger, #swagger iframe").css('display', 'none');
     $rootScope.loadSwagger = function (hash) {
 
 
@@ -27,11 +27,12 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
 
         $timeout(function () {
-            $("#swagger iframe").css('height', $('.main').height() - 200).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
+            $("#swagger iframe").css('height', $('.main').height() - 210).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
             $("#swagger").css({
                 'height': $('.main').height() - 200,
                 'width': '95%'
             }).show();
+            $("#swagctrl").show();
         }, 1000);
 
         $(window).resize(function () {
@@ -39,7 +40,7 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
                 "height" : $('.main').height() - 200,
                 "width" : '95%'
             });
-            $("#swagger iframe").css('height', $(window).height() -200).css('width', '96%');
+            $("#swagger iframe").css('height', $(window).height() -210).css('width', '96%');
         });
     }
 
@@ -68,6 +69,7 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
             }).attr({
                     "src" : CurrentServer + '/public/admin/docs' + appendURL
                 }).show();
+            $("#swagctrl").show();
         }, 1000);
 
         $(window).resize(function() {
@@ -125,7 +127,7 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
         $('#docs').css({
             "height" : $('.main').height() - 220,
-            "width" : "100%",
+            "width" : "100%"
         });
 
         $('#docs iframe').css({
