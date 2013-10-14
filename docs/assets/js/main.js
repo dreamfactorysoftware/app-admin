@@ -62,7 +62,7 @@ function goToAnchor() {
 }
 function resize()
 {
-    $(".sidebar").css('height', $(window).height() -60);
+    $(".sidebar").css('height', $(window).height() -100);
     $("#content-window").css('height', $(window).height() -60);
 
 }
