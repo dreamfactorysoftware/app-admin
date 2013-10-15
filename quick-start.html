@@ -103,7 +103,7 @@
         <p>
             Use of our API requires SSL3.  If you plan on making requests from Curl, or your Native SDK, make sure you are using version 3.
             <br/>
-            For example, in curl: <b>curl - 3 url</b>
+            For example, in curl: <b>curl -3 url</b>
         </p>
         <p>
             <b>Your API Key</b><br/>
@@ -124,7 +124,8 @@
             <br/>
             To authenticate a user, simply POST a JSON string to /user/session that takes on the following format: ‘{“email”:”email_value”, “password”:”password_value”}’
             <br/>
-            If successful, in the response, you’ll see a session_id has been created.<br/>
+            If successful, you’ll see a session_id has been created in the response.
+			<br/>
             <b>Very Important</b> : For all future requests to the API, you’ll need to pass the session_id as a new request header called <b>X-DreamFactory-Session-Token</b> 
             <br/>
         <div   data-ng-show="app.native==1">
