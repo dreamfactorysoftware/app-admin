@@ -22,7 +22,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
             Scope.create();
 //            var height = $(window).height();
 //            $('.well.main').css('height', height + 400);
-//            return;
+            return;
         }else if(step == 3){
             Scope.step = 4;
             return;
