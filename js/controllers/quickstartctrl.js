@@ -1,8 +1,10 @@
 var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
     setCurrentApp('getting_started');
     Scope = $scope;
-    Scope.Config = Config.get();
-    Scope.allVerbs = ["GET","POST", "PUT", "MERGE", "PATCH", "DELETE", "COPY"];
+    Scope.Config = Config.get(function(data){
+        Scope.CORSConfig = {"id": data.id, "verbs":["GET","POST","PUT","MERGE","PATCH","DELETE","COPY"],"host":"*","is_enabled":true};
+    })
+
     Scope.Services = Service.get(function(){
 
         Scope.Services.record.forEach(function(service){
@@ -21,7 +23,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
             var height = $(window).height();
             $('.well.main').css('height', height + 400);
             return;
-        }else if(step == 3 && Scope.app.storage_service_id != null){
+        }else if(step == 3){
             Scope.step = 4;
             return;
         }
@@ -34,49 +36,15 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
     Scope.downloadSDK = function(){
         $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + Scope.app.id + '?sdk=true&app_name=admin')
     }
-    Scope.addHost = function () {
-        Scope.Config.allowed_hosts.push(Scope.CORS.host);
-        Scope.CORS.host = "";
-    }
-    Scope.removeHost = function () {
-        var index = this.$index;
-        Scope.Config.allowed_hosts.splice(index, 1);
-    }
-    Scope.selectAll = function($event){
-
-        if($event.target.checked){
-            this.host.verbs = Scope.allVerbs;
-        }else{
-            this.host.verbs = [];
-        }
-
-    }
-    Scope.toggleVerb = function () {
-
-        var index = this.$parent.$index;
-        if (Scope.Config.allowed_hosts[index].verbs.indexOf(this.verb) === -1) {
-            Scope.Config.allowed_hosts[index].verbs.push(this.verb);
-        } else {
-            Scope.Config.allowed_hosts[index].verbs.splice(Scope.Config.allowed_hosts[index].verbs.indexOf(this.verb), 1);
-        }
-    };
-    Scope.promptForNew = function(){
-        var newhost = {};
-        newhost.verbs = Scope.allVerbs;
-        newhost.host = "";
-        newhost.is_enabled = true;
-        Scope.Config.allowed_hosts.unshift(newhost);
-    }
-    Scope.showCORS = function(){
-        $("#cors-section").show();
-        var height = $(window).height();
-        $('.well.main').css('height', height + 400);
-    }
     Scope.goToApps = function(){
         $location.path('/app');
     };
     Scope.saveConfig = function () {
-        Config.update(Scope.Config, function () {
+        if(Scope.app.storage_service_id != 0){
+            return;
+        }
+
+        Config.update(Scope.CORSConfig, function () {
 //                $.pnotify({
 //                    title: 'Configuration',
 //                    type: 'success',
