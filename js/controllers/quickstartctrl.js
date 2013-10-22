@@ -39,6 +39,9 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
     Scope.goToApps = function(){
         $location.path('/app');
     };
+    Scope.goToDocs = function(){
+        $location.path('/api');
+    };
     Scope.saveConfig = function () {
         if(Scope.app.storage_service_id != 0){
             return;
