@@ -20,9 +20,9 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
         if(step == 2 && Scope.app.native =='1'){
             Scope.step = 4;
             Scope.create();
-            var height = $(window).height();
-            $('.well.main').css('height', height + 400);
-            return;
+//            var height = $(window).height();
+//            $('.well.main').css('height', height + 400);
+//            return;
         }else if(step == 3){
             Scope.step = 4;
             return;
@@ -130,18 +130,18 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
 
 
     };
-    $(function(){
-        var height = $(window).height();
-        var width = window.innerWidth - 300;
-        //$('#app-preview').css('height', height - 300).css('width', width);
-        $('.well.main').css('height', height);
-    });
-
-    $(window).resize(function(){
-        var height = $(window).height();
-        var width = window.innerWidth - 300;
-        //$('#app-preview').css('height', height - 300).css('width', width);
-        $('.well.main').css('height', height);
-
-    });
+//    $(function(){
+//        var height = $(window).height();
+//        var width = window.innerWidth - 300;
+//        //$('#app-preview').css('height', height - 300).css('width', width);
+//        $('.well.main').css('height', height);
+//    });
+//
+//    $(window).resize(function(){
+//        var height = $(window).height();
+//        var width = window.innerWidth - 300;
+//        //$('#app-preview').css('height', height - 300).css('width', width);
+//        $('.well.main').css('height', height);
+//
+//    });
 };
