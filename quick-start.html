@@ -39,10 +39,7 @@
     <button class="btn btn-success" data-ng-disabled="!app.api_name" data-ng-click="setStep(2)">Next</button>
 </div>
 <div ng-show="step == 2">
-    <p style="color:#777">Some people like to edit all of their HTML, CSS, and JavaScript files on the local computer
-        and then upload them to the DreamFactory Services Platform for deployment. Other people like to edit the hosted
-        application files right here in the Admin Console. You can always switch back and forth between these methods as
-        needed.</p>
+    <p style="color:#777">Some developers like to edit all of their HTML, CSS, and JavaScript files on the local computer and then upload them to the DreamFactory Services Platform for deployment. This option makes debugging simpler and allows the use of desktop development tools. Other developers like to edit the hosted application files right here in the Admin Console. This option allows the app to be run immediately. You can always switch back and forth between these methods as needed.</p>
     <br/>
 
     <div style="font-size:2em">Where do you want to develop your app?</div>
@@ -111,7 +108,7 @@
         <br/>
         <div style="width:100%">
             <div style="display:table-cell">
-                <button style="width:200px" data-ng-click="launchApp();goToApps();" class="btn btn-success">Launch App</button>
+                <button style="width:200px" data-ng-click="goToApps();" class="btn btn-success">Launch App</button>
             </div>
             <div style="display:table-cell;width:50%">&nbsp;</div>
             <div style="display:table-cell"><img src="img/hosted.png"/></div>

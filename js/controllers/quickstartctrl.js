@@ -1,6 +1,8 @@
 var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
     setCurrentApp('getting_started');
     Scope = $scope;
+
+
     Scope.Config = Config.get(function(data){
         Scope.CORSConfig = {"id": data.id, "verbs":["GET","POST","PUT","MERGE","PATCH","DELETE","COPY"],"host":"*","is_enabled":true};
     })
@@ -104,6 +106,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
                     type: 'success',
                     text: 'Created Successfully'
                 });
+                Service.newApp = data;
 
 //                if (!Scope.app.native) {
 //                    Scope.showAppPreview(data.launch_url);

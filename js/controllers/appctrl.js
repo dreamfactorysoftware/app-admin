@@ -2,9 +2,10 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
     $scope.$on('$routeChangeSuccess', function () {
         $(window).resize();
     });
+    Scope = $scope;
 
     $('#alert_container').empty();
-    Scope = $scope;
+
     Scope.alerts = [];
     Scope.currentServer = CurrentServer;
     Scope.action = "Create";
@@ -15,7 +16,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
 
     Scope.storageOptions = [];
 
-    Scope.Apps = AppsRelated.get(function () {
+    Scope.Apps = AppsRelated.get(function (data) {
+        Scope.Apps.record.reverse();
     }, function (response) {
         var code = response.status;
         if (code == 401) {
@@ -78,7 +80,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
 
                         })
                     }
-
+                    if(Service.newApp){
+                        Scope.showDetails(Service.newApp);
+                        Scope.showAppPreview(Scope.app.launch_url);
+                        delete Service.newApp;
+                    }
                 }).error(function (data) {
                         //console.log(data);
                     });
@@ -86,7 +92,22 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
 
 
         });
-    })
+    });
+    Scope.showAppPreview = function (appUrl) {
+
+        Scope.action = "Preview ";
+        $('#step1').hide();
+
+        $("#app-preview").show();
+
+
+        $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", appUrl).show();
+        $('#create_button').hide();
+        $('#update_button').hide();
+        $('#file-manager').hide();
+    };
+
+
     Scope.loadStorageContainers = function () {
 
         Scope.storageOptions = Scope.storageContainers[Scope.app.storage_service_id].options;
@@ -280,24 +301,19 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
 
 
     };
-    Scope.showAppPreview = function (appUrl) {
-
-        Scope.action = "Preview ";
-        $('#step1').hide();
-
-        $("#app-preview").show();
 
 
-        $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", appUrl).show();
-        $('#create_button').hide();
-        $('#update_button').hide();
-        $('#file-manager').hide();
-    };
-
-    Scope.showDetails = function () {
+    Scope.showDetails = function (newApp) {
         Scope.app = {};
         Scope.action = "Update";
-        Scope.app = angular.copy(this.app);
+        if(newApp){
+            Scope.app = newApp;
+        }else{
+            Scope.app = angular.copy(this.app);
+        }
+
+
+
         Scope.app.storage_service_id = this.app.storage_service_id || Scope.defaultStorageID;
 
         if (!this.app.storage_service_id && !this.app.is_url_external) {
