@@ -57,7 +57,7 @@
     </div>
 </div>
 <div ng-show="step == 3">
-    <div ng-show="!app.native"><h3>The DreamFactory Javascript SDK</h3><br/>
+    <div ng-show="app.native != 1"><h3>The DreamFactory Javascript SDK</h3><br/>
 
         <p style="font-size:2em">What's in the SDK?</p>
 
@@ -88,7 +88,7 @@
 <div ng-show="step == 4">
     <p style="font-size:1.5em">Congratulations</p>
 
-    <div ng-show="!app.native && app.storage_service_id != null">
+    <div ng-show="app.native != 1 && app.storage_service_id != null">
 
         <p>Your app has been created! When you select the "Apps" tab from the list of options at left you will see your
             new application in the list, as well as some other example projects.
@@ -114,7 +114,7 @@
             <div style="display:table-cell"><img src="img/hosted.png"/></div>
         </div>
     </div>
-    <div ng-show="!app.native && !app.storage_service_id">
+    <div ng-show="app.native != 1 && !app.storage_service_id">
         <p>We have created a backend for your application. Click the "Download" button below and save the DreamFactory
             Javascript SDK to your desktop. Unzip the file into a local folder to create a workspace for building your
             application. To get started run the "index.html" file in a browser, we have included example code there to
@@ -126,7 +126,7 @@
             manage users, assign roles, create schema, and connect external services!
         </p>
 
-        <div ng-show="!app.native"><br/><br/>
+        <div ng-show="app.native != 1"><br/><br/>
 
             <p style="font-size:1.4em">What's in the SDK?</p>
 
