@@ -24,7 +24,7 @@
     <div style="font-size:1.5em">What kind of app are you building?</div>
     <br/>
 
-    <div class="alert alert-info">This lets us know what additional resources you might need, and can be changed later.
+    <div class="alert alert-info">Web-based applications run in the browser and use HTML5 and Javascript. Native applications run as compiled code on a mobile device or desktop / server application.
     </div>
     <input type="radio" value=0 data-ng-model="app.native">&nbsp;&nbsp;<b>Web</b><img src="img/hcj.png"/><br/><br/>
     <input style="margin-top:11px;display:inline-block" type="radio" value=1 data-ng-model="app.native">&nbsp;&nbsp;<b>Native</b>
@@ -61,23 +61,13 @@
 
         <p style="font-size:2em">What's in the SDK?</p>
 
-        <p>This SDK is a convenience wrapper for all the methods you can use with our REST API. It's also a LIVE API,
-            meaning any changes you make to the
-            Services on your DSP will be available the next time your application is loaded. We've created a version for
-            you with your endpoint and api key already inside, so no configuration needed, just download and start
-            coding.
+        <p>The Javascript SDK is a convenience wrapper for all the methods in our REST API. The SDK contains your REST endpoint and API key so you can start coding immediately. When a new service is provisioned in the Admin Console the JavaScript SDK will automatically include that service the next time your application is loaded.</p>
 
-        <p>You can see the df object in your debugger, and underneath df.apis are all the resources and methods
-            available to you by opening up the DOM inspection tab and scrolling down to the df object. It's a global
-            object so its attached to the window object. This means, using Chrome's DevTools, you can simply open the
-            console and start typing "window.df.apis" and its typeahead will show all the methods and
-            properties.</p></p>
-        <p>
-            If you'd like to use our javascript-sdk, which we've just created for this DSP and app, click the
-            download button below.
-            <br/>
+        <p>Access the SDK by using the "df" object. You can see the "df" object in your debugger by opening up the DOM inspection tab. The "df" object is attached to the "window" object. For example, using Chrome's Dev Tools, open the console and start typing "window.df.apis" to display all the methods and properties.</p>
 
-        </p></div>
+        <p>Use of this SDK on the local file system requires "*" to be in your list of allowed hosts in the CORS configuration section of the Admin app.    </p>
+        <br/>
+    </div>
     <br/>
 
     <div class="btn-group">

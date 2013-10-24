@@ -368,7 +368,25 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
     };
 
     Scope.reload = function () {
-        Scope.Apps = AppsRelated.get();
+        Scope.Apps = AppsRelated.get(function (data) {
+            Scope.Apps.record.reverse();
+        }, function (response) {
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
+
+        });
     }
 
 };
