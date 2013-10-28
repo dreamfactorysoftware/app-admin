@@ -199,7 +199,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
             Scope.app.storage_container = null;
         }
         AppsRelated.save(Scope.app, function (data) {
-                Scope.Apps.record.push(data);
+                Scope.Apps.record.unshift(data);
                 //Scope.app.id = data.id;
                 //Scope.app = data;
                 if(window.top.Actions){
