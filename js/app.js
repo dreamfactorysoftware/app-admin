@@ -40,7 +40,7 @@ AdminApp.factory('App', function ($resource) {
     } });
 });
 AdminApp.factory('User', function ($resource) {
-    return $resource('/rest/system/user/:id/?app_name=admin&fields=*', {}, { update:{ method:'PUT' }, query:{
+    return $resource('/rest/system/user/:id/?app_name=admin&fields=*&order=display_name%20ASC', {}, { update:{ method:'PUT' }, query:{
         method:'GET',
         isArray:false
     } });
