@@ -239,6 +239,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
 
     Scope.delete = function () {
         var which = this.app.name;
+        var delete_files = "false";
         if (!which || which == '') {
             which = "the application?";
         } else {
@@ -247,8 +248,14 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
         if (!confirm("Are you sure you want to delete " + which)) {
             return;
         }
+        if(this.app.storage_service_id != null){
+            if (confirm("Remove the files associated with " + which + "\nPressing Cancel will delete the app, but keep the files on the server")) {
+                delete_files = "true";
+            }
+        }
+
         var id = this.app.id;
-        AppsRelated.delete({ id: id }, function () {
+        AppsRelated.delete({ id: id, delete_files: delete_files }, function () {
                 $("#row_" + id).fadeOut();
                 window.top.Actions.updateSession();
 
