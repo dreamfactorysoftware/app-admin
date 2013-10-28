@@ -30,18 +30,38 @@
   </li>
 </ul>
   <ul class="parameter">
-  <li class="param-required-">last_login_date : string
-	  <div class="param-description">Date and time of the last login for the current user.</div>
+  <li class="param-required-">role : string
+	  <div class="param-description">Name of the role to which the current user is assigned.</div>
   </li>
 </ul>
   <ul class="parameter">
-  <li class="param-required-">app_groups : List[string]
+  <li class="param-required-">last_login_date : string
+	  <div class="param-description">Date timestamp of the last login for the current user.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">user_data : string
+	  <div class="param-description">Extra user data, potentially from remote login provider.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">user_source : integer
+	  <div class="param-description">Where the user login originated, 0 = local, otherwise remote login provider_id.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">app_groups : List[App]
 	  <div class="param-description">App groups and the containing apps.</div>
   </li>
 </ul>
   <ul class="parameter">
-  <li class="param-required-">no_group_apps : List[string]
+  <li class="param-required-">no_group_apps : List[App]
 	  <div class="param-description">Apps that are not in any app groups.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">session_id : string
+	  <div class="param-description">Id for the current session, used in X-DreamFactory-Session-Token header for API requests.</div>
   </li>
 </ul>
   <ul class="parameter">

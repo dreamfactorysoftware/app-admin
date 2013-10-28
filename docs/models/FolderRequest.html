@@ -1,4 +1,4 @@
-<h2>Folder</h2>
+<h2>FolderRequest</h2>
   <ul class="parameter">
   <li class="param-required-">name : string
 	  <div class="param-description">Identifier/Name for the folder, localized to requested resource.</div>
@@ -17,6 +17,16 @@
   <ul class="parameter">
   <li class="param-required-">metadata : List[string]
 	  <div class="param-description">An array of name-value pairs.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">folder : List[FolderRequest]
+	  <div class="param-description">An array of sub-folders to create.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">file : List[FileRequest]
+	  <div class="param-description">An array of files to create.</div>
   </li>
 </ul>
   

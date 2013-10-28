@@ -1,0 +1,42 @@
+<h2>ConfigRequest</h2>
+  <ul class="parameter">
+  <li class="param-required-">open_reg_role_id : integer
+	  <div class="param-description">Default Role Id assigned to newly registered users, set to null to turn off open registration.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">open_reg_email_service_id : integer
+	  <div class="param-description">Set to an email-type service id to require email confirmation of newly registered users.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">open_reg_email_template_id : integer
+	  <div class="param-description">Default email template used for open registration email confirmations.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">password_email_service_id : integer
+	  <div class="param-description">Set to an email-type service id to require email confirmation to reset passwords, otherwise defaults to security question and answer.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">password_email_template_id : integer
+	  <div class="param-description">Default email template used for password reset email confirmations.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">guest_role_id : integer
+	  <div class="param-description">Role Id assigned for all guest sessions, set to null to require authenticated sessions.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">editable_profile_fields : string
+	  <div class="param-description">Comma-delimited list of fields the user is allowed to edit.</div>
+  </li>
+</ul>
+  <ul class="parameter">
+  <li class="param-required-">allowed_hosts : List[HostInfo]
+	  <div class="param-description">CORS whitelist of allowed remote hosts.</div>
+  </li>
+</ul>
+  

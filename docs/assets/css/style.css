@@ -104,8 +104,9 @@
   border-bottom: 2px;
   font-weight: bold;
   font-size: 15px;
-  padding: 6px 0;
+  padding: 6px 0 0 10px;
   color: rgb(57,57,57);
+
 }
 
 .content {
