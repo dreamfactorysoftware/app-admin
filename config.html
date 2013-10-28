@@ -71,8 +71,11 @@
                         <p>Assign a Role for Guest Users</p>
 
                         <div>
-                            <select ng-disabled="!Config.allow_guest_user" ng-model="Config.guest_role_id">
-                                <option ng-selected="Config.guest_role_id == role.id" ng-repeat="role in Roles.record"
+                            <select data-ng-disabled="!Config.allow_guest_user"
+                                    data-ng-model="Config.guest_role_id">
+                                <option value="">- - None - -</option>
+                                <option data-ng-selected="Config.guest_role_id == role.id"
+                                        data-ng-repeat="role in Roles.record"
                                         value="{{role.id}}">{{role.name}}
                                 </option>
                             </select>
@@ -96,9 +99,40 @@
                         <p>Assign a Default Role for Open Registration Users</p>
 
                         <div>
-                            <select ng-disabled="!Config.allow_open_registration" ng-model="Config.open_reg_role_id">
-                                <option ng-selected="Config.open_reg_role_id == role.id"
-                                        ng-repeat="role in Roles.record" value="{{role.id}}">{{role.name}}
+                            <select data-ng-disabled="!Config.allow_open_registration"
+                                    data-ng-model="Config.open_reg_role_id">
+                                <option value="">- - None - -</option>
+                                <option data-ng-selected="Config.open_reg_role_id == role.id"
+                                        data-ng-repeat="role in Roles.record"
+                                        value="{{role.id}}">{{role.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Select An Email Service If You Want To Require Email Confirmation</p>
+
+                        <div>
+                            <select data-ng-disabled="!Config.allow_open_registration"
+                                    data-ng-model="Config.open_reg_email_service_id">
+                                <option value="">- - None - -</option>
+                                <option data-ng-selected="Config.open_reg_email_service_id == svc.id"
+                                        data-ng-repeat="svc in Service.record | filter:{type:'email'}"
+                                        value="{{svc.id}}">{{svc.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Select An Email Template for Email Confirmation</p>
+
+                        <div>
+                            <select data-ng-disabled="!Config.allow_open_registration || Config.open_reg_email_service_id==''"
+                                    data-ng-model="Config.open_reg_email_template_id">
+                                <option value="">- - None - -</option>
+                                <option data-ng-selected="Config.open_reg_email_template_id == template.id"
+                                        data-ng-repeat="template in emailTemplates.record"
+                                        value="{{template.id}}">{{template.name}}
                                 </option>
                             </select>
                         </div>
@@ -111,7 +145,9 @@
                         <li class="icon-info-sign"></li>
                         &nbsp;Create a new email template or modify an existing one.
                     </div>
-                    <select data-ng-model="selectedEmailTemplateId" data-ng-options="email.id as email.name for email in emailTemplates.record | filter: emailTemplatesFilter">
+                    <select
+                            data-ng-model="selectedEmailTemplateId"
+                            data-ng-options="email.id as email.name for email in emailTemplates.record | filter: emailTemplatesFilter">
                         <option value="">- - Select a template - -</option>
                     </select>
                     <input data-ng-model="emailTemplatesFilter" type="text" placeholder="Filter By Name" />
