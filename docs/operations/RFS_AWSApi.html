@@ -1,12 +1,12 @@
 <div class="main-content">
-  <h2><a name="AppApi"></a>AppApi</h2>
-  <p>This is the AppApi API</p>
+  <h2><a name="RFS_AWSApi"></a>RFS_AWSApi</h2>
+  <p>This is the RFS_AWSApi API</p>
 
   <h2><a name="getContainers"></a>getContainers</h2>
   <hr>
   <p></p>
   <p>List the names of the available containers in this storage. Use 'include_properties' to include any properties of the containers.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -24,7 +24,7 @@
   <hr>
   <p></p>
   <p>Post data should be a single container definition or an array of container definitions. Alternatively, override the HTTP Method to pass containers to other actions.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -54,7 +54,7 @@
   <hr>
   <p></p>
   <p>Pass a comma-delimited list of container names to delete. Set 'force' to true to delete all containers. Alternatively, to delete by container records or a large list of names, use the POST request with X-HTTP-METHOD = DELETE header and post containers.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>
@@ -78,7 +78,7 @@
   <hr>
   <p></p>
   <p>Use 'include_properties' to get properties of the container. Use the 'include_folders' and/or 'include_files' to modify the listing.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -126,7 +126,7 @@
   <hr>
   <p></p>
   <p>Post data as an array of folders and/or files.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -180,7 +180,7 @@
   <hr>
   <p></p>
   <p>Post data as an array of container properties.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>PATCH</code>
   <h3 class="section">Response Type</h3>
@@ -204,7 +204,7 @@
   <hr>
   <p></p>
   <p>Set 'content_only' to true to delete the folders and files contained, but not the container. Set 'force' to true to delete a non-empty container. Alternatively, to delete by a listing of folders and files, use the POST request with X-HTTP-METHOD = DELETE header and post listing.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>
@@ -234,7 +234,7 @@
   <hr>
   <p></p>
   <p>Use 'include_properties' to get properties of the folder. Use the 'include_folders' and/or 'include_files' to modify the listing.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{folder_path}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{folder_path}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -288,7 +288,7 @@
   <hr>
   <p></p>
   <p>Post data as an array of folders and/or files. Folders are created if they do not exist</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{folder_path}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{folder_path}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -348,7 +348,7 @@
   <hr>
   <p></p>
   <p>Post body as an array of folder properties.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{folder_path}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{folder_path}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>PATCH</code>
   <h3 class="section">Response Type</h3>
@@ -378,7 +378,7 @@
   <hr>
   <p></p>
   <p>Set 'content_only' to true to delete the sub-folders and files contained, but not the folder. Set 'force' to true to delete a non-empty folder. Alternatively, to delete by a listing of sub-folders and files, use the POST request with X-HTTP-METHOD = DELETE header and post listing.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{folder_path}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{folder_path}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>
@@ -414,7 +414,7 @@
   <hr>
   <p></p>
   <p>By default, the file is streamed to the browser. Use the 'download' parameter to prompt for download. Use the 'include_properties' parameter (optionally add 'content' to include base64 content) to list properties of the file.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -456,7 +456,7 @@
   <hr>
   <p></p>
   <p>Post body should be the contents of the file or an object with file properties.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -492,7 +492,7 @@
   <hr>
   <p></p>
   <p>Post body should be the contents of the file.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>PUT</code>
   <h3 class="section">Response Type</h3>
@@ -522,7 +522,7 @@
   <hr>
   <p></p>
   <p>Post body should be an array of file properties.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>PATCH</code>
   <h3 class="section">Response Type</h3>
@@ -552,7 +552,7 @@
   <hr>
   <p></p>
   <p>Careful, this removes the given file from the storage.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
+  <code>https://your-dsp-name.dreamfactory.com/RFS_AWS/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>

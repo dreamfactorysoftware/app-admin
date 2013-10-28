@@ -1,97 +1,62 @@
 <h2>FieldSchema</h2>
-  <ul class="parameter">
-  <li class="param-required-">name : string
-	  <div class="param-description">The API name of the field.</div>
+<ul class="parameter">
+  <li  style="font-weight:bold" class="param-required-">name : string
+	  <br/><span style="font-weight:normal" class="param-description">The API name of the field.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">label : string
-	  <div class="param-description">The displayable label for the field.</div>
+  <li  style="font-weight:bold" class="param-required-">label : string
+	  <br/><span style="font-weight:normal" class="param-description">The displayable label for the field.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">type : string
-	  <div class="param-description">The DSP abstract data type for this field.</div>
+  <li  style="font-weight:bold" class="param-required-">type : string
+	  <br/><span style="font-weight:normal" class="param-description">The DSP abstract data type for this field.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">db_type : string
-	  <div class="param-description">The native database type used for this field.</div>
+  <li  style="font-weight:bold" class="param-required-">db_type : string
+	  <br/><span style="font-weight:normal" class="param-description">The native database type used for this field.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">length : integer
-	  <div class="param-description">The maximum length allowed (in characters for string, displayed for numbers).</div>
+  <li  style="font-weight:bold" class="param-required-">length : integer
+	  <br/><span style="font-weight:normal" class="param-description">The maximum length allowed (in characters for string, displayed for numbers).</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">precision : integer
-	  <div class="param-description">Total number of places for numbers.</div>
+  <li  style="font-weight:bold" class="param-required-">precision : integer
+	  <br/><span style="font-weight:normal" class="param-description">Total number of places for numbers.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">scale : integer
-	  <div class="param-description">Number of decimal places allowed for numbers.</div>
+  <li  style="font-weight:bold" class="param-required-">scale : integer
+	  <br/><span style="font-weight:normal" class="param-description">Number of decimal places allowed for numbers.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">default : string
-	  <div class="param-description">Default value for this field.</div>
+  <li  style="font-weight:bold" class="param-required-">default : string
+	  <br/><span style="font-weight:normal" class="param-description">Default value for this field.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">required : boolean
-	  <div class="param-description">Is a value required for record creation.</div>
+  <li  style="font-weight:bold" class="param-required-">required : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Is a value required for record creation.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">allow_null : boolean
-	  <div class="param-description">Is null allowed as a value.</div>
+  <li  style="font-weight:bold" class="param-required-">allow_null : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Is null allowed as a value.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">fixed_length : boolean
-	  <div class="param-description">Is the length fixed (not variable).</div>
+  <li  style="font-weight:bold" class="param-required-">fixed_length : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Is the length fixed (not variable).</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">supports_multibyte : boolean
-	  <div class="param-description">Does the data type support multibyte characters.</div>
+  <li  style="font-weight:bold" class="param-required-">supports_multibyte : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Does the data type support multibyte characters.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">auto_increment : boolean
-	  <div class="param-description">Does the integer field value increment upon new record creation.</div>
+  <li  style="font-weight:bold" class="param-required-">auto_increment : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Does the integer field value increment upon new record creation.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">is_primary_key : boolean
-	  <div class="param-description">Is this field used as/part of the primary key.</div>
+  <li  style="font-weight:bold" class="param-required-">is_primary_key : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Is this field used as/part of the primary key.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">is_foreign_key : boolean
-	  <div class="param-description">Is this field used as a foreign key.</div>
+  <li  style="font-weight:bold" class="param-required-">is_foreign_key : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Is this field used as a foreign key.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">ref_table : string
-	  <div class="param-description">For foreign keys, the referenced table name.</div>
+  <li  style="font-weight:bold" class="param-required-">ref_table : string
+	  <br/><span style="font-weight:normal" class="param-description">For foreign keys, the referenced table name.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">ref_fields : string
-	  <div class="param-description">For foreign keys, the referenced table field name.</div>
+  <li  style="font-weight:bold" class="param-required-">ref_fields : string
+	  <br/><span style="font-weight:normal" class="param-description">For foreign keys, the referenced table field name.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">validation : List[string]
-	  <div class="param-description">validations to be performed on this field.</div>
+  <li  style="font-weight:bold" class="param-required-">validation : List[string]
+	  <br/><span style="font-weight:normal" class="param-description">validations to be performed on this field.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">values : List[string]
-	  <div class="param-description">Selectable string values for picklist validation.</div>
+  <li  style="font-weight:bold" class="param-required-">values : List[string]
+	  <br/><span style="font-weight:normal" class="param-description">Selectable string values for picklist validation.</span>
   </li>
-</ul>
-  
+  </ul>
+
+

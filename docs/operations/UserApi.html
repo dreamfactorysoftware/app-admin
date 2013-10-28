@@ -6,7 +6,7 @@
   <hr>
   <p></p>
   <p>See listed operations for each resource available.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user</code>
+  <code>https://your-dsp-name.dreamfactory.com/user</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -18,7 +18,7 @@
   <hr>
   <p></p>
   <p>Returns an object containing name-value pairs for custom user settings</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/custom</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/custom</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -30,7 +30,7 @@
   <hr>
   <p></p>
   <p>A valid session is required to edit settings. Post body should be an array of name-value pairs.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/custom</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/custom</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -48,7 +48,7 @@
   <hr>
   <p></p>
   <p>Setting will be returned as an object containing name-value pair. A value of null is returned for settings that are not found.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/custom/{setting}</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/custom/{setting}</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -66,7 +66,7 @@
   <hr>
   <p></p>
   <p>A valid session is required to delete settings.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/custom/{setting}</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/custom/{setting}</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>
@@ -84,7 +84,7 @@
   <hr>
   <p></p>
   <p>A valid current session along with old and new password are required to change the password directly posting 'old_password' and 'new_password'. &lt;br/&gt;To request password reset, post 'email' and set 'reset' to true. &lt;br/&gt;To reset the password from an email confirmation, post 'email', 'code', and 'new_password'. &lt;br/&gt;To reset the password from a security question, post 'email', 'security_answer', and 'new_password'.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/password</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/password</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -108,7 +108,7 @@
   <hr>
   <p></p>
   <p>A valid current session is required to use this API. This profile, along with password, is the only things that the user can directly change.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/profile</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/profile</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -120,7 +120,7 @@
   <hr>
   <p></p>
   <p>Update the display name, phone, etc., as well as, security question and answer.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/profile</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/profile</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -138,7 +138,7 @@
   <hr>
   <p></p>
   <p>The new user is created and, if required, sent an email for confirmation. This also handles the registration confirmation by posting email, confirmation code and new password.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/register</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/register</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -156,7 +156,7 @@
   <hr>
   <p></p>
   <p>Calling this refreshes the current session, or returns an error for timed-out or invalid sessions.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/session</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/session</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
@@ -168,7 +168,7 @@
   <hr>
   <p></p>
   <p>Calling this creates a new session and logs in the user.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/session</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/session</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
@@ -186,7 +186,7 @@
   <hr>
   <p></p>
   <p>Calling this deletes the current session and logs out the user.</p><h3 class="section">URL</h3>
-  <code>https://your-dsp-name.dreamfactory.com/rest/user/session</code>
+  <code>https://your-dsp-name.dreamfactory.com/user/session</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>
