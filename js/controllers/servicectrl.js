@@ -477,7 +477,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $('#step1').show();
         $('#file-manager').hide();
         $("#button_holder").show();
-        $("#swagger, #swagger iframe").hide();
+        $("#swagger, #swagger iframe, #swagctrl").hide();
         Scope.service = angular.copy(this.service);
         if (Scope.service.type.indexOf("Email Service") != -1) {
             Scope.service.type = "Email Service";
