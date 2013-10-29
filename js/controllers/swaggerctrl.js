@@ -27,9 +27,9 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
 
         $timeout(function () {
-            $("#swagger iframe").css('height', $('.main').height() - 220).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
+            $("#swagger iframe").css('height', $('.main').height() - 230).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
             $("#swagger").css({
-                'height': $('.main').height() - 200,
+                'height': $('.main').height() - 220,
                 'width': '95%'
             }).show();
             $("#swagctrl").show();
@@ -119,12 +119,12 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
         $('.main').css({'height' :height - 40, 'margin-bottom': 0, 'padding-bottom':0});
 
-        $('#docs').css({
+        $('#docs, #swagger').css({
             "height" : $('.main').height() - 220,
             "width" : "100%"
         });
 
-        $('#docs iframe').css({
+        $('#docs iframe, #swagger iframe').css({
             "height" : $('.main').height() - 220,
             "width" : "100%"
         });
