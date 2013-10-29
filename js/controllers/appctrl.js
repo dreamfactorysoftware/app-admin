@@ -255,7 +255,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
         }
 
         var id = this.app.id;
-        AppsRelated.delete({ id: id, delete_files: delete_files }, function () {
+        AppsRelated.delete({ id: id, delete_storage: delete_files }, function () {
                 $("#row_" + id).fadeOut();
                 window.top.Actions.updateSession();
 
