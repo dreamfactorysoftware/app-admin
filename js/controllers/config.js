@@ -15,6 +15,12 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates, Service) {
         if (data.open_reg_email_template_id === null) {
             data.open_reg_email_template_id = '';
         }
+        if (data.password_email_service_id === null) {
+            data.password_email_service_id = '';
+        }
+        if (data.password_email_template_id === null) {
+            data.password_email_template_id = '';
+        }
     }
     Scope.stringToNull = function (data) {
         if (data.guest_role_id === '') {
@@ -28,6 +34,12 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates, Service) {
         }
         if (data.open_reg_email_template_id === '') {
             data.open_reg_email_template_id = null;
+        }
+        if (data.password_email_service_id === '') {
+            data.password_email_service_id = null;
+        }
+        if (data.password_email_template_id === '') {
+            data.password_email_template_id = null;
         }
     }
     Scope.Config = Config.get(function (response) {
@@ -360,10 +372,10 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates, Service) {
 
             // If it does splice it out
             Scope.emailTemplates.record.splice(templateIndex, 1);
-
-            // Reset Scope.getSelectedEmailTemplate and Scope.selectedEmailTemplateId
-            Scope.newEmailTemplate();
         }
+
+        // Reset Scope.getSelectedEmailTemplate and Scope.selectedEmailTemplateId
+        Scope.newEmailTemplate();
     });
 
     // UI Functions
