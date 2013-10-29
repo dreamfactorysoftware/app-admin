@@ -27,7 +27,7 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
 
         $timeout(function () {
-            $("#swagger iframe").css('height', $('.main').height() - 210).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
+            $("#swagger iframe").css('height', $('.main').height() - 220).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
             $("#swagger").css({
                 'height': $('.main').height() - 200,
                 'width': '95%'
@@ -40,7 +40,7 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
                 "height" : $('.main').height() - 200,
                 "width" : '95%'
             });
-            $("#swagger iframe").css('height', $(window).height() -210).css('width', '96%');
+            $("#swagger iframe").css('height', $(window).height() -230).css('width', '96%');
         });
     }
 
@@ -56,19 +56,13 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
             "src" : ""
         });
 
-        var appendURL = "";
-        if (hash) {
-            appendURL = "/#!/" + hash;
-        }
 
         $timeout(function() {
             $('#docs iframe').css({
                 "height" : $('.main').height() - 200,
                 "width" : "100%",
                 "display" : "block"
-            }).attr({
-                    "src" : CurrentServer + '/public/admin/docs' + appendURL
-                }).show();
+            }).attr("src" , CurrentServer + '/public/admin/docs/').show();
             $("#swagctrl").show();
         }, 1000);
 

@@ -108,9 +108,7 @@
 
 }
 
-.content {
-    padding-top: 100px;
-}
+
 
 .content h1 {
     font-size: 43px;
@@ -126,6 +124,7 @@
     width: 240px;
     overflow: scroll;
     position: fixed;
+    height:100%;
 }
 
 .section-box {
@@ -143,7 +142,7 @@
     display: block;
     margin-left: 240px;
     margin-right: 0px;
-    width: 638px;
+
 }
 
 .non-sidebar h2 {
