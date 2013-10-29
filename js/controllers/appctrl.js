@@ -249,7 +249,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
             return;
         }
         if(this.app.storage_service_id != null){
-            if (confirm("Remove the files associated with " + which + "\nPressing Cancel will delete the app, but keep the files on the server")) {
+            if (confirm("Remove the files associated with " + which + "\nPressing Cancel will delete the app, but keep the files in storage")) {
                 delete_files = "true";
             }
         }
