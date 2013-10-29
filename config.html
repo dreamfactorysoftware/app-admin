@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <div>
-                        <p>Select an email service if you want to require email confirmation</p>
+                        <p>Select an email service if you want to require email confirmation for open registration</p>
 
                         <div>
                             <select data-ng-disabled="!Config.allow_open_registration"
@@ -118,7 +118,7 @@
                         </div>
                     </div>
                     <div>
-                        <p>Select an email template for email confirmation</p>
+                        <p>Optionally select an email template for open registration</p>
 
                         <div>
                             <select data-ng-disabled="!Config.allow_open_registration || !Config.open_reg_email_service_id"
@@ -135,10 +135,10 @@
 
                     <div class="alert alert-info">
                         <li class="icon-info-sign"></li>
-                        &nbsp;If a security question has not been set, password resets can be handled via email. To enable this feature select an email service and template below. Leave set to --None-- to disable password resets via email.
+                        &nbsp;To enable password reset via email confirmation, select an email service and template below. Leave it set to --None-- to disable password resets via email and use security question/answer.
                     </div>
                     <div>
-                        <p>Select an email service for password reset, or --None-- to only use security question/answer</p>
+                        <p>Select an email service for password reset email confirmation</p>
 
                         <div>
                             <select data-ng-model="Config.password_email_service_id"
@@ -149,7 +149,7 @@
                         </div>
                     </div>
                     <div>
-                        <p>Select an email template for password reset</p>
+                        <p>Optionally select an email template for password reset</p>
 
                         <div>
                             <select data-ng-disabled="!Config.password_email_service_id"
