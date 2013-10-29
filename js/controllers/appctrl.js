@@ -57,7 +57,10 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
         Scope.storageServices = [];
         Scope.storageContainers = {}
         Scope.Services.record.forEach(function (service) {
-
+            if (service.type.indexOf("Local File Storage") != -1){
+                Scope.defaultStorageID = service.id;
+                Scope.defaultStorageName = service.api_name;
+            }
             if (service.type.indexOf("File Storage") != -1) {
                 Scope.storageServices.push(service);
 
@@ -66,9 +69,9 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
                     Scope.storageContainers[service.id] = {options: []};
                     if (data.resource) {
                         data.resource.forEach(function (container) {
-                            if (service.api_name == "app") {
+                            if (service.api_name == Scope.defaultStorageName) {
                                 Scope.app.storage_service_id = service.id;
-                                Scope.defaultStorageID = service.id;
+                                //Scope.defaultStorageID = service.id;
                                 Scope.app.storage_container = "applications";
                                 Scope.storageContainers[service.id].options.push({name: container.name});
                                 Scope.storageContainers[service.id].name = service.api_name;

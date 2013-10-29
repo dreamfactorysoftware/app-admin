@@ -12,6 +12,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
         Scope.Services.record.forEach(function(service){
             if (service.type.indexOf("Local File Storage") != -1){
                 Scope.defaultStorageID = service.id;
+                Scope.defaultStorageName = service.api_name;
             }
 
         });
@@ -22,8 +23,6 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
         if(step == 2 && Scope.app.native ==1){
             Scope.step = 4;
             Scope.create();
-//            var height = $(window).height();
-//            $('.well.main').css('height', height + 400);
             return;
         }else if(step == 3){
             Scope.step = 4;
@@ -33,7 +32,7 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
         Scope.step = step;
     }
     Scope.launchApp = function(){
-        window.open(location.protocol + '//' + location.host + '/app/applications/' + Scope.app.api_name+ '/index.html', "df-new");
+        window.open(location.protocol + '//' + location.host + '/' + Scope.defaultStorageName +'/applications/' + Scope.app.api_name+ '/index.html', "df-new");
     }
     Scope.downloadSDK = function(){
         $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + Scope.app.id + '?sdk=true&app_name=admin')
@@ -50,21 +49,10 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
         }
 
         Config.update(Scope.CORSConfig, function () {
-//                $.pnotify({
-//                    title: 'Configuration',
-//                    type: 'success',
-//                    text: 'Updated Successfully'
-//                });
+
             },
             function (response) {
                 var code = response.status;
-//                if (code == 401) {
-//                    if(window.top.Actions){
-//
-//                    }
-//                    window.top.Actions.doSignInDialog("stay");
-//                    return;
-//                }
                 var error = response.data.error;
                 $.pnotify({
                     title: 'Error',
@@ -107,10 +95,6 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
                     text: 'Created Successfully'
                 });
                 Service.newApp = data;
-
-//                if (!Scope.app.native) {
-//                    Scope.showAppPreview(data.launch_url);
-//                }
             },
             function (response) {
                 Scope.setStep(1);
@@ -136,18 +120,4 @@ var QuickStartCtrl = function ($scope, App, Config, Service, $location) {
 
 
     };
-//    $(function(){
-//        var height = $(window).height();
-//        var width = window.innerWidth - 300;
-//        //$('#app-preview').css('height', height - 300).css('width', width);
-//        $('.well.main').css('height', height);
-//    });
-//
-//    $(window).resize(function(){
-//        var height = $(window).height();
-//        var width = window.innerWidth - 300;
-//        //$('#app-preview').css('height', height - 300).css('width', width);
-//        $('.well.main').css('height', height);
-//
-//    });
 };

@@ -95,7 +95,7 @@
                             <p ng-hide="app.is_url_external!=0" id="remote_storage">Choose where you want your files for this app stored.  The app service is our default storage service.</p>
                             <label ng-hide="app.is_url_external!=0">Storage Service</label>
                             <select ng-change="loadStorageContainers()" ng-hide="app.is_url_external!=0" ng-model="app.storage_service_id">
-                                <option ng-selected = "service.id == app.storage_service_id" value = "{{service.id}}"  ng-repeat = "service in storageServices">{{service.api_name}}</option>
+                                <option ng-selected = "service.id == app.storage_service_id" value = {{service.id}}  ng-repeat = "service in storageServices">{{service.api_name}}</option>
                             </select>
                             <label ng-hide="app.is_url_external != 0">Storage Container</label>
                             <select ng-hide="app.is_url_external != 0" id="storage_options" ng-model="app.storage_container"
