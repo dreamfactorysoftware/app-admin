@@ -46,7 +46,11 @@ EditorActions = {
                 xhr.setRequestHeader("X-File-Name",EditorActions.getFileName());
             },
             success:function (response) {
-                window.close();
+                $.pnotify({
+                    title: EditorActions.getFileName(),
+                    type: 'success',
+                    text: 'Saved Successfully'
+                });
             },
             error:function (response) {
                 if (response.status == 401) {
