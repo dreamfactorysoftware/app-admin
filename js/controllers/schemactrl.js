@@ -137,7 +137,7 @@ var SchemaCtrl = function ($scope, Schema, DB, $http) {
         var row = this.row.entity;
         $http.put('/rest/schema/' + table + '/?app_name=admin', row).success(function(data){
             Scope.tableData = removeByAttr(Scope.tableData, 'new', true);
-            Scope.tableData.unshift(data.field[0]);
+            Scope.tableData.unshift(data);
             Scope.tableData.unshift({"new":true});
         });
 
