@@ -168,7 +168,7 @@
                 This SDK or Seed App will grab all of the services available on your DSP, and give you access to
                 them through a dom object (df currently in app.js).
                 <br/><br/>
-                If you still have the following lines in your index.html, you'll need to put in your dsp and app
+                If you still have the following lines in your /lib/sdk-init.js, you'll need to put in your dsp and app
                 information :
                 <code>
                 <pre>
@@ -194,7 +194,7 @@ var app_name = "_your_app_api_name_here_";
   email: "dspuser@host.com",
   password: "password"
   };
-  window.df.apis.user.login({body: JSON.stringify(body)},
+  window.df.apis.user.login({body: body},
   function (response) {
      window.authorizations.add("X-DreamFactory-Session-Token",
      new ApiKeyAuthorization("X-Dreamfactory-Session-Token",
