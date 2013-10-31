@@ -59,7 +59,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     Scope.browseOptions = {data:'tableData', width:500, columnDefs:'columnDefs', canSelectRows:false, displaySelectionCheckbox:false};
     Scope.headerColumnDefs = [
         {field:'name', width:100},
-        {field:'value', enableFocusedCellEdit:true, width:200, enableCellSelection:true, editableCellTemplate:inputTemplate },
+        {field:'value', enableFocusedCellEdit:true, width:200, enableCellSelection:true, editableCellTemplate:headerInputTemplate },
         {field:'Update', cellTemplate:headerButtonTemplate, width:80}
     ];
     Scope.headerOptions = {data:'headerData', width:500, columnDefs:'headerColumnDefs', canSelectRows:false, displaySelectionCheckbox:false};
