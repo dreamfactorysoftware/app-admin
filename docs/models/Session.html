@@ -1,57 +1,50 @@
 <h2>Session</h2>
-  <ul class="parameter">
-  <li class="param-required-">id : string
-	  <div class="param-description">Identifier for the current user.</div>
+<ul class="parameter">
+  <li  style="font-weight:bold" class="param-required-">id : string
+	  <br/><span style="font-weight:normal" class="param-description">Identifier for the current user.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">email : string
-	  <div class="param-description">Email address of the current user.</div>
+  <li  style="font-weight:bold" class="param-required-">email : string
+	  <br/><span style="font-weight:normal" class="param-description">Email address of the current user.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">first_name : string
-	  <div class="param-description">First name of the current user.</div>
+  <li  style="font-weight:bold" class="param-required-">first_name : string
+	  <br/><span style="font-weight:normal" class="param-description">First name of the current user.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">last_name : string
-	  <div class="param-description">Last name of the current user.</div>
+  <li  style="font-weight:bold" class="param-required-">last_name : string
+	  <br/><span style="font-weight:normal" class="param-description">Last name of the current user.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">display_name : string
-	  <div class="param-description">Full display name of the current user.</div>
+  <li  style="font-weight:bold" class="param-required-">display_name : string
+	  <br/><span style="font-weight:normal" class="param-description">Full display name of the current user.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">is_sys_admin : boolean
-	  <div class="param-description">Is the current user a system administrator.</div>
+  <li  style="font-weight:bold" class="param-required-">is_sys_admin : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Is the current user a system administrator.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">last_login_date : string
-	  <div class="param-description">Date and time of the last login for the current user.</div>
+  <li  style="font-weight:bold" class="param-required-">role : string
+	  <br/><span style="font-weight:normal" class="param-description">Name of the role to which the current user is assigned.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">app_groups : List[string]
-	  <div class="param-description">App groups and the containing apps.</div>
+  <li  style="font-weight:bold" class="param-required-">last_login_date : string
+	  <br/><span style="font-weight:normal" class="param-description">Date timestamp of the last login for the current user.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">no_group_apps : List[string]
-	  <div class="param-description">Apps that are not in any app groups.</div>
+  <li  style="font-weight:bold" class="param-required-">user_data : string
+	  <br/><span style="font-weight:normal" class="param-description">Extra user data, potentially from remote login provider.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">ticket : string
-	  <div class="param-description">Timed ticket that can be used to start a separate session.</div>
+  <li  style="font-weight:bold" class="param-required-">user_source : integer
+	  <br/><span style="font-weight:normal" class="param-description">Where the user login originated, 0 = local, otherwise remote login provider_id.</span>
   </li>
-</ul>
-  <ul class="parameter">
-  <li class="param-required-">ticket_expiry : string
-	  <div class="param-description">Expiration time for the given ticket.</div>
+  <li  style="font-weight:bold" class="param-required-">app_groups : List[App]
+	  <br/><span style="font-weight:normal" class="param-description">App groups and the containing apps.</span>
   </li>
-</ul>
-  
+  <li  style="font-weight:bold" class="param-required-">no_group_apps : List[App]
+	  <br/><span style="font-weight:normal" class="param-description">Apps that are not in any app groups.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">session_id : string
+	  <br/><span style="font-weight:normal" class="param-description">Id for the current session, used in X-DreamFactory-Session-Token header for API requests.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">ticket : string
+	  <br/><span style="font-weight:normal" class="param-description">Timed ticket that can be used to start a separate session.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">ticket_expiry : string
+	  <br/><span style="font-weight:normal" class="param-description">Expiration time for the given ticket.</span>
+  </li>
+  </ul>
+
+

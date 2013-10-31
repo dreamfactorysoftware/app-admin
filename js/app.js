@@ -7,6 +7,7 @@
  */
 var AdminApp = angular.module("AdminApp", ["ngResource", "ngGrid"]).
     config(function ($routeProvider) {
+        $routeProvider.when('/', { controller:QuickStartCtrl, templateUrl:'quick-start.html' });
         $routeProvider.when('/app', { controller:AppCtrl, templateUrl:'applications.html' });
         $routeProvider.when('/user', { controller:UserCtrl, templateUrl:'users.html' });
         $routeProvider.when('/role', { controller:RoleCtrl, templateUrl:'roles.html' });
@@ -39,7 +40,7 @@ AdminApp.factory('App', function ($resource) {
     } });
 });
 AdminApp.factory('User', function ($resource) {
-    return $resource('/rest/system/user/:id/?app_name=admin&fields=*', {}, { update:{ method:'PUT' }, query:{
+    return $resource('/rest/system/user/:id/?app_name=admin&fields=*&order=display_name%20ASC', {}, { update:{ method:'PUT' }, query:{
         method:'GET',
         isArray:false
     } });

@@ -6,33 +6,33 @@
   <hr>
   <p></p>
   <p>List the names of the available containers in this storage. Use 'include_properties' to include any properties of the containers.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app</code>
+  <code>https://your-dsp-name.dreamfactory.com/app</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="Containers"><a href="#">Containers</a></div>
+  <div class="model" id="ContainersResponse"><a href="#">ContainersResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
 	    <div class="param">include_properties&nbsp;:&nbsp;boolean&nbsp;(query)</div>
 	      <span>optional</span>
 	    </div>
-	    <p class="param-description">Return all properties of the container, if any.</p>
+	    <p class="param-description">Return any properties of the container in the response.</p>
 	  </div>
     </ul>
   <h2><a name="createContainers"></a>createContainers</h2>
   <hr>
   <p></p>
-  <p>Post data should be a single container definition or an array of container definitions.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app</code>
+  <p>Post data should be a single container definition or an array of container definitions. Alternatively, override the HTTP Method to pass containers to other actions.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="Containers"><a href="#">Containers</a></div>
+  <div class="model" id="ContainersResponse"><a href="#">ContainersResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="Containers"><a href="#">Containers</a>&nbsp;(body)</div>
+	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="ContainersRequest"><a href="#">ContainersRequest</a>&nbsp;(body)</div>
 	      <span></span>
 	    </div>
 	    <p class="param-description">Array of containers to create.</p>
@@ -43,47 +43,59 @@
 	    </div>
 	    <p class="param-description">If true, the request fails when the container to create already exists.</p>
 	  </div>
+    <div class="parameter">
+	    <div class="param">X-HTTP-METHOD&nbsp;:&nbsp;string&nbsp;(header)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Override request using POST to tunnel other http request, such as DELETE.</p>
+	  </div>
     </ul>
   <h2><a name="deleteContainers"></a>deleteContainers</h2>
   <hr>
   <p></p>
-  <p>Post data should be a single container definition or an array of container definitions.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app</code>
+  <p>Pass a comma-delimited list of container names to delete. Set 'force' to true to delete all containers. Alternatively, to delete by container records or a large list of names, use the POST request with X-HTTP-METHOD = DELETE header and post containers.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="Containers"><a href="#">Containers</a></div>
+  <div class="model" id="ContainersResponse"><a href="#">ContainersResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="Containers"><a href="#">Containers</a>&nbsp;(body)</div>
-	      <span></span>
+	    <div class="param">names&nbsp;:&nbsp;string&nbsp;(query)</div>
+	      <span>optional</span>
 	    </div>
-	    <p class="param-description">Array of containers to delete.</p>
+	    <p class="param-description">List of containers to delete.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">force&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Set force to true to delete all containers, otherwise 'names' parameter is required.</p>
 	  </div>
     </ul>
   <h2><a name="getContainer"></a>getContainer</h2>
   <hr>
   <p></p>
-  <p>Use 'include_properties' to get properties of the container. Use the 'include_folders' and/or 'include_files' to return a listing.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/</code>
+  <p>Use 'include_properties' to get properties of the container. Use the 'include_folders' and/or 'include_files' to modify the listing.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a></div>
+  <div class="model" id="ContainerResponse"><a href="#">ContainerResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
 	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
 	      <span></span>
 	    </div>
-	    <p class="param-description">The name of the container you want to retrieve the contents.</p>
+	    <p class="param-description">The name of the container from which you want to retrieve contents.</p>
 	  </div>
     <div class="parameter">
 	    <div class="param">include_properties&nbsp;:&nbsp;boolean&nbsp;(query)</div>
 	      <span>optional</span>
 	    </div>
-	    <p class="param-description">Return all properties of the container, if any.</p>
+	    <p class="param-description">Include any properties of the container in the response.</p>
 	  </div>
     <div class="parameter">
 	    <div class="param">include_folders&nbsp;:&nbsp;boolean&nbsp;(query)</div>
@@ -107,18 +119,18 @@
 	    <div class="param">zip&nbsp;:&nbsp;boolean&nbsp;(query)</div>
 	      <span>optional</span>
 	    </div>
-	    <p class="param-description">Return the zipped content of the folder.</p>
+	    <p class="param-description">Return the content of the folder as a zip file.</p>
 	  </div>
     </ul>
   <h2><a name="createContainer"></a>createContainer</h2>
   <hr>
   <p></p>
   <p>Post data as an array of folders and/or files.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a></div>
+  <div class="model" id="ContainerResponse"><a href="#">ContainerResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
@@ -126,6 +138,12 @@
 	      <span></span>
 	    </div>
 	    <p class="param-description">The name of the container you want to put the contents.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="ContainerRequest"><a href="#">ContainerRequest</a>&nbsp;(body)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Array of folders and/or files.</p>
 	  </div>
     <div class="parameter">
 	    <div class="param">url&nbsp;:&nbsp;string&nbsp;(query)</div>
@@ -152,17 +170,17 @@
 	    <p class="param-description">If true, the request fails when the file or folder to create already exists.</p>
 	  </div>
     <div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a>&nbsp;(body)</div>
+	    <div class="param">X-HTTP-METHOD&nbsp;:&nbsp;string&nbsp;(header)</div>
 	      <span>optional</span>
 	    </div>
-	    <p class="param-description">Array of folders and/or files.</p>
+	    <p class="param-description">Override request using POST to tunnel other http request, such as DELETE.</p>
 	  </div>
     </ul>
   <h2><a name="updateContainerProperties"></a>updateContainerProperties</h2>
   <hr>
   <p></p>
   <p>Post data as an array of container properties.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/</code>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>PATCH</code>
   <h3 class="section">Response Type</h3>
@@ -185,12 +203,12 @@
   <h2><a name="deleteContainer"></a>deleteContainer</h2>
   <hr>
   <p></p>
-  <p>Careful, this deletes the requested container and all of its contents, unless there are posted specific folders and/or files.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/</code>
+  <p>Set 'content_only' to true to delete the folders and files contained, but not the container. Set 'force' to true to delete a non-empty container. Alternatively, to delete by a listing of folders and files, use the POST request with X-HTTP-METHOD = DELETE header and post listing.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a></div>
+  <div class="model" id="ContainerResponse"><a href="#">ContainerResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
@@ -200,22 +218,207 @@
 	    <p class="param-description">The name of the container you want to delete from.</p>
 	  </div>
     <div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a>&nbsp;(body)</div>
+	    <div class="param">force&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Set to true to force delete on a non-empty container.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">content_only&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Set to true to only delete the content of the container.</p>
+	  </div>
+    </ul>
+  <h2><a name="getFolder"></a>getFolder</h2>
+  <hr>
+  <p></p>
+  <p>Use 'include_properties' to get properties of the folder. Use the 'include_folders' and/or 'include_files' to modify the listing.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{folder_path}/</code>
+  <h3 class="section">HTTP Method</h3>
+  <code>GET</code>
+  <h3 class="section">Response Type</h3>
+  <div class="model" id="FolderResponse"><a href="#">FolderResponse</a></div>
+  <h3 class="section">Parameters</h3>
+  <ul>
+  	<div class="parameter">
+	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
 	      <span></span>
 	    </div>
-	    <p class="param-description">An array of folders and/or files to delete from the container.</p>
+	    <p class="param-description">The name of the container from which you want to retrieve contents.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">folder_path&nbsp;:&nbsp;string&nbsp;(path)</div>
+	      <span></span>
+	    </div>
+	    <p class="param-description">The path of the folder you want to retrieve. This can be a sub-folder, with each level separated by a '/'</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">include_properties&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Return any properties of the folder in the response.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">include_folders&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Include folders in the returned listing.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">include_files&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Include files in the returned listing.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">full_tree&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">List the contents of all sub-folders as well.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">zip&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Return the content of the folder as a zip file.</p>
+	  </div>
+    </ul>
+  <h2><a name="createFolder"></a>createFolder</h2>
+  <hr>
+  <p></p>
+  <p>Post data as an array of folders and/or files. Folders are created if they do not exist</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{folder_path}/</code>
+  <h3 class="section">HTTP Method</h3>
+  <code>POST</code>
+  <h3 class="section">Response Type</h3>
+  <div class="model" id="FolderResponse"><a href="#">FolderResponse</a></div>
+  <h3 class="section">Parameters</h3>
+  <ul>
+  	<div class="parameter">
+	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
+	      <span></span>
+	    </div>
+	    <p class="param-description">The name of the container where you want to put the contents.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">folder_path&nbsp;:&nbsp;string&nbsp;(path)</div>
+	      <span></span>
+	    </div>
+	    <p class="param-description">The path of the folder where you want to put the contents. This can be a sub-folder, with each level separated by a '/'</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="FolderRequest"><a href="#">FolderRequest</a>&nbsp;(body)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Array of folders and/or files.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">url&nbsp;:&nbsp;string&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">The full URL of the file to upload.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">extract&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Extract an uploaded zip file into the folder.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">clean&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Option when 'extract' is true, clean the current folder before extracting files and folders.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">check_exist&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">If true, the request fails when the file or folder to create already exists.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">X-HTTP-METHOD&nbsp;:&nbsp;string&nbsp;(header)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Override request using POST to tunnel other http request, such as DELETE.</p>
+	  </div>
+    </ul>
+  <h2><a name="updateFolderProperties"></a>updateFolderProperties</h2>
+  <hr>
+  <p></p>
+  <p>Post body as an array of folder properties.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{folder_path}/</code>
+  <h3 class="section">HTTP Method</h3>
+  <code>PATCH</code>
+  <h3 class="section">Response Type</h3>
+  <div class="model" id="Folder"><a href="#">Folder</a></div>
+  <h3 class="section">Parameters</h3>
+  <ul>
+  	<div class="parameter">
+	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
+	      <span></span>
+	    </div>
+	    <p class="param-description">The name of the container where you want to put the contents.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">folder_path&nbsp;:&nbsp;string&nbsp;(path)</div>
+	      <span></span>
+	    </div>
+	    <p class="param-description">The path of the folder you want to update. This can be a sub-folder, with each level separated by a '/'</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="Folder"><a href="#">Folder</a>&nbsp;(body)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Array of folder properties.</p>
+	  </div>
+    </ul>
+  <h2><a name="deleteFolder"></a>deleteFolder</h2>
+  <hr>
+  <p></p>
+  <p>Set 'content_only' to true to delete the sub-folders and files contained, but not the folder. Set 'force' to true to delete a non-empty folder. Alternatively, to delete by a listing of sub-folders and files, use the POST request with X-HTTP-METHOD = DELETE header and post listing.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{folder_path}/</code>
+  <h3 class="section">HTTP Method</h3>
+  <code>DELETE</code>
+  <h3 class="section">Response Type</h3>
+  <div class="model" id="FolderResponse"><a href="#">FolderResponse</a></div>
+  <h3 class="section">Parameters</h3>
+  <ul>
+  	<div class="parameter">
+	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
+	      <span></span>
+	    </div>
+	    <p class="param-description">The name of the container where the folder exists.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">folder_path&nbsp;:&nbsp;string&nbsp;(path)</div>
+	      <span></span>
+	    </div>
+	    <p class="param-description">The path of the folder where you want to delete contents. This can be a sub-folder, with each level separated by a '/'</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">force&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Set to true to force delete on a non-empty folder.</p>
+	  </div>
+    <div class="parameter">
+	    <div class="param">content_only&nbsp;:&nbsp;boolean&nbsp;(query)</div>
+	      <span>optional</span>
+	    </div>
+	    <p class="param-description">Set to true to only delete the content of the folder.</p>
 	  </div>
     </ul>
   <h2><a name="getFile"></a>getFile</h2>
   <hr>
   <p></p>
-  <p>By default, the file is streamed to the browser. Use the 'download' parameter to prompt for download.
-             Use the 'include_properties' parameter (optionally add 'content' to include base64 content) to list properties of the file.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{file_path}</code>
+  <p>By default, the file is streamed to the browser. Use the 'download' parameter to prompt for download. Use the 'include_properties' parameter (optionally add 'content' to include base64 content) to list properties of the file.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>GET</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="File"><a href="#">File</a></div>
+  <div class="model" id="FileResponse"><a href="#">FileResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
@@ -252,12 +455,12 @@
   <h2><a name="createFile"></a>createFile</h2>
   <hr>
   <p></p>
-  <p>Post data should be the contents of the file or an object with file properties.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{file_path}</code>
+  <p>Post body should be the contents of the file or an object with file properties.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>POST</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="File"><a href="#">File</a></div>
+  <div class="model" id="FileResponse"><a href="#">FileResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
@@ -279,27 +482,21 @@
 	    <p class="param-description">If true, the request fails when the file to create already exists.</p>
 	  </div>
     <div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="File"><a href="#">File</a>&nbsp;(body)</div>
+	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="FileRequest"><a href="#">FileRequest</a>&nbsp;(body)</div>
 	      <span>optional</span>
 	    </div>
-	    <p class="param-description">Properties of the file.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;string&nbsp;(body)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">The content of the file.</p>
+	    <p class="param-description">Content and/or properties of the file.</p>
 	  </div>
     </ul>
-  <h2><a name="updateFile"></a>updateFile</h2>
+  <h2><a name="replaceFile"></a>replaceFile</h2>
   <hr>
   <p></p>
-  <p>Post data should be the contents of the file.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{file_path}</code>
+  <p>Post body should be the contents of the file.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>PUT</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="File"><a href="#">File</a></div>
+  <div class="model" id="FileResponse"><a href="#">FileResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
@@ -315,7 +512,7 @@
 	    <p class="param-description">Path and name of the file to update.</p>
 	  </div>
     <div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;string&nbsp;(body)</div>
+	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="FileRequest"><a href="#">FileRequest</a>&nbsp;(body)</div>
 	      <span>optional</span>
 	    </div>
 	    <p class="param-description">The content of the file.</p>
@@ -324,8 +521,8 @@
   <h2><a name="updateFileProperties"></a>updateFileProperties</h2>
   <hr>
   <p></p>
-  <p>Post data should be the file properties.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{file_path}</code>
+  <p>Post body should be an array of file properties.</p><h3 class="section">URL</h3>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>PATCH</code>
   <h3 class="section">Response Type</h3>
@@ -355,11 +552,11 @@
   <hr>
   <p></p>
   <p>Careful, this removes the given file from the storage.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{file_path}</code>
+  <code>https://your-dsp-name.dreamfactory.com/app/{container}/{file_path}</code>
   <h3 class="section">HTTP Method</h3>
   <code>DELETE</code>
   <h3 class="section">Response Type</h3>
-  <div class="model" id="File"><a href="#">File</a></div>
+  <div class="model" id="FileResponse"><a href="#">FileResponse</a></div>
   <h3 class="section">Parameters</h3>
   <ul>
   	<div class="parameter">
@@ -373,174 +570,6 @@
 	      <span></span>
 	    </div>
 	    <p class="param-description">Path and name of the file to delete.</p>
-	  </div>
-    </ul>
-  <h2><a name="getFolder"></a>getFolder</h2>
-  <hr>
-  <p></p>
-  <p>Use with no parameters to get properties of the folder or use the 'include_folders' and/or 'include_files' to return a listing.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{folder_path}/</code>
-  <h3 class="section">HTTP Method</h3>
-  <code>GET</code>
-  <h3 class="section">Response Type</h3>
-  <div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a></div>
-  <h3 class="section">Parameters</h3>
-  <ul>
-  	<div class="parameter">
-	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
-	      <span></span>
-	    </div>
-	    <p class="param-description">The name of the container from which you want to retrieve contents.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">folder_path&nbsp;:&nbsp;string&nbsp;(path)</div>
-	      <span></span>
-	    </div>
-	    <p class="param-description">The path of the folder you want to retrieve. This can be a sub-folder, with each level separated by a '/'</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">include_properties&nbsp;:&nbsp;boolean&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Return all properties of the folder, if any.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">include_folders&nbsp;:&nbsp;boolean&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Include folders in the returned listing.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">include_files&nbsp;:&nbsp;boolean&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Include files in the returned listing.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">full_tree&nbsp;:&nbsp;boolean&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">List the contents of all sub-folders as well.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">zip&nbsp;:&nbsp;boolean&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Return the zipped content of the folder.</p>
-	  </div>
-    </ul>
-  <h2><a name="createFolder"></a>createFolder</h2>
-  <hr>
-  <p></p>
-  <p>Post data as an array of folders and/or files. Folders are created if they do not exist</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{folder_path}/</code>
-  <h3 class="section">HTTP Method</h3>
-  <code>POST</code>
-  <h3 class="section">Response Type</h3>
-  <div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a></div>
-  <h3 class="section">Parameters</h3>
-  <ul>
-  	<div class="parameter">
-	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
-	      <span></span>
-	    </div>
-	    <p class="param-description">The name of the container where you want to put the contents.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">folder_path&nbsp;:&nbsp;string&nbsp;(path)</div>
-	      <span></span>
-	    </div>
-	    <p class="param-description">The path of the folder where you want to put the contents. This can be a sub-folder, with each level separated by a '/'</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">url&nbsp;:&nbsp;string&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">The full URL of the file to upload.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">extract&nbsp;:&nbsp;boolean&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Extract an uploaded zip file into the folder.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">clean&nbsp;:&nbsp;boolean&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Option when 'extract' is true, clean the current folder before extracting files and folders.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">check_exist&nbsp;:&nbsp;boolean&nbsp;(query)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">If true, the request fails when the file or folder to create already exists.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a>&nbsp;(body)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Array of folders and/or files.</p>
-	  </div>
-    </ul>
-  <h2><a name="updateFolderProperties"></a>updateFolderProperties</h2>
-  <hr>
-  <p></p>
-  <p>Post data as an array of folder properties.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{folder_path}/</code>
-  <h3 class="section">HTTP Method</h3>
-  <code>PATCH</code>
-  <h3 class="section">Response Type</h3>
-  <div class="model" id="Folder"><a href="#">Folder</a></div>
-  <h3 class="section">Parameters</h3>
-  <ul>
-  	<div class="parameter">
-	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
-	      <span></span>
-	    </div>
-	    <p class="param-description">The name of the container where you want to put the contents.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">folder_path&nbsp;:&nbsp;string&nbsp;(path)</div>
-	      <span></span>
-	    </div>
-	    <p class="param-description">The path of the folder you want to update. This can be a sub-folder, with each level separated by a '/'</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a>&nbsp;(body)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Array of folder properties.</p>
-	  </div>
-    </ul>
-  <h2><a name="deleteFolder"></a>deleteFolder</h2>
-  <hr>
-  <p></p>
-  <p>Careful, this deletes the requested folder and all of its contents, unless there are posted specific sub-folders and/or files.</p><h3 class="section">URL</h3>
-  <code>https://yourdspname.cloud.dreamfactory.com/rest/app/{container}/{folder_path}/</code>
-  <h3 class="section">HTTP Method</h3>
-  <code>DELETE</code>
-  <h3 class="section">Response Type</h3>
-  <div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a></div>
-  <h3 class="section">Parameters</h3>
-  <ul>
-  	<div class="parameter">
-	    <div class="param">container&nbsp;:&nbsp;string&nbsp;(path)</div>
-	      <span></span>
-	    </div>
-	    <p class="param-description">The name of the container where the folder exists.</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">folder_path&nbsp;:&nbsp;string&nbsp;(path)</div>
-	      <span></span>
-	    </div>
-	    <p class="param-description">The path of the folder where you want to delete contents. This can be a sub-folder, with each level separated by a '/'</p>
-	  </div>
-    <div class="parameter">
-	    <div class="param">body&nbsp;:&nbsp;&nbsp;<div class="model" id="FoldersAndFiles"><a href="#">FoldersAndFiles</a>&nbsp;(body)</div>
-	      <span>optional</span>
-	    </div>
-	    <p class="param-description">Array of folder and files to delete.</p>
 	  </div>
     </ul>
   </div>

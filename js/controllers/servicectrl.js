@@ -31,6 +31,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.rackspace = {};
         Scope.openstack = {};
         Scope.mongodb = {};
+        Scope.mongohq = {};
         Scope.couch = {};
         Scope.salesforce = {};
 
@@ -166,7 +167,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
         if (Scope.service.type =="Salesforce"){
-            Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token};
+            Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token,version: Scope.salesforce.version};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
         if (Scope.service.type == "NoSQL DB" ) {
@@ -229,7 +230,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         Scope.service.parameters = Scope.tableData;
         Scope.service.headers = Scope.headerData;
         if(Scope.service.type =="Salesforce"){
-            Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token};
+            Scope.service.credentials = {username:Scope.salesforce.username, password:Scope.salesforce.password, security_token: Scope.salesforce.security_token,version: Scope.salesforce.version};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
         }
 
@@ -258,10 +259,10 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         }
 
         if (Scope.service.type == "Remote SQL DB") {
-            if (Scope.service.credentials) {
-                Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
-                Scope.service.credentials = JSON.stringify(Scope.service.credentials);
-            }
+
+            Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
+            Scope.service.credentials = JSON.stringify(Scope.service.credentials);
+
         }
         if (Scope.service.type == "Remote File Storage") {
             switch (Scope.service.storage_type) {
@@ -476,7 +477,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
         $('#step1').show();
         $('#file-manager').hide();
         $("#button_holder").show();
-        $("#swagger, #swagger iframe").hide();
+        $("#swagger, #swagger iframe, #swagctrl").hide();
         Scope.service = angular.copy(this.service);
         if (Scope.service.type.indexOf("Email Service") != -1) {
             Scope.service.type = "Email Service";
@@ -504,6 +505,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.salesforce.username = cString.username;
             Scope.salesforce.password = cString.password;
             Scope.salesforce.security_token = cString.security_token;
+            Scope.salesforce.version = cString.version;
         }
         if (Scope.service.type == "Remote SQL DB") {
             if (Scope.service.credentials) {

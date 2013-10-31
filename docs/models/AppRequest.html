@@ -1,0 +1,62 @@
+<h2>AppRequest</h2>
+<ul class="parameter">
+  <li  style="font-weight:bold" class="param-required-">id : integer
+	  <br/><span style="font-weight:normal" class="param-description">Identifier of this application.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">name : string
+	  <br/><span style="font-weight:normal" class="param-description">Displayable name of this application.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">api_name : string
+	  <br/><span style="font-weight:normal" class="param-description">Name of the application to use in API transactions.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">description : string
+	  <br/><span style="font-weight:normal" class="param-description">Description of this application.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">is_active : boolean
+	  <br/><span style="font-weight:normal" class="param-description">Is this system application active for use.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">url : string
+	  <br/><span style="font-weight:normal" class="param-description">URL for accessing this application.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">is_url_external : boolean
+	  <br/><span style="font-weight:normal" class="param-description">True when this application is hosted elsewhere, but available in Launchpad.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">import_url : string
+	  <br/><span style="font-weight:normal" class="param-description">If hosted and imported, the url of zip or package file where the code originated.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">storage_service_id : string
+	  <br/><span style="font-weight:normal" class="param-description">If hosted, the storage service identifier.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">storage_container : string
+	  <br/><span style="font-weight:normal" class="param-description">If hosted, the container of the storage service.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">requires_fullscreen : boolean
+	  <br/><span style="font-weight:normal" class="param-description">True when this app needs to hide launchpad.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">allow_fullscreen_toggle : boolean
+	  <br/><span style="font-weight:normal" class="param-description">True to allow launchpad access via toggle.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">toggle_location : string
+	  <br/><span style="font-weight:normal" class="param-description">Screen location for toggle placement.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">requires_plugin : boolean
+	  <br/><span style="font-weight:normal" class="param-description">True when the app relies on a browser plugin.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">roles_default_app : List[string]
+	  <br/><span style="font-weight:normal" class="param-description">Related roles by Role.default_app_id.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">users_default_app : List[string]
+	  <br/><span style="font-weight:normal" class="param-description">Related users by User.default_app_id.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">app_groups : List[string]
+	  <br/><span style="font-weight:normal" class="param-description">Related groups by app to group assignment.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">roles : List[string]
+	  <br/><span style="font-weight:normal" class="param-description">Related roles by app to role assignment.</span>
+  </li>
+  <li  style="font-weight:bold" class="param-required-">services : List[string]
+	  <br/><span style="font-weight:normal" class="param-description">Related services by app to service assignment.</span>
+  </li>
+  </ul>
+
+

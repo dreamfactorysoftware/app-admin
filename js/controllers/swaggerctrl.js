@@ -1,22 +1,28 @@
 var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
-
-
-    // Tabbable Nav Current Tab indicator
+    $scope.$on('$routeChangeSuccess', function () {
+        $(window).resize();
+    });
     $scope.currentTab = 'swagger-pane';
-
-    // Sets current tab
-    $scope.showTab = function(tab) {
+    $scope.showTab = function (tab) {
         $scope.currentTab = tab;
     };
 
+    var swaggerIframe = $("#swaggerFrame");
+    var swaggerDiv = $('#swagger');
+    var docsIframe = $('#docsFrame');
+    var apiContainer = $('#swagctrl');
+    var docsDiv = $('#docs');
+    var mainDiv = $('.main');
 
+    swaggerIframe.hide();
+    swaggerDiv.hide();
+    apiContainer.hide();
 
-    $("#swagger, #swagger iframe").css('display', 'none');
     $rootScope.loadSwagger = function (hash) {
 
 
-        $("#swagger iframe").attr('src', '');
+        swaggerIframe.attr('src', '');
 
         var appendURL = "";
         if (hash) {
@@ -25,65 +31,39 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
 
 
         $timeout(function () {
-            $("#swagger iframe").css('height', $(window).height() -40).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
-            $("#swagger").css({
-                'height': $(window).height(),
+            swaggerIframe.css('height', mainDiv.height() - 230).css('width', '100%').attr("src", CurrentServer + '/public/admin/swagger/' + appendURL).show();
+            swaggerDiv.css({
+                'height': $('.main').height() - 220,
                 'width': '95%'
             }).show();
+            apiContainer.show();
         }, 1000);
-
-        $(window).resize(function () {
-            $('#swagger').css({
-                "height" : $(window).height(),
-                "width" : '95%'
-            });
-            $("#swagger iframe").css('height', $(window).height() -40).css('width', '96%');
-        });
-    }
+    };
 
 
     $rootScope.loadSDK = function (hash) {
 
-        $('#docs').css({
-            "display" : "block"
+        docsDiv.css({
+            "display": "block"
         });
 
 
-        $('#docs iframe').attr({
-            "src" : ""
+        docsIframe.attr({
+            "src": ""
         });
 
-        var appendURL = "";
-        if (hash) {
-            appendURL = "/#!/" + hash;
-        }
 
-        $timeout(function() {
-            $('#docs iframe').css({
-                "height" : $(window).height() - 40,
-                "width" : "100%",
-                "display" : "block"
-            }).attr({
-                    "src" : CurrentServer + '/public/admin/docs' + appendURL
-                }).show();
+        $timeout(function () {
+            docsIframe.css({
+                "height": mainDiv.height() - 200,
+                "width": "95%",
+                "display": "block"
+            }).attr("src", CurrentServer + '/public/admin/docs/').show();
+            apiContainer.show();
         }, 1000);
+    };
 
-        $(window).resize(function() {
-            $('#docs').css({
-                "height" : $(window).height(),
-                "width" : "100%",
-            });
-
-            $('#docs iframe').css({
-                "height" : $(window).height() -40,
-                "width" : "100%"
-            });
-        });
-
-    }
-
-    if(!$scope.action)
-    {
+    if (!$scope.action) {
         $rootScope.loadSwagger();
         $rootScope.loadSDK();
     }
@@ -91,13 +71,52 @@ var SwaggerCtrl = function ($rootScope, $timeout, $scope) {
     else {
 
 
-
         $('#swagbar').hide();
         $('#swagtabs').hide();
-        $('#swagctrl').removeClass('well');
+        apiContainer.removeClass('well');
 
 
     }
 
+    $(function () {
+        var height = $(window).height();
 
+
+        mainDiv.css({'height': height - 40, 'margin-bottom': 0, 'padding-bottom': 0});
+        var mainheight = mainDiv.height();
+        docsDiv.css({
+            "height": mainDiv.height() - 220,
+            "width": "95%"
+        });
+
+        docsIframe.css({
+            "height": mainDiv.height() - 220,
+            "width": "100%"
+        });
+    });
+
+    $(window).resize(function () {
+        var height = $(window).height();
+
+        mainDiv.css({'height': height - 40, 'margin-bottom': 0, 'padding-bottom': 0});
+
+        docsDiv.css({
+            "height": mainDiv.height() - 220,
+            "width": "95%"
+        });
+        swaggerDiv.css({
+            "height": mainDiv.height() - 220,
+            "width": "95%"
+        });
+
+        docsIframe.css({
+            "height": mainDiv.height() - 220,
+            "width": "100%"
+        });
+        swaggerIframe.css({
+            "height": mainDiv.height() - 220,
+            "width": "100%"
+        });
+
+    });
 };

@@ -1,21 +1,23 @@
-var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $timeout) {
+var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location) {
     $scope.$on('$routeChangeSuccess', function () {
-    $(window).resize();
+        $(window).resize();
     });
+    Scope = $scope;
 
     $('#alert_container').empty();
-    Scope = $scope;
+
     Scope.alerts = [];
     Scope.currentServer = CurrentServer;
     Scope.action = "Create";
     setCurrentApp('applications');
     Scope.app = {is_url_external: 0, native: true, allow_fullscreen_toggle: 0, requires_fullscreen: '0', roles: [], storage_service_id: null};
-    $('#update_button').hide();
+    //$('#update_button').hide();
     $('.external').hide();
 
     Scope.storageOptions = [];
 
-    Scope.Apps = AppsRelated.get(function () {
+    Scope.Apps = AppsRelated.get(function (data) {
+        Scope.Apps.record.reverse();
     }, function (response) {
         var code = response.status;
         if (code == 401) {
@@ -55,7 +57,10 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         Scope.storageServices = [];
         Scope.storageContainers = {}
         Scope.Services.record.forEach(function (service) {
-
+            if (service.type.indexOf("Local File Storage") != -1){
+                Scope.defaultStorageID = service.id;
+                Scope.defaultStorageName = service.api_name;
+            }
             if (service.type.indexOf("File Storage") != -1) {
                 Scope.storageServices.push(service);
 
@@ -64,9 +69,9 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
                     Scope.storageContainers[service.id] = {options: []};
                     if (data.resource) {
                         data.resource.forEach(function (container) {
-                            if (service.api_name == "app") {
+                            if (service.api_name == Scope.defaultStorageName) {
                                 Scope.app.storage_service_id = service.id;
-                                Scope.defaultStorageID = service.id;
+                                //Scope.defaultStorageID = service.id;
                                 Scope.app.storage_container = "applications";
                                 Scope.storageContainers[service.id].options.push({name: container.name});
                                 Scope.storageContainers[service.id].name = service.api_name;
@@ -78,7 +83,11 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
 
                         })
                     }
-
+                    if(Service.newApp){
+                        Scope.showDetails(Service.newApp);
+                        Scope.showAppPreview(Scope.app.launch_url);
+                        delete Service.newApp;
+                    }
                 }).error(function (data) {
                         //console.log(data);
                     });
@@ -86,10 +95,24 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
 
 
         });
-    })
+    });
+    Scope.showAppPreview = function (appUrl) {
+
+        Scope.action = "Preview ";
+        $('#step1').hide();
+
+        $("#app-preview").show();
+
+
+        $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", appUrl).show();
+        $('#create_button').hide();
+        $('#update_button').hide();
+        $('#file-manager').hide();
+    };
+
 
     Scope.loadStorageContainers = function () {
-        Scope.storageOptions = [];
+
         Scope.storageOptions = Scope.storageContainers[Scope.app.storage_service_id].options;
 
 
@@ -106,23 +129,30 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         $('#file-manager').hide();
         $('#app-preview').hide();
         $('#step1').show();
-        $('#create_button').show();
-        $('#update_button').hide();
+//        $('#create_button').show();
+//        $('#update_button').hide();
         $("tr.info").removeClass('info');
         $(window).scrollTop(0);
     };
     Scope.save = function () {
-        if (Scope.app.native) {
+        if (Scope.app.is_url_external == -1) {
             Scope.app.storage_service_id = null;
             Scope.app.storage_container = null;
             Scope.app.name = Scope.app.api_name;
             Scope.app.launch_url = "";
+            Scope.app.is_url_external = 0;
+        }
+        if(Scope.app.is_url_external == 1){
+            Scope.app.storage_service_id = null;
+            Scope.app.storage_container = null;
         }
         var id = Scope.app.id;
         AppsRelated.update({id: id}, Scope.app, function (data) {
                 updateByAttr(Scope.Apps.record, 'id', id, data);
 
-                window.top.Actions.updateSession("update");
+                if(window.top.Actions){
+                    window.top.Actions.updateSession("update");
+                }
 
                 $.pnotify({
                     title: Scope.app.name,
@@ -154,19 +184,31 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     Scope.goToImport = function () {
         $location.path('/import');
     }
+    Scope.downloadSDK = function(){
+        $("#sdk-download").attr('src', location.protocol + '//' + location.host + '/rest/system/app/' + Scope.app.id + '?sdk=true&app_name=admin')
+    }
     Scope.create = function () {
-        if (Scope.app.native) {
+        if (Scope.app.is_url_external == -1) {
             Scope.app.storage_service_id = null;
             Scope.app.storage_container = null;
             Scope.app.name = Scope.app.api_name;
             Scope.app.launch_url = "";
+            Scope.app.is_url_external = 0;
 
         }
+        if(Scope.app.is_url_external == 1){
+            Scope.app.name = Scope.app.api_name;
+            Scope.app.storage_service_id = null;
+            Scope.app.storage_container = null;
+        }
         AppsRelated.save(Scope.app, function (data) {
-                Scope.Apps.record.push(data);
+                Scope.Apps.record.unshift(data);
                 //Scope.app.id = data.id;
                 //Scope.app = data;
-                window.top.Actions.updateSession("update");
+                if(window.top.Actions){
+                    window.top.Actions.updateSession("update");
+                }
+
                 $.pnotify({
                     title: Scope.app.name,
                     type: 'success',
@@ -200,6 +242,7 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
 
     Scope.delete = function () {
         var which = this.app.name;
+        var delete_files = "false";
         if (!which || which == '') {
             which = "the application?";
         } else {
@@ -208,8 +251,14 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         if (!confirm("Are you sure you want to delete " + which)) {
             return;
         }
+        if(this.app.storage_service_id != null){
+            if (confirm("Remove the files associated with " + which + "\nPressing Cancel will delete the app, but keep the files in storage")) {
+                delete_files = "true";
+            }
+        }
+
         var id = this.app.id;
-        AppsRelated.delete({ id: id }, function () {
+        AppsRelated.delete({ id: id, delete_storage: delete_files }, function () {
                 $("#row_" + id).fadeOut();
                 window.top.Actions.updateSession();
 
@@ -255,38 +304,36 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         if (this.app.storage_service_id) {
             container = this.app.storage_container || null;
             container = container ? this.app.storage_container + "/" : '';
-            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/' + Scope.storageContainers[this.app.storage_service_id].name + '/' + container + this.app.api_name + '/&allowroot=false').show();
+            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/' + Scope.storageContainers[this.app.storage_service_id].name + '/' + container  + this.app.api_name + '/&allowroot=false').show();
         } else {
-            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/app/applications/' + this.app.api_name + '/&allowroot=false').show();
+            $("#file-manager iframe").css('height', $(window).height() - 200).attr("src", CurrentServer + '/public/admin/filemanager/?path=/' + Scope.defaultStorageName  + '/applications/' + this.app.api_name + '/&allowroot=false').show();
         }
 
 
     };
-    Scope.showAppPreview = function (appUrl) {
-
-        Scope.action = "Preview ";
-        $('#step1').hide();
-
-        $("#app-preview").show();
 
 
-        $("#app-preview  iframe").css('height', $(window).height() - 200).attr("src", appUrl).show();
-        $('#create_button').hide();
-        $('#update_button').hide();
-        $('#file-manager').hide();
-    };
-
-    Scope.showDetails = function () {
+    Scope.showDetails = function (newApp) {
         Scope.app = {};
         Scope.action = "Update";
-        Scope.app = this.app;
-        if (!this.app.storage_service_id) {
-            Scope.app.storage_service_id = Scope.defaultStorageID;
-            Scope.app.storage_container = "applications";
+        if(newApp){
+            Scope.app = newApp;
+        }else{
+            Scope.app = angular.copy(this.app);
         }
 
 
+
+        Scope.app.storage_service_id = this.app.storage_service_id || Scope.defaultStorageID;
+
+        if (!this.app.storage_service_id && !this.app.is_url_external) {
+            Scope.app.is_url_external = -1;
+        }
         Scope.loadStorageContainers();
+
+
+
+
         if (!Scope.app.launch_url) {
             Scope.app.native = true;
             Scope.app.storage_service_id = null;
@@ -300,8 +347,8 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
         $('#file-manager').hide();
         $('#app-preview').hide();
         $('#step1').show();
-        $('#create_button').hide();
-        $('#update_button').show();
+        // $('#create_button').hide();
+        // $('#update_button').show();
         $("tr.info").removeClass('info');
         $('#row_' + Scope.app.id).addClass('info');
     }
@@ -331,7 +378,25 @@ var AppCtrl = function ($scope, AppsRelated, Role, $http, Service, $location, $t
     };
 
     Scope.reload = function () {
-        Scope.Apps = AppsRelated.get();
+        Scope.Apps = AppsRelated.get(function (data) {
+            Scope.Apps.record.reverse();
+        }, function (response) {
+            var code = response.status;
+            if (code == 401) {
+                window.top.Actions.doSignInDialog("stay");
+                return;
+            }
+            var error = response.data.error;
+            $.pnotify({
+                title: 'Error',
+                type: 'error',
+                hide: false,
+                addclass: "stack-bottomright",
+                text: error[0].message
+            });
+
+
+        });
     }
 
 };

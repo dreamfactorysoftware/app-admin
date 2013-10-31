@@ -1,20 +1,61 @@
-var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
+var ConfigCtrl = function ($scope, Config, Role, EmailTemplates, Service) {
     Scope = $scope;
     Scope.allVerbs = ["GET","POST", "PUT", "MERGE", "PATCH", "DELETE", "COPY"];
-    Scope.Config = Config.get(function () {
+    // convert between null and empty string for menus
+    Scope.nullToString = function (data) {
+        if (data.guest_role_id === null) {
+            data.guest_role_id = '';
+        }
+        if (data.open_reg_role_id === null) {
+            data.open_reg_role_id = '';
+        }
+        if (data.open_reg_email_service_id === null) {
+            data.open_reg_email_service_id = '';
+        }
+        if (data.open_reg_email_template_id === null) {
+            data.open_reg_email_template_id = '';
+        }
+        if (data.password_email_service_id === null) {
+            data.password_email_service_id = '';
+        }
+        if (data.password_email_template_id === null) {
+            data.password_email_template_id = '';
+        }
+    }
+    Scope.stringToNull = function (data) {
+        if (data.guest_role_id === '') {
+            data.guest_role_id = null;
+        }
+        if (data.open_reg_role_id === '') {
+            data.open_reg_role_id = null;
+        }
+        if (data.open_reg_email_service_id === '') {
+            data.open_reg_email_service_id = null;
+        }
+        if (data.open_reg_email_template_id === '') {
+            data.open_reg_email_template_id = null;
+        }
+        if (data.password_email_service_id === '') {
+            data.password_email_service_id = null;
+        }
+        if (data.password_email_template_id === '') {
+            data.password_email_template_id = null;
+        }
+    }
+    Scope.Config = Config.get(function (response) {
+        Scope.nullToString(response);
     }, function (response) {
         var code = response.status;
         if (code == 401) {
             window.top.Actions.doSignInDialog("stay");
             return;
         }
-        var error = response.data.error;
         $.pnotify({
             title: 'Error',
             type: 'error',
             hide: false,
             addclass: "stack-bottomright",
-            text: error[0].message
+            text: getErrorString(response)
         });
 
 
@@ -26,13 +67,29 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
             window.top.Actions.doSignInDialog("stay");
             return;
         }
-        var error = response.data.error;
         $.pnotify({
             title: 'Error',
             type: 'error',
             hide: false,
             addclass: "stack-bottomright",
-            text: error[0].message
+            text: getErrorString(response)
+        });
+
+
+    });
+    Scope.Service = Service.get(function () {
+    }, function (response) {
+        var code = response.status;
+        if (code == 401) {
+            window.top.Actions.doSignInDialog("stay");
+            return;
+        }
+        $.pnotify({
+            title: 'Error',
+            type: 'error',
+            hide: false,
+            addclass: "stack-bottomright",
+            text: getErrorString(response)
         });
 
 
@@ -42,7 +99,10 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
         Scope.CORS.host = "";
     }
     Scope.save = function () {
-        Config.update(Scope.Config, function () {
+        // make a copy
+        var data = JSON.parse(JSON.stringify(Scope.Config));
+        Scope.stringToNull(data);
+        Config.update(data, function () {
                 $.pnotify({
                     title: 'Configuration',
                     type: 'success',
@@ -55,13 +115,12 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
-                var error = response.data.error;
                 $.pnotify({
                     title: 'Error',
                     type: 'error',
                     hide: false,
                     addclass: "stack-bottomright",
-                    text: error[0].message
+                    text: getErrorString(response)
                 });
 
 
@@ -149,13 +208,12 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
-                var error = response.data.error;
                 $.pnotify({
                     title: 'Error',
                     type: 'error',
                     hide: false,
                     addclass: "stack-bottomright",
-                    text: error[0].message
+                    text: getErrorString(response)
                 });
             });
 
@@ -198,13 +256,12 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
-                var error = response.data.error;
                 $.pnotify({
                     title: 'Error',
                     type: 'error',
                     hide: false,
                     addclass: "stack-bottomright",
-                    text: error[0].message
+                    text: getErrorString(response)
                 });
 
 
@@ -231,13 +288,12 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
                     window.top.Actions.doSignInDialog("stay");
                     return;
                 }
-                var error = response.data.error;
                 $.pnotify({
                     title: 'Error',
                     type: 'error',
                     hide: false,
                     addclass: "stack-bottomright",
-                    text: error[0].message
+                    text: getErrorString(response)
                 });
         });
 
@@ -312,14 +368,14 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
 
 
         // Check to make sure our template exists
-        if ((templateIndex != '') || (templateIndex != undefined) || (templateIndex != null)) {
+        if ((templateIndex != '') && (templateIndex != undefined) && (templateIndex != null)) {
 
             // If it does splice it out
             Scope.emailTemplates.record.splice(templateIndex, 1);
-
-            // Reset Scope.getSelectedEmailTemplate and Scope.selectedEmailTemplateId
-            Scope.newEmailTemplate();
         }
+
+        // Reset Scope.getSelectedEmailTemplate and Scope.selectedEmailTemplateId
+        Scope.newEmailTemplate();
     });
 
     // UI Functions
@@ -356,36 +412,14 @@ var ConfigCtrl = function ($scope, Config, Role, EmailTemplates) {
                 // Store it
                 result.push(value);
             }
-            // Stop!  We found our email template
-            return false;
         });
 
-
-        // Double check that there is a result
-        if (!result) {
-            // Handle error: email template not found
-            // console.log('Template Not found');
+        // the result array should contain a single element
+        if (result.length !== 1) {
+            //console.log(result.length + 'templates found');
+            return;
         }
 
-        // If there is just one result(which there should only be one)
-        else if (result.length === 1) {
-
-            // Copy the result object for editing/deleting/updating and so on
-            Scope.getSelectedEmailTemplate = angular.copy(result[0]);
-        }
-
-        // There was more that one template found.
-        // This is a problem as every template should have a unique Id
-        else if (result.length > 1) {
-            // Handle error: more than one email template
-            // with the same Id
-            //console.log('multiple templates found');
-            $.pnotify({
-                title: 'Email Templates',
-                type: 'warning',
-                text: 'Multiple templates found.'
-            });
-        }
+        Scope.getSelectedEmailTemplate = angular.copy(result[0]);
     });
-
 }
