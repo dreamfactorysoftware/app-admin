@@ -79,13 +79,19 @@
                             <input ng-checked="user.is_active" type="checkbox" ng-model="user.is_active"/>&nbsp;Active
                         </div>
                         <div class="section" ng-hide="user.user_source > 0">
-                            <div ng-show="action=='Create'">
+                            <div ng-show="action=='Create' && defaultEmailService != null">
                                 <input ng-checked="passwordEdit" type="checkbox" ng-model="passwordEdit"/>&nbsp;Skip email confirmation and set password manually
+                            </div>
+                            <div  class="alert alert-info" ng-show="action=='Create' && defaultEmailService == null">
+                                <li class="icon-info-sign"></li>If you'd like send an invite message via email, please configure an email service in the Services section of this application.
                             </div>
                             <div ng-show="action=='Edit'">
                                 <input ng-checked="passwordEdit" type="checkbox" ng-model="passwordEdit"/>&nbsp;Change password
                             </div>
-                            <div ng-show="passwordEdit">
+                            <div ng-show="action=='Create' && defaultEmailService == null">
+                                <input ng-checked="passwordEdit" type="checkbox" ng-model="passwordEdit"/>&nbsp;Set password
+                            </div>
+                            <div ng-show="passwordEdit ">
                                 <br/>
                                 Password : <input id="password" name="password" type="password" ng-model="user.password">
                                 <br/>
