@@ -135,10 +135,9 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
     $('#update_button').hide();
 
     Scope.save = function () {
-        if (Scope.service.type == "Remote SQL DB") {
+        if (Scope.service.type == "Remote SQL DB" || Scope.service.type == "Remote SQL DB Schema") {
             Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
-
         }
         if (Scope.service.type == "Email Service") {
             if(Scope.email_type == "SMTP"){
@@ -146,8 +145,6 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
                 Scope.service.credentials = {host:Scope.service.host,port:Scope.service.port,security:Scope.service.security, user:Scope.service.user, pwd:Scope.service.pwd};
                 Scope.service.credentials = JSON.stringify(Scope.service.credentials);
             }
-
-
         }
         if (Scope.service.type == "Remote File Storage") {
             switch (Scope.service.storage_type) {
@@ -258,7 +255,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
 
         }
 
-        if (Scope.service.type == "Remote SQL DB") {
+        if (Scope.service.type == "Remote SQL DB" || Scope.service.type == "Remote SQL DB Schema") {
 
             Scope.service.credentials = {dsn:Scope.service.dsn, user:Scope.service.user, pwd:Scope.service.pwd};
             Scope.service.credentials = JSON.stringify(Scope.service.credentials);
@@ -507,7 +504,7 @@ var ServiceCtrl = function ($scope, Service, $rootScope) {
             Scope.salesforce.security_token = cString.security_token;
             Scope.salesforce.version = cString.version;
         }
-        if (Scope.service.type == "Remote SQL DB") {
+        if (Scope.service.type == "Remote SQL DB" || Scope.service.type == "Remote SQL DB Schema") {
             if (Scope.service.credentials) {
                 var cString = Scope.service.credentials;
                 Scope.service.dsn = cString.dsn;
