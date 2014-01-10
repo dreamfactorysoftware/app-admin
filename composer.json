@@ -1,6 +1,6 @@
 {
 	"name":              "dreamfactory/app-admin",
-	"version":           "1.1.5",
+	"version":           "1.1.6",
 	"homepage":          "http://dreamfactorysoftware.github.io",
 	"description":       "DreamFactory Services Platform(tm) Admin Application",
 	"keywords":          ["dreamfactory", "dsp", "cloud", "dsp-admin", "dsp-app", "dsp-core"],

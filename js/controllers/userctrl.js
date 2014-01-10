@@ -1,8 +1,18 @@
-var UserCtrl = function ($scope, Config, User, Role) {
+var UserCtrl = function ($scope, Config, User, Role, Service) {
     $scope.$on('$routeChangeSuccess', function () {
         $(window).resize();
     });
     Scope = $scope;
+    Scope.defaultEmailService = null;
+    Scope.Services = Service.get(function(data){
+            data.record.forEach(function(service){
+                if(service.type.indexOf("Email Service") != -1){
+                    Scope.defaultEmailService = service.api_name;
+                }
+            })
+        }
+
+    );
     Scope.Config = Config.get();
     Scope.Users = User.get();
     Scope.action = "Create";
@@ -142,7 +152,7 @@ var UserCtrl = function ($scope, Config, User, Role) {
         $.ajax({
             dataType: 'json',
             type: 'POST',
-            url: CurrentServer + '/rest/email/?app_name=admin&method=POST',
+            url: CurrentServer + '/rest/' + Scope.defaultEmailService +'/?app_name=admin&method=POST',
             data: JSON.stringify(data),
             cache: false,
             success: info.success,
