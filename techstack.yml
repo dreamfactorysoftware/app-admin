@@ -1,0 +1,57 @@
+repo_name: dreamfactorysoftware/app-admin
+report_id: 7b2368d6ada72a44285516c7e98ae012
+repo_type: Public
+timestamp: '2023-12-06T22:36:03+00:00'
+requested_by: df-jablan
+provider: github
+branch: master
+detected_tools_count: 5
+tools:
+- name: CSS 3
+  description: The latest evolution of the Cascading Style Sheets language
+  website_url: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/6727/css.png
+  detection_source: Repo Metadata
+- name: JavaScript
+  description: Lightweight, interpreted, object-oriented language with first-class
+    functions
+  website_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source: Repo Metadata
+- name: Eclipse
+  description: IDE for Java EE Developers
+  website_url: https://www.eclipse.org/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Integrated Development Environment
+  image_url: https://img.stackshare.io/service/1446/8cyY6D_m.png
+  detection_source: filemanager/js/ace/theme-eclipse.js
+  last_updated_by: Jason Sykes
+  last_updated_on: 2013-01-23 20:20:19.000000000 Z
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source: Repo Metadata
+- name: HTML
+  description: Hypertext Markup Language for creating web pages.
+  website_url: http://
+  open_source: false
+  hosted_saas: false
+  image_url: https://img.stackshare.io/service/2270/no-img-open-source.png
+  detection_source: applications.html
+  last_updated_by: Jason Sykes
+  last_updated_on: 2013-02-27 19:13:10.000000000 Z
